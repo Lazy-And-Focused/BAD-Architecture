@@ -1,0 +1,49 @@
+import type { App } from "supertest/types";
+
+import type { INestApplication } from "@nestjs/common";
+import type { TestingModule } from "@nestjs/testing";
+
+import request from "supertest";
+
+import { HttpStatus } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+
+import { ROUTE, ROUTES } from "./<%= name %>.routes";
+import v1Module from "v1/v1.module";
+
+const toUrl = (path: string) => `/v1/${ROUTE}${path}`;
+
+describe("<%= classify(name) %> controller", () => {
+  let app: INestApplication<App>;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [v1Module],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // ===========================================================================
+  // Пример теста для одного эндпоинта
+  // ===========================================================================
+
+  describe(`GET ${ROUTES.GET}`, () => {
+    it("should return status 200 and array of <%= plural %>", async () => {
+      const response = await request(app.getHttpServer())
+        .get(toUrl(ROUTES.GET))
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual([]);
+    });
+  });
+});
