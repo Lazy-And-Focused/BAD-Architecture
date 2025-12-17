@@ -1,4 +1,4 @@
-import type { <%= classify(name) %> } from "types/<%= name %>.types";
+import type { <%= classify(name) %> } from "v1/types/<%= name %>.types";
 
 import { ApiProperty } from "@nestjs/swagger";
 
