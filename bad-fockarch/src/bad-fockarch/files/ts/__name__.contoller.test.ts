@@ -38,7 +38,7 @@ describe("<%= classify(name) %> controller", () => {
   // ===========================================================================
 
   describe(`GET ${ROUTES.GET}`, () => {
-    it("should return status 200 and array of <%= plural %>", async () => {
+    it("should return status 200 and array of <%= name %>", async () => {
       const response = await request(app.getHttpServer())
         .get(toUrl(ROUTES.GET))
         .expect(HttpStatus.OK);
