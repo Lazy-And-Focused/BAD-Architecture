@@ -44,7 +44,7 @@ export class Controller {
     const { abbreviations, methods } = AuthApi.methods;
 
     return {
-      message: `Sorry, but you can"t auth without method, try next methods:\n${toStr(methods)}\nAnd this abbreviations:\n${toStr(abbreviations)}`,
+      message: `Sorry, but you can't auth without method, try next methods:\n${toStr(methods)}\nAnd this abbreviations:\n${toStr(abbreviations)}`,
       abbreviations,
       methods,
     };

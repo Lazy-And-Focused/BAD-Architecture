@@ -24,8 +24,8 @@
     "paths": {
       "@env": ["./src/services/env.service"],
       "v1/*": ["./src/v1/*"],
-      "constants": ["./src/constants"],
-      "constants/*": ["./src/constants/*"],
+      "#constants": ["./src/constants"],
+      "#constants/*": ["./src/constants/*"],
       "errors/*": ["./src/errors/*"],
       "services/*": ["./src/services/*"],
       "decorators/*": ["./src/decorators/*"],

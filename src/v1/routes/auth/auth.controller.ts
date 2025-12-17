@@ -39,7 +39,7 @@ export class AuthController {
     const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 
     return {
-      message: `Sorry, but you can"t auth without method, try next methods:\n${toStr(methods)}\nAnd this abbreviations:\n${toStr(abbreviations)}`,
+      message: `Sorry, but you can't auth without method, try next methods:\n${toStr(methods)}\nAnd this abbreviations:\n${toStr(abbreviations)}`,
       abbreviations,
       methods,
     };

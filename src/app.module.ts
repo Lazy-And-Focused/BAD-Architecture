@@ -4,11 +4,13 @@ import { RouterModule } from "@nestjs/core";
 
 import v1Module, { v1Modules } from "./v1/v1.module";
 
-const modules: Array<{
+type RegisterModule = {
   module: new () => NestModule;
   children: (new () => unknown)[];
   path: string;
-}> = [
+}
+
+const modules: RegisterModule[] = [
   {
     module: v1Module,
     children: v1Modules,

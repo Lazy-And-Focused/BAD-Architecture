@@ -8,10 +8,11 @@ import request from "supertest";
 import { HttpStatus } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
+import { urlize } from "#constants";
 import { ROUTE, ROUTES } from "./<%= name %>.routes";
 import v1Module from "v1/v1.module";
 
-const toUrl = (path: string) => `/v1/${ROUTE}${path}`;
+const toUrl = urlize({ version: "v1", route: ROUTE });
 
 describe("<%= classify(name) %> controller", () => {
   let app: INestApplication<App>;
@@ -32,10 +33,6 @@ describe("<%= classify(name) %> controller", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
-  // ===========================================================================
-  // Пример теста для одного эндпоинта
-  // ===========================================================================
 
   describe(`GET ${ROUTES.GET}`, () => {
     it("should return status 200 and array of <%= name %>", async () => {

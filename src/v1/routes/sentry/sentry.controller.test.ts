@@ -8,10 +8,11 @@ import request from "supertest";
 import { HttpStatus } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
+import { urlize } from "#constants";
 import { ROUTE, ROUTES } from "./sentry.routes";
-import v1Module from "../../v1.module";
+import v1Module from "v1/v1.module";
 
-const toUrl = (path: string) => `/v1/${ROUTE}${path}`;
+const toUrl = urlize({ version: "v1", route: ROUTE });
 
 describe(ROUTE + " controller", () => {
   let app: INestApplication<App>;

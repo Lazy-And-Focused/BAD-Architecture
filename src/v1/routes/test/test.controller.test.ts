@@ -8,9 +8,10 @@ import request from "supertest";
 import { Controller } from "./test.controller";
 import { ROUTE, ROUTES } from "./test.routes";
 
-import v1Module from "../../v1.module";
+import { urlize } from "#constants";
+import v1Module from "v1/v1.module";
 
-const toUrl = (path: string) => `/v1/${ROUTE}${path}`;
+const toUrl = urlize({ version: "v1", route: ROUTE });
 
 describe(ROUTE + " controller", () => {
   let controller: Controller;
