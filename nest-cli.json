@@ -5,7 +5,7 @@
   "language": "ts",
   "root": "./",
   "generateOptions": {
-    "baseDir": "routes",
+    "baseDir": "v1/routes",
     "spec": {
       "controller": true,
       "service": true,
