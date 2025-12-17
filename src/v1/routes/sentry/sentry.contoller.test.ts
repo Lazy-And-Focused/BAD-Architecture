@@ -34,7 +34,7 @@ describe(ROUTE + " controller", () => {
       jest.clearAllMocks();
     });
 
-    it("should return 200 and \"Hello, World!\"", () => {
+    it("should return 200 and "Hello, World!"", () => {
       return request(app.getHttpServer())
         .get(toUrl(ROUTES.GET))
         .expect(HttpStatus.OK)
@@ -59,13 +59,13 @@ describe(ROUTE + " controller", () => {
       jest.clearAllMocks();
     });
 
-    it("should return \"not found\"", () => {
+    it("should return "not found"", () => {
       return request(app.getHttpServer())
         .get(toUrl(ROUTES.GET_HTTP))
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    it("should return \"bad request\"", () => {
+    it("should return "bad request"", () => {
       const status = HttpStatus.BAD_REQUEST;
       return request(app.getHttpServer())
         .get(toUrl(ROUTES.GET_HTTP + "?status=" + status))
