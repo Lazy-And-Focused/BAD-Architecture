@@ -8,10 +8,14 @@ import request from "supertest";
 import { Controller } from "./test.controller";
 import { ROUTE, ROUTES } from "./test.routes";
 
-import { urlize } from "#constants";
+import { createEndpoints } from "#constants";
 import v1Module from "v1/v1.module";
 
-const toUrl = urlize({ version: "v1", route: ROUTE });
+const endpoints = createEndpoints({
+  route: ROUTE,
+  routes: ROUTES,
+  version: "v1"
+});
 
 describe(ROUTE + " controller", () => {
   let controller: Controller;
@@ -39,14 +43,14 @@ describe(ROUTE + " controller", () => {
     await app.close();
   });
 
-  describe("GET " + ROUTES.GET, () => {
+  describe("GET " + endpoints.GET, () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
     it("should return 200 and hello string", () => {
       return request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET))
+        .get(endpoints.GET)
         .expect(200)
         .expect("Hi from guarded test");
     });
@@ -59,11 +63,11 @@ describe(ROUTE + " controller", () => {
         timeToExpire: 0,
       });
 
-      return request(app.getHttpServer()).get(toUrl(ROUTES.GET)).expect(429);
+      return request(app.getHttpServer()).get(endpoints.GET).expect(429);
     });
   });
 
-  describe("GET " + ROUTES.GET_PUBLIC, () => {
+  describe("GET " + endpoints.GET_PUBLIC, () => {
     it("should return hello string", () => {
       const result = "Hi from public test";
       expect(controller.getPublic()).toBe(result);

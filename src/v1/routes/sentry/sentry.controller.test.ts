@@ -8,11 +8,15 @@ import request from "supertest";
 import { HttpStatus } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
-import { urlize } from "#constants";
+import { createEndpoints } from "#constants";
 import { ROUTE, ROUTES } from "./sentry.routes";
 import v1Module from "v1/v1.module";
 
-const toUrl = urlize({ version: "v1", route: ROUTE });
+const endpoints = createEndpoints({
+  route: ROUTE,
+  routes: ROUTES,
+  version: "v1"
+});
 
 describe(ROUTE + " controller", () => {
   let app: INestApplication<App>;
@@ -30,46 +34,46 @@ describe(ROUTE + " controller", () => {
     await app.close();
   });
 
-  describe("GET " + ROUTES.GET, () => {
+  describe("GET " + endpoints.GET, () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
     it("should return 200 and \"Hello, World!\"", () => {
       return request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET))
+        .get(endpoints.GET)
         .expect(HttpStatus.OK)
         .expect("Hello, World!");
     });
   });
 
-  describe("GET " + ROUTES.GET_ERROR, () => {
+  describe("GET " + endpoints.GET_ERROR, () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
     it("should return internal server error", () => {
       return request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET_ERROR))
+        .get(endpoints.GET_ERROR)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 
-  describe("GET " + ROUTES.GET_HTTP, () => {
+  describe("GET " + endpoints.GET_HTTP, () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
     it("should return \"not found\"", () => {
       return request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET_HTTP))
+        .get(endpoints.GET_HTTP)
         .expect(HttpStatus.NOT_FOUND);
     });
 
     it("should return \"bad request\"", () => {
       const status = HttpStatus.BAD_REQUEST;
       return request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET_HTTP + "?status=" + status))
+        .get(endpoints.GET_HTTP + "?status=" + status)
         .expect(status);
     });
   });

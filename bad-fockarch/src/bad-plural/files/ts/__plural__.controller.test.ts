@@ -8,12 +8,16 @@ import request from "supertest";
 import { HttpStatus } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
-import { urlize } from "#constants";
-import { ROUTE, ROUTES } from "./<%= plural %>.routes";
+import { createEndpoints } from "#constants";
+import { ROUTE, ROUTES } from "./<%= name %>.routes";
 
 import v1Module from "v1/v1.module";
 
-const toUrl = urlize({ version: "v1", route: ROUTE });
+const endpoints = createEndpoints({
+  route: ROUTE,
+  routes: ROUTES,
+  version: "v1",
+});
 
 describe("<%= classify(name) %> controller", () => {
   let app: INestApplication<App>;
@@ -35,10 +39,10 @@ describe("<%= classify(name) %> controller", () => {
     jest.clearAllMocks();
   });
 
-  describe(`GET ${ROUTES.GET}`, () => {
+  describe(`GET ${endpoints.GET}`, () => {
     it("should return status 200 and array of <%= plural %>", async () => {
       const response = await request(app.getHttpServer())
-        .get(toUrl(ROUTES.GET))
+        .get(endpoints.GET)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
