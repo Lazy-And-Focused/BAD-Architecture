@@ -10,6 +10,7 @@ import { Test } from "@nestjs/testing";
 
 import { urlize } from "#constants";
 import { ROUTE, ROUTES } from "./<%= plural %>.routes";
+
 import v1Module from "v1/v1.module";
 
 const toUrl = urlize({ version: "v1", route: ROUTE });
