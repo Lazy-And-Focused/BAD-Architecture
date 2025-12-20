@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
-import type { Auth, AuthTypes } from "types";
-import { AUTH_TYPES } from "types";
+import type { Auth, AuthTypes } from "@1/types";
+import { AUTH_TYPES } from "@1/types";
 
 import { Next, Req, Res } from "@nestjs/common";
 

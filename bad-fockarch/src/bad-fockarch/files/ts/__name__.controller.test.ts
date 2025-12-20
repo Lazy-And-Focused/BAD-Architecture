@@ -8,10 +8,10 @@ import request from "supertest";
 import { HttpStatus } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
-import { createEndpoints } from "#constants";
 import { ROUTE, ROUTES } from "./<%= name %>.routes";
 
-import v1Module from "v1/v1.module";
+import { createEndpoints } from "@1/constants";
+import v1Module from "@1/v1.module";
 
 const endpoints = createEndpoints({
   route: ROUTE,

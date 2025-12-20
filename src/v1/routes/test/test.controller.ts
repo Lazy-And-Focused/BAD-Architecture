@@ -1,5 +1,5 @@
-import { Public } from "decorators/public.decorator";
-import { AuthGuard } from "v1/guards/auth/auth.guard";
+import { Public } from "@1/decorators/public.decorator";
+import { AuthGuard } from "@1/guards/auth/auth.guard";
 
 import {
   Controller as NestController,

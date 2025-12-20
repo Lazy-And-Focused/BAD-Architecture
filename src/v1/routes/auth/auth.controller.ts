@@ -12,9 +12,11 @@ import {
 
 import { ROUTE, ROUTES } from "./auth.routes";
 
-import env from "services/env.service";
-import Hash from "services/hash.service";
-import AuthApi from "services/auth.service";
+import env from "f@/env";
+
+import Hash from "@1/services/hash.service";
+import AuthApi from "@1/services/auth.service";
+
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @Injectable()

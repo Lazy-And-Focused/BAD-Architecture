@@ -10,7 +10,7 @@ import Session from "./app/session.app";
 import Passport from "./app/strategies";
 import AppModule from "./app.module";
 
-import { env } from "services/env.service";
+import { env } from "f@/env";
 
 const passport = new Passport();
 

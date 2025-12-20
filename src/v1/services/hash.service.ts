@@ -2,7 +2,7 @@ import type { Request } from "express";
 
 import crypto from "crypto";
 
-import { env } from "./env.service";
+import { env } from "f@/env";
 
 const PARSE_ERROR = {
   successed: false,

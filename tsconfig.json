@@ -22,16 +22,30 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@env": ["./src/services/env.service"],
-      "v1/*": ["./src/v1/*"],
-      "#constants": ["./src/constants"],
-      "#constants/*": ["./src/constants/*"],
-      "errors/*": ["./src/errors/*"],
-      "services/*": ["./src/services/*"],
-      "decorators/*": ["./src/decorators/*"],
-      "guards/*": ["./src/guards/*"],
-      "types": ["./src/types"],
-      "types/*": ["./src/types/*"]
+      "f@/env": ["./src/services/env.service"],
+
+      "@/services/*": ["./src/services/*"],
+      "@/services": ["./src/services"],
+      
+      "@1/*": ["./src/v1/*"],
+      
+      "@1/constants/*": ["./src/v1/constants/*"],
+      "@1/constants": ["./src/v1/constants"],
+      
+      "@1/errors/*": ["./src/v1/errors/*"],
+      "@1/errors": ["./src/v1/errors"],
+      
+      "@1/services/*": ["./src/v1/services/*"],
+      "@1/services": ["./src/v1/services"],
+      
+      "@1/decorators/*": ["./src/v1/decorators/*"],
+      "@1/decorators": ["./src/v1/decorators"],
+      
+      "@1/guards/*": ["./src/v1/guards/*"],
+      "@1/guards": ["./src/v1/guards"],
+
+      "@1/types/*": ["./src/v1/types/*"],
+      "@1/types": ["./src/v1/types"],
     }
   },
   "include": ["./**/*.ts"],

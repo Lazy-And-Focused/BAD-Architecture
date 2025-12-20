@@ -1,8 +1,8 @@
 import type { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
 import type { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
 
-import { Public } from "v1/decorators/public.decorator";
-import { AuthGuard } from "v1/guards/auth/auth.guard";
+import { Public } from "@1/decorators/public.decorator";
+import { AuthGuard } from "@1/guards/auth/auth.guard";
 
 import {
   Controller as NestController,

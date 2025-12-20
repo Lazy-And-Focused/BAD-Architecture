@@ -79,12 +79,12 @@ const ROUTES: Record<string, string> = {
 
 Основной файл, в котором будет хранится логика конкретного роутера.
 Для удобства можно использовать API других сервисов, создав
-`~/services/` и перенеся часть из логики сервива туда. Например:
+`~/v{version}/services/` и перенеся часть из логики сервива туда. Например:
 
 - Это:
 
 ```ts
-import env from "@env";
+import env from "f@1/env";
 
 export class Service {
   public async get(token: string, profileId: string) {
@@ -117,7 +117,7 @@ export class Service {
 - Превратится в это:
 
 ```ts
-import GoogleApi from "api/google";
+import GoogleApi from "@/api/google";
 
 export class Service {
   public get(token: string, profileId: string) {
@@ -137,8 +137,8 @@ export default Service;
 import type { UsersCreateDto } from "./dto/users-create.dto";
 import type { UsersUpdateDto } from "./dto/users-update.dto";
 
-import { Public } from "decorators/public.decorator";
-import { AuthGuard } from "guards/auth/auth.guard";
+import { Public } from "@{version}/decorators/public.decorator";
+import { AuthGuard } from "@{version}/guards/auth/auth.guard";
 
 import {
   Controller as NestController,

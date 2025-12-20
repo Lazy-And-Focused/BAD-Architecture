@@ -21,7 +21,7 @@ import AuthModule from "./routes/auth/auth.module";
 import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
 
-import env from "@env";
+import env from "f@/env";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 

@@ -1,8 +1,8 @@
 import type { Request } from "express";
-import type { Auth } from "types";
+import type { Auth } from "@1/types";
 
-import Hash from "services/hash.service";
-import authErrors from "errors/guards/auth.errors";
+import Hash from "@1/services/hash.service";
+import authErrors from "@1/errors/guards/auth.errors";
 
 export class Service {
   public static async validateRequest(req: Request) {
