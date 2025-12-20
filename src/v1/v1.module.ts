@@ -23,7 +23,7 @@ import TestModule from "./routes/test/test.module";
 
 import env from "@env";
 
-export const v1Modules = [AuthModule, SentryModule, TestModule]
+export const v1Modules = [AuthModule, SentryModule, TestModule];
 
 @Module({
   imports: [

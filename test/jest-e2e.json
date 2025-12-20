@@ -1,0 +1,21 @@
+{
+  "moduleNameMapper": {
+    "^@env$": "<rootDir>/src/services/env.service",
+    "^v1/(.*)$": "<rootDir>/src/v1/$1",
+    "^constants$": "<rootDir>/src/constants",
+    "^constants/(.*)$": "<rootDir>/src/constants/$1",
+    "^errors/(.*)$": "<rootDir>/src/errors/$1",
+    "^services/(.*)$": "<rootDir>/src/services/$1",
+    "^decorators/(.*)$": "<rootDir>/src/decorators/$1",
+    "^guards/(.*)$": "<rootDir>/src/guards/$1",
+    "^types$": "<rootDir>/src/types",
+    "^types/(.*)$": "<rootDir>/src/types/$1"
+  },
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}

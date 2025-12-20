@@ -24,16 +24,16 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest<Request>();
-    
+
     try {
-      return Service.validateRequest(request)
+      return Service.validateRequest(request);
     } catch (error) {
       logger.error(error, {
         hostname: request.hostname,
-        body: request.body
+        body: request.body,
       });
       return false;
-    };
+    }
   }
 }
 

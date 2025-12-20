@@ -1,5 +1,5 @@
 import { Public } from "decorators/public.decorator";
-import { AuthGuard } from "src/v1/guards/auth/auth.guard";
+import { AuthGuard } from "v1/guards/auth/auth.guard";
 
 import {
   Controller as NestController,
@@ -9,10 +9,7 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 
-import {
-  ApiOperation,
-  ApiResponse,
-} from "@nestjs/swagger";
+import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 import { SkipThrottle } from "@nestjs/throttler";
 import { CacheTTL } from "@nestjs/cache-manager";
@@ -24,23 +21,24 @@ import { ROUTE, ROUTES } from "./test.routes";
 @UseGuards(AuthGuard)
 @ApiResponse({
   status: HttpStatus.OK,
-  description: "Ok"
+  description: "Ok",
 })
 @ApiResponse({
   status: HttpStatus.FORBIDDEN,
-  description: "Not accesss to route"
+  description: "Not accesss to route",
 })
 @ApiResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
-  description: `A large number of requests`
+  description: `A large number of requests`,
 })
 @ApiResponse({
   status: HttpStatus.UNAUTHORIZED,
-  description: "Does not have an authentication token in headers (`headers.authorization`)"
+  description:
+    "Does not have an authentication token in headers (`headers.authorization`)",
 })
 @ApiResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
-  description: "Too many requests, try later"
+  description: "Too many requests, try later",
 })
 export class Controller {
   public constructor() {}

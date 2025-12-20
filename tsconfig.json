@@ -23,8 +23,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@env": ["./src/services/env.service"],
-      "constants": ["./src/constants"],
-      "constants/*": ["./src/constants/*"],
+      "v1/*": ["./src/v1/*"],
+      "#constants": ["./src/constants"],
+      "#constants/*": ["./src/constants/*"],
+      "errors/*": ["./src/errors/*"],
       "services/*": ["./src/services/*"],
       "decorators/*": ["./src/decorators/*"],
       "guards/*": ["./src/guards/*"],
