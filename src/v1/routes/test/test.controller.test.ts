@@ -14,7 +14,7 @@ import v1Module from "@1/v1.module";
 const endpoints = createEndpoints({
   route: ROUTE,
   routes: ROUTES,
-  version: "v1"
+  version: "v1",
 });
 
 describe(ROUTE + " controller", () => {

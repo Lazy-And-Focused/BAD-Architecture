@@ -16,7 +16,7 @@ import v1Module from "@1/v1.module";
 const endpoints = createEndpoints({
   route: ROUTE,
   routes: ROUTES,
-  version: "v1"
+  version: "v1",
 });
 
 describe(ROUTE + " controller", () => {
@@ -40,7 +40,7 @@ describe(ROUTE + " controller", () => {
       jest.clearAllMocks();
     });
 
-    it("should return 200 and \"Hello, World!\"", () => {
+    it('should return 200 and "Hello, World!"', () => {
       return request(app.getHttpServer())
         .get(endpoints.GET)
         .expect(HttpStatus.OK)
@@ -65,13 +65,13 @@ describe(ROUTE + " controller", () => {
       jest.clearAllMocks();
     });
 
-    it("should return \"not found\"", () => {
+    it('should return "not found"', () => {
       return request(app.getHttpServer())
         .get(endpoints.GET_HTTP)
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    it("should return \"bad request\"", () => {
+    it('should return "bad request"', () => {
       const status = HttpStatus.BAD_REQUEST;
       return request(app.getHttpServer())
         .get(endpoints.GET_HTTP + "?status=" + status)

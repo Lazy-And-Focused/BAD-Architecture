@@ -1,20 +1,22 @@
-import { urlize } from "./urlize.utils"
+import { urlize } from "./urlize.utils";
 
 type Routes = {
-  [key: string]: string
-}
+  [key: string]: string;
+};
 
 type UrlizeParameters = Parameters<typeof urlize>[0];
 
 export const createEndpoints = <T extends Routes>({
-  routes, ...data
+  routes,
+  ...data
 }: UrlizeParameters & { routes: T }) => {
   const toUrl = urlize(data);
 
   const endpoints = Object.fromEntries(
-    Object.keys(routes).map(key => {
-      return [key, toUrl(routes[key])]
-  })) as Record<keyof T, string>;
+    Object.keys(routes).map((key) => {
+      return [key, toUrl(routes[key])];
+    }),
+  ) as Record<keyof T, string>;
 
   return endpoints;
-}
+};
