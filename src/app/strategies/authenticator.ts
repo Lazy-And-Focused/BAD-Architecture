@@ -1,11 +1,11 @@
 import type { Profile } from "passport";
 import type { Strategy, VerifyCallback, VerifyFunction } from "passport-oauth2";
 
-import type { AuthTypes } from "types";
+import type { AuthTypes } from "@1/types";
 
 import passport = require("passport");
 
-import { getPassportEnv } from "services/env.service";
+import { getPassportEnv } from "f@/env";
 
 /* const CreateOrUpdate = async <T>({
   model,

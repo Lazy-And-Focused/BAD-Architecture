@@ -1,4 +1,4 @@
-import { urlize } from "./urlize"
+import { urlize } from "./urlize.utils"
 
 type Routes = {
   [key: string]: string

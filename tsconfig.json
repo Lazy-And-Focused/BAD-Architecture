@@ -31,6 +31,9 @@
       
       "@1/constants/*": ["./src/v1/constants/*"],
       "@1/constants": ["./src/v1/constants"],
+
+      "@1/utils/*": ["./src/v1/utils/*"],
+      "@1/utils": ["./src/v1/utils"],
       
       "@1/errors/*": ["./src/v1/errors/*"],
       "@1/errors": ["./src/v1/errors"],

@@ -10,7 +10,7 @@ import { Test } from "@nestjs/testing";
 
 import { ROUTE, ROUTES } from "./sentry.routes";
 
-import { createEndpoints } from "@1/constants";
+import { createEndpoints } from "@1/utils";
 import v1Module from "@1/v1.module";
 
 const endpoints = createEndpoints({

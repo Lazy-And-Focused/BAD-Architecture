@@ -1,4 +1,4 @@
-import type { Auth } from "types";
+import type { Auth } from "@1/types";
 
 import passport = require("passport");
 
