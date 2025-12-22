@@ -3,35 +3,56 @@ import type { VerifyCallback } from 'passport-oauth2';
 import type { Profile } from 'passport';
 
 import { PassportStrategy } from '@nestjs/passport';
+import OAuth2 = require("passport-oauth2");
 
 import { getPassportEnv } from 'f@/env';
 
-type PassportData = { path: string; scopes: string[] }
+type PassportData = {
+  path: string;
+  scopes: string[];
+  strategyName: string;
+}
+
+interface PassportStrategyMixin<TValidationResult = unknown> {
+  validate(...args: any[]): TValidationResult | Promise<TValidationResult>;
+}
 
 const defaultPassports: Record<AuthTypes, PassportData> = {
   google: {
     path: "passport-google-oauth20",
     scopes: [],
+    strategyName: "Strategy"
   },
 };
 
 export class AuthStrategyRegister {
-  public static readonly strategies: Map<AuthTypes, unknown>;
-  public readonly strategies: Map<AuthTypes, unknown>;
+  public static readonly strategies: Map<AuthTypes, unknown> = new Map();
+  public readonly strategies: Map<AuthTypes, unknown> = new Map();
+
+  public static getStrategy(strategy: string) {
+    const output = this.strategies.get(strategy as AuthTypes);
+    
+    if (!output) {
+      return null;
+    }
+
+    return output;
+  }
 
   public execute() {
     for (const passport in defaultPassports) {
-      const { path, scopes } = defaultPassports[passport];
+      const { path, scopes, strategyName } = defaultPassports[passport];
       const client = getPassportEnv(passport.toUpperCase() as Uppercase<AuthTypes>);
       
-      const { Strategy } = require(path);
+      const { [strategyName]: Strategy } = require(path);
+      
       const ServiceStrategyClass = PassportStrategy(Strategy, passport);
       const ServiceStrategy = new ServiceStrategyClass({
         clientID: client.id,
         clientSecret: client.secret,
         callbackURL: client.callback,
         scope: scopes
-      });
+      }) as (OAuth2 & PassportStrategyMixin);
 
 /* 
       ! FOR TESTING
@@ -42,18 +63,18 @@ export class AuthStrategyRegister {
         callbackURL: client.callback,
         scope: scopes
       });
- */
+      */
 
-      ServiceStrategy.validate = async <Done extends (...data: unknown[]) => void = VerifyCallback>(
+      ServiceStrategy.validate = async (
         accessToken: string,
         refreshToken: string,
         profile: Profile,
-        done: Done,
+        done: VerifyCallback,
       ) => {
         try {
-          return done(null, null);
+          return done(null, false);
         } catch (error) {
-          return done(error, null);
+          return done(error, false);
         }
       };
 
@@ -64,3 +85,5 @@ export class AuthStrategyRegister {
     return this;
   }
 }
+
+export default AuthStrategyRegister;

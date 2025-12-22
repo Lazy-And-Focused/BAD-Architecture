@@ -15,7 +15,7 @@ import { ROUTE, ROUTES } from "./auth.routes";
 import env from "f@/env";
 
 import Hash from "@1/services/hash.service";
-import AuthApi from "@1/services/auth.service";
+import AuthService from "@1/services/auth.service";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
@@ -37,7 +37,7 @@ export class AuthController {
   @Get()
   @ApiOperation({ summary: "getting all authentication methods" })
   public printMethods() {
-    const { abbreviations, methods } = AuthApi.methods;
+    const { abbreviations, methods } = AuthService.methods;
     const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 
     return {
@@ -54,7 +54,7 @@ export class AuthController {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
-    return new AuthApi(req.params.method).auth(req, res, next);
+    return new AuthService(req.params.method).auth(req, res, next);
   }
 
   @Get(ROUTES.GET_CALLBACK)
@@ -64,7 +64,7 @@ export class AuthController {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
-    return new AuthApi(req.params.method).callback(
+    return new AuthService(req.params.method).callback(
       req,
       res,
       next,
