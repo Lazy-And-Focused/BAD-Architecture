@@ -51,7 +51,7 @@ export class AuthApi {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    callback: (...args: [Auth|null]) => unknown,
+    callback: (...args: [Auth | null]) => unknown,
   ): unknown {
     const { successed, method, body } = this.getMethod();
     if (!successed) {
@@ -87,14 +87,14 @@ export class AuthApi {
         successed: data,
         body: null,
         method: this._method,
-      }
+      };
     }
 
     return {
       successed: data.successed,
       body: data.body || null,
       method: data.method || this._method,
-    } as const
+    } as const;
   }
 }
 
