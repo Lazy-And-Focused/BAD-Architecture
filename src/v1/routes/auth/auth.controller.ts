@@ -69,7 +69,7 @@ export class AuthController {
       res,
       next,
       (...args) => {
-        const user = args[1];
+        const user = args[0];
 
         if (!user) return;
 

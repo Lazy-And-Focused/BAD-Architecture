@@ -6,6 +6,7 @@ import { AUTH_TYPES } from "@1/types";
 import { Next, Req, Res } from "@nestjs/common";
 
 import passport = require("passport");
+import AuthStrategyRegister from "@1/strategies/strategy.register";
 
 const abbreviations: Map<string, AuthTypes> = new Map([]);
 
@@ -38,7 +39,8 @@ export class AuthApi {
   ): unknown {
     const { successed, method, body } = this.getMethod();
 
-    if (!successed) {
+    const strategy = AuthStrategyRegister.getStrategy(method);
+    if (!successed || !strategy) {
       return res.send(body);
     }
 
@@ -49,10 +51,9 @@ export class AuthApi {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    callback: (...args: [unknown, Auth | null, unknown]) => unknown,
+    callback: (...args: [Auth|null]) => unknown,
   ): unknown {
     const { successed, method, body } = this.getMethod();
-
     if (!successed) {
       return res.send(body);
     }
@@ -61,7 +62,8 @@ export class AuthApi {
   }
 
   private getMethod(): { successed: boolean; method: string; body: unknown } {
-    if ((AUTH_TYPES as unknown as string[]).includes(this._method)) {
+    const exists = (<readonly string[]>AUTH_TYPES).includes(this._method);
+    if (exists) {
       return this.generateReturn(true);
     }
 
@@ -80,17 +82,19 @@ export class AuthApi {
   }
 
   private generateReturn(data: GenerateReturnProps) {
-    return typeof data === "boolean"
-      ? {
-          successed: data,
-          body: null,
-          method: this._method,
-        }
-      : ({
-          successed: data.successed,
-          body: data.body || null,
-          method: data.method || this._method,
-        } as const);
+    if (typeof data === "boolean") {
+      return {
+        successed: data,
+        body: null,
+        method: this._method,
+      }
+    }
+
+    return {
+      successed: data.successed,
+      body: data.body || null,
+      method: data.method || this._method,
+    } as const
   }
 }
 

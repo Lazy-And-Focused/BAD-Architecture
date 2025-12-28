@@ -22,8 +22,11 @@ import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
 
 import env from "f@/env";
+import AuthStrategyRegister from "./strategies/strategy.register";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
+
+new AuthStrategyRegister().execute();
 
 @Module({
   imports: [

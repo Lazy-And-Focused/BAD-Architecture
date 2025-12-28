@@ -7,12 +7,12 @@ import { json, urlencoded } from "express";
 import cookieParser = require("cookie-parser");
 
 import Session from "./app/session.app";
-import Passport from "./app/strategies";
+// import Passport from "./app/strategies";
 import AppModule from "./app.module";
 
 import { env } from "f@/env";
 
-const passport = new Passport();
+// const passport = new Passport();
 
 initSentry({
   dsn: env.SENTRY_URL,
@@ -36,8 +36,8 @@ initSentry({
   app.use(json());
   app.use(urlencoded());
 
-  app.use(passport.session());
-  app.use(passport.initialize());
+  // app.use(passport.session());
+  // app.use(passport.initialize());
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle("API documentation")

@@ -1,33 +1,34 @@
 import type { AuthTypes } from '@1/types';
 import type { VerifyCallback } from 'passport-oauth2';
 import type { Profile } from 'passport';
+import type OAuth2 from "passport-oauth2";
 
 import { PassportStrategy } from '@nestjs/passport';
-import OAuth2 = require("passport-oauth2");
 
 import { getPassportEnv } from 'f@/env';
 
+type Strategies = Map<AuthTypes, OAuth2Strategy>;
 type PassportData = {
   path: string;
   scopes: string[];
-  strategyName: string;
 }
 
 interface PassportStrategyMixin<TValidationResult = unknown> {
-  validate(...args: any[]): TValidationResult | Promise<TValidationResult>;
+  validate(...args: unknown[]): TValidationResult | Promise<TValidationResult>;
 }
+
+export type OAuth2Strategy = OAuth2 & PassportStrategyMixin;
 
 const defaultPassports: Record<AuthTypes, PassportData> = {
   google: {
     path: "passport-google-oauth20",
-    scopes: [],
-    strategyName: "Strategy"
+    scopes: ["profile", "email"],
   },
 };
 
 export class AuthStrategyRegister {
-  public static readonly strategies: Map<AuthTypes, unknown> = new Map();
-  public readonly strategies: Map<AuthTypes, unknown> = new Map();
+  public static readonly strategies: Strategies = new Map();
+  public readonly strategies: Strategies = new Map();
 
   public static getStrategy(strategy: string) {
     const output = this.strategies.get(strategy as AuthTypes);
@@ -41,10 +42,10 @@ export class AuthStrategyRegister {
 
   public execute() {
     for (const passport in defaultPassports) {
-      const { path, scopes, strategyName } = defaultPassports[passport];
+      const { path, scopes } = defaultPassports[passport];
       const client = getPassportEnv(passport.toUpperCase() as Uppercase<AuthTypes>);
       
-      const { [strategyName]: Strategy } = require(path);
+      const { Strategy } = require(path);
       
       const ServiceStrategyClass = PassportStrategy(Strategy, passport);
       const ServiceStrategy = new ServiceStrategyClass({
@@ -52,20 +53,7 @@ export class AuthStrategyRegister {
         clientSecret: client.secret,
         callbackURL: client.callback,
         scope: scopes
-      }) as (OAuth2 & PassportStrategyMixin);
-
-/* 
-      ! FOR TESTING
-
-      const a = new (PassportStrategy(GoogleStrategy, "google"))({
-        clientID: client.id,
-        clientSecret: client.secret,
-        callbackURL: client.callback,
-        scope: scopes
-      });
-      */
-
-      ServiceStrategy.validate = async (
+      }, async (
         accessToken: string,
         refreshToken: string,
         profile: Profile,
@@ -76,7 +64,7 @@ export class AuthStrategyRegister {
         } catch (error) {
           return done(error, false);
         }
-      };
+      }) as OAuth2Strategy;
 
       this.strategies.set(passport as AuthTypes, ServiceStrategy);
       AuthStrategyRegister.strategies.set(passport as AuthTypes, ServiceStrategy);
