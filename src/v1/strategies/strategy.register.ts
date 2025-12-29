@@ -36,15 +36,15 @@ export class AuthStrategyRegister {
   }
 
   public execute(): this {
-    for (const passport in oauth2Services) {
-      const { path, scopes } = oauth2Services[passport];
+    for (const service in oauth2Services) {
+      const { path, scopes } = oauth2Services[service];
       const client = getPassportEnv(
-        passport.toUpperCase() as Uppercase<AuthTypes>,
+        service.toUpperCase() as Uppercase<AuthTypes>,
       );
 
       const { Strategy } = require(path);
 
-      const ServiceStrategyClass = PassportStrategy(Strategy, passport);
+      const ServiceStrategyClass = PassportStrategy(Strategy, service);
       const ServiceStrategy = new ServiceStrategyClass(
         {
           clientID: client.id,
@@ -66,9 +66,9 @@ export class AuthStrategyRegister {
         },
       ) as OAuth2Strategy;
 
-      this.strategies.set(passport as AuthTypes, ServiceStrategy);
+      this.strategies.set(service as AuthTypes, ServiceStrategy);
       AuthStrategyRegister.strategies.set(
-        passport as AuthTypes,
+        service as AuthTypes,
         ServiceStrategy,
       );
     }
