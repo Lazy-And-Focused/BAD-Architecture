@@ -85,7 +85,7 @@ const ROUTES: Record<string, string> = {
 - Это:
 
 ```ts
-import env from "f@1/env";
+import env from "f@/env";
 
 export class Service {
   public async get(token: string, profileId: string) {
