@@ -1,6 +1,6 @@
 import type { AuthTypes } from "@1/types";
-import type { VerifyCallback } from "passport-oauth2";
 import type { Profile } from "passport";
+import type { VerifyCallback } from "passport-oauth2";
 import type OAuth2 from "passport-oauth2";
 
 import { PassportStrategy } from "@nestjs/passport";
@@ -8,7 +8,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { getPassportEnv } from "f@/env";
 
 type Strategies = Map<AuthTypes, OAuth2Strategy>;
-type PassportData = {
+type OAuth2ServiceProperties = {
   path: string;
   scopes: string[];
 };
@@ -19,7 +19,7 @@ interface PassportStrategyMixin<TValidationResult = unknown> {
 
 export type OAuth2Strategy = OAuth2 & PassportStrategyMixin;
 
-const defaultPassports: Record<AuthTypes, PassportData> = {
+const oauth2Services: Record<AuthTypes, OAuth2ServiceProperties> = {
   google: {
     path: "passport-google-oauth20",
     scopes: ["profile", "email"],
@@ -30,19 +30,14 @@ export class AuthStrategyRegister {
   public static readonly strategies: Strategies = new Map();
   public readonly strategies: Strategies = new Map();
 
-  public static getStrategy(strategy: string) {
+  public static getStrategy(strategy: string): OAuth2Strategy | null {
     const output = this.strategies.get(strategy as AuthTypes);
-
-    if (!output) {
-      return null;
-    }
-
-    return output;
+    return output || null;
   }
 
-  public execute() {
-    for (const passport in defaultPassports) {
-      const { path, scopes } = defaultPassports[passport];
+  public execute(): this {
+    for (const passport in oauth2Services) {
+      const { path, scopes } = oauth2Services[passport];
       const client = getPassportEnv(
         passport.toUpperCase() as Uppercase<AuthTypes>,
       );
