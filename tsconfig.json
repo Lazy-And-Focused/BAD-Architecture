@@ -22,6 +22,8 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@/*": ["./src/*"],
+
       "f@/env": ["./src/services/env.service"],
 
       "@/services/*": ["./src/services/*"],
@@ -32,8 +34,8 @@
       "@1/constants/*": ["./src/v1/constants/*"],
       "@1/constants": ["./src/v1/constants"],
 
-      "@1/utils/*": ["./src/v1/utils/*"],
-      "@1/utils": ["./src/v1/utils"],
+      "@1/utils/*": ["src/utils/*"],
+      "@1/utils": ["src/utils"],
 
       "@1/errors/*": ["./src/v1/errors/*"],
       "@1/errors": ["./src/v1/errors"],
@@ -41,8 +43,8 @@
       "@1/services/*": ["./src/v1/services/*"],
       "@1/services": ["./src/v1/services"],
 
-      "@1/decorators/*": ["./src/v1/decorators/*"],
-      "@1/decorators": ["./src/v1/decorators"],
+      "@1/decorators/*": ["src/decorators/*"],
+      "@1/decorators": ["src/decorators"],
 
       "@1/guards/*": ["./src/v1/guards/*"],
       "@1/guards": ["./src/v1/guards"],

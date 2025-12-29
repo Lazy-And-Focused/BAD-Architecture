@@ -73,7 +73,7 @@
         ├── {version}/
         │   ├── {version}.module.ts
         │   ├── types/
-        │   │   ├── {typeName}.type.ts
+        │   │   ├── {typeName}.types.ts
         │   │   └── index.ts
         │   ├── services/                                      # services
         │   │   ├── {serviceName}.service.ts
@@ -112,14 +112,36 @@
         │           ├── {guardName}.service.ts
         │           ├── {guardName}.guard.ts
         │           └── index.ts
+        ├── middleware/
+        │   ├── {middlewareName}.middleware.ts
+        │   └── index.ts
+        ├── errors/                                    # ?
+        │   ├── constructor.ts
+        │   └── {errorCategory}/
+        │       └── {errorName}.errors.ts
+        ├── decorators/                                    # ?
+        │   ├── {decoratorName}.decorator.ts
+        │   └── index.ts
+        ├── constants/                                    # ?
+        │   ├── {constantName}.constants.ts
+        │   └── index.ts
+        ├── utils/                                    # ?
+        │   ├── {utilsName}.utils.ts
+        │   ├── create-endpoints.utils.ts
+        │   ├── index.ts
+        │   └── urlize.utils.ts
+        ├── types/                                          # ? types
+        │   ├── {typeName}.types.ts
+        │   └── index.ts
         ├── services/                                          # ? services
         │   ├── {serviceName}.service.ts
-        │   └── env.service.ts
+        │   ├── env.service.ts
+        │   └── index.ts
         └── app/
             ├── session.app.ts
+            ├── {appService}.app.ts
             └── strategies/
                 ├── {strategy}.ts
-                ├── authenticator.ts
                 └── index.ts
 ```
 

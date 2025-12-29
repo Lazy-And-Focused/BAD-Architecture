@@ -1,4 +1,4 @@
-import { Public } from "@1/decorators/public.decorator";
+import { Public } from "@/decorators";
 import { AuthGuard } from "@1/guards/auth/auth.guard";
 
 import {
