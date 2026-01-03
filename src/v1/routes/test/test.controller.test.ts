@@ -8,13 +8,13 @@ import request from "supertest";
 import { Controller } from "./test.controller";
 import { ROUTE, ROUTES } from "./test.routes";
 
-import { createEndpoints } from "#constants";
-import v1Module from "v1/v1.module";
+import { createEndpoints } from "@/utils";
+import v1Module from "@1/v1.module";
 
 const endpoints = createEndpoints({
   route: ROUTE,
   routes: ROUTES,
-  version: "v1"
+  version: "v1",
 });
 
 describe(ROUTE + " controller", () => {

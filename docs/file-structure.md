@@ -46,9 +46,14 @@
 ## Структура
 
 ```txt
-└── $WORK_FOLDER/
+└── {workFolder}/
+    ├── .dockerignore
+    ├── .env
+    ├── .env.{envName}
     ├── .gitignore
-    ├── .prettierrc
+    ├── .prettierrc.mjs
+    ├── docker-compose.yaml
+    ├── dockerfile
     ├── eslint.config.mjs
     ├── LICENSE
     ├── nest-cli.json
@@ -56,71 +61,91 @@
     ├── pnpm-lock.yaml
     ├── README.md
     ├── tsconfig.build.json
+    ├── tsconfig.build.tsbuildinfo
     ├── tsconfig.json
     ├── test/
-    │   ├── app.e2e-test.ts
-    │   └── jest-e2e.json
+    │   ├── app.e2e-spec.ts
+    │   ├── jest-e2e.json
+    │   └── jest.json
     └── src/
         ├── app.module.ts
         ├── main.ts
-        ├── app/
-        │   └── session.app.ts
-        ├── constants/
-        │   └── $CONSTANT_NAME.constant.ts
-        ├── database/
-        │   │── schemas/
-        |   |   └── $SHEMA_NAME.schema.ts
+        ├── {version}/
+        │   ├── {version}.module.ts
+        │   ├── types/
+        │   │   ├── {typeName}.types.ts
+        │   │   └── index.ts
+        │   ├── services/                                      # services
+        │   │   ├── {serviceName}.service.ts
+        │   │   └── index.ts
+        │   ├── middleware/
+        │   │   ├── {middlewareName}.middleware.ts
+        │   │   └── index.ts
+        │   ├── errors/
+        │   │   ├── constructor.ts
+        │   │   └── {errorCategory}/
+        │   │       └── {errorName}.errors.ts
+        │   ├── decorators/
+        │   │   ├── {decoratorName}.decorator.ts
+        │   │   └── public.decorator.ts
+        │   ├── constants/                                    # ?
+        │   │   ├── {constantName}.constants.ts
+        │   │   └── index.ts
+        │   ├── utils/
+        │   │   ├── {utilsName}.utils.ts
+        │   │   ├── create-endpoints.utils.ts
+        │   │   ├── index.ts
+        │   │   └── urlize.utils.ts
+        │   ├── routes/
+        │   │   └── {routeName}/                               # routes/:route/
+        │   │       ├── dto/
+        │   │       │   └── {routeName}-{dtoName}.dto.ts
+        │   │       ├── {routeName}.controller.test.ts
+        │   │       ├── {routeName}.controller.ts
+        │   │       ├── {routeName}.service.test.ts
+        │   │       ├── {routeName}.service.ts
+        │   │       ├── {routeName}.module.ts
+        │   │       ├── {routeName}.routes.ts
+        │   │       └── {subRouteName}/...{link:routeName}     # ? /:route/:subroute
+        │   └── guards/
+        │       └── {guardName}/
+        │           ├── {guardName}.service.ts
+        │           ├── {guardName}.guard.ts
+        │           └── index.ts
+        ├── middleware/
+        │   ├── {middlewareName}.middleware.ts
         │   └── index.ts
-        ├── decorators/
-        │   ├── $DECORATOR_NAME.decorator.ts
-        │   └── public.decorator.ts
-        ├── errors/
-        │   ├── $CATEGORY_NAME/
-        │   │   └── $ERROR_NAME.erros.ts
-        │   └── constructor.ts
-        ├── guards/
-        │   ├── auth/
-        │   │   ├── auth-guard.service.ts
-        │   │   └── auth.guard.ts
-        │   └── $GUARD_NAME/
-        │       ├── $GUARD_NAME-guard.service.ts
-        │       └── $GUARD_NAME.guard.ts
-        │── middleware/
-        │   ├── $MIDDLEWARE_NAME.middleware.ts
-        │   └── logger.middleware.ts
-        │── routes/
-        │   ├── auth/
-        │   │   ├── auth.controller.ts
-        │   │   ├── auth.module.ts
-        │   │   └── auth.routes.ts
-        │   └── $ROUTE/                                 # routes/:route/
-        │       ├── dto/
-        │       │   └── ROUTE-$DTO_NAME.dto.ts
-        │       ├── $ROUTE.controller.test.ts
-        │       ├── $ROUTE.controller.ts
-        │       ├── $ROUTE.service.test.ts
-        │       ├── $ROUTE.service.ts
-        │       ├── $ROUTE.module.ts
-        │       ├── $ROUTE.routes.ts                    # .routes
-        │       └── $SUB_ROUTE/...                      # /:route/:subroute
-        ├── services/                                   # services
-        │   ├── auth.service.ts
+        ├── errors/                                    # ?
+        │   ├── constructor.ts
+        │   └── {errorCategory}/
+        │       └── {errorName}.errors.ts
+        ├── decorators/                                    # ?
+        │   ├── {decoratorName}.decorator.ts
+        │   └── index.ts
+        ├── constants/                                    # ?
+        │   ├── {constantName}.constants.ts
+        │   └── index.ts
+        ├── utils/                                    # ?
+        │   ├── {utilsName}.utils.ts
+        │   ├── create-endpoints.utils.ts
+        │   ├── index.ts
+        │   └── urlize.utils.ts
+        ├── types/                                          # ? types
+        │   ├── {typeName}.types.ts
+        │   └── index.ts
+        ├── services/                                          # ? services
+        │   ├── {serviceName}.service.ts
         │   ├── env.service.ts
-        │   ├── hash.service.ts
-        |   ├── $SERVICE_NAME.service.ts
-        ├── strategies/
-        │   ├── authenticator.ts
-        │   ├── general.stategy.ts
         │   └── index.ts
-        └── types/
-            ├── promise/...                             # ? types/promise/
-            ├── $TYPE_NAME.types.ts
-            ├── response.types.ts
-            ├── auth.types.ts
-            └── index.ts
+        └── app/
+            ├── session.app.ts
+            ├── {appService}.app.ts
+            └── strategies/
+                ├── {strategy}.ts
+                └── index.ts
 ```
 
-- ? - Не обязательный файл/папка
+- ? - Необязательный файл/папка
 
 - `routes/:route/` — Не генерировать в ручную, использовать:
   `nest g bad $ROUTE`.
@@ -129,7 +154,5 @@
 - `/:route/:subroute` — Копия `$ROUTE`, максимум до 3-4 вложеностей.
 - `services` — Можно заменить на `api/`, также можно создать
   `index.ts`.
-- `types/promise/` — Копия `types/`, только все типу обёрнуты в
-  `Promise`
 
 Роуты могут иметь максимум 3-4 вложенности.
