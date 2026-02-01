@@ -1,4 +1,4 @@
-name: Create Release
+name: Create BAD Release
 
 on:
   push:
@@ -19,9 +19,9 @@ jobs:
         run: |
           mkdir -p release_contents
           mkdir -p release_contents/src
-          mkdir -p release_contents/src/test
+          mkdir -p release_contents/test
           cp -r src/* release_contents/src
-          cp -r ./src/test/* release_contents/src/test
+          cp -r ./test/* release_contents/test
           cp -r ./.env.example release_contents/.env.example
           cp -r ./.gitignore release_contents/.gitignore
           cp -r ./.prettierrc.mjs release_contents/.prettierrc.mjs
@@ -40,7 +40,7 @@ jobs:
 
       - name: Create Release
         run: |
-          gh release create "${{ github.ref_name}}" \
+          gh release create "${{ github.ref_name }}" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${GITHUB_REF_NAME#rv}" \
             --generate-notes \

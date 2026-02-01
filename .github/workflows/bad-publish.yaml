@@ -1,29 +1,39 @@
-name: Node.js CI/CD
+name: BAD package publish
 
 on:
   push:
     tags:
       - "bv*"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+permissions:
+  id-token: write
+  contents: read
 
+jobs:
+  publish:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
-          registry-url: https://registry.npmjs.org
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: "Installing dependencies"
-        run: cd bad-fockarch && npm install
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-node-
 
-      - name: "Building package"
-        run: cd bad-fockarch && npm run build
+      - run: npm i
+      - run: npm run build
 
-      - name: "Publishing"
-        run: cd bad-fockarch && npm publish --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Dry-run publish (optional)
+        run: npm publish --access public --dry-run
+
+      - name: Publish to npm
+        run: npm publish --access public
