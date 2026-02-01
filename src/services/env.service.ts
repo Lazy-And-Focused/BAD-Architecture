@@ -8,8 +8,8 @@ if (process.env.NODE_ENV !== "production") {
   config();
 }
 
-import type { AuthTypes } from "types";
-import { AUTH_TYPES } from "types";
+import type { AuthTypes } from "@1/types";
+import { AUTH_TYPES } from "@1/types";
 
 export const REQUIRED = [
   "CLIENT_URL",

@@ -5,9 +5,9 @@ import session from "express-session";
 
 export const ONE_WEEK = 60000 * 60 * 24 * 7;
 
-export class Session {
+export class Session<T extends INestApplication<unknown> | Express> {
   private readonly _secret: string;
-  private readonly _app: INestApplication<unknown> | Express;
+  private readonly _app: T;
 
   private readonly _resave: boolean = false;
   private readonly _save_uninitialized: boolean = false;
@@ -16,9 +16,9 @@ export class Session {
     maxAge: ONE_WEEK,
   };
 
-  constructor(
+  public constructor(
     secret: string,
-    app: INestApplication<unknown> | Express,
+    app: T,
     data?: {
       resave?: boolean;
       saveUninitialized?: boolean;
@@ -36,7 +36,7 @@ export class Session {
   }
 
   public create() {
-    this._app.use(
+    return this._app.use(
       session({
         secret: this._secret,
         resave: this._resave,

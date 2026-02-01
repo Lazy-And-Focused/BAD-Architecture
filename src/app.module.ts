@@ -8,7 +8,7 @@ type RegisterModule = {
   module: new () => NestModule;
   children: (new () => unknown)[];
   path: string;
-}
+};
 
 const modules: RegisterModule[] = [
   {

@@ -17,13 +17,17 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 
+import AuthStrategyRegister from "./strategies/strategy.register";
 import AuthModule from "./routes/auth/auth.module";
 import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
 
-import env from "@env";
+import env from "f@/env";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
+
+const authStrategyRegister = new AuthStrategyRegister();
+authStrategyRegister.execute();
 
 @Module({
   imports: [
