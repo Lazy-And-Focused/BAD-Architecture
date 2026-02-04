@@ -26,9 +26,6 @@ import env from "f@/env";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 
-const authStrategyRegister = new AuthStrategyRegister();
-authStrategyRegister.execute();
-
 @Module({
   imports: [
     ...v1Modules.flatMap((module) => [
@@ -48,6 +45,7 @@ authStrategyRegister.execute();
     Sentry.forRoot(),
   ],
   providers: [
+    AuthStrategyRegister,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,

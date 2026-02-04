@@ -6,6 +6,7 @@ import type OAuth2 from "passport-oauth2";
 import { PassportStrategy } from "@nestjs/passport";
 
 import { getPassportEnv } from "f@/env";
+import { Injectable } from "@nestjs/common";
 
 type Strategies = Map<AuthTypes, OAuth2Strategy>;
 type OAuth2ServiceProperties = {
@@ -26,6 +27,7 @@ const oauth2Services: Record<AuthTypes, OAuth2ServiceProperties> = {
   },
 };
 
+@Injectable()
 export class AuthStrategyRegister {
   public static readonly strategies: Strategies = new Map();
   public readonly strategies: Strategies = new Map();
@@ -33,6 +35,10 @@ export class AuthStrategyRegister {
   public static getStrategy(strategy: string): OAuth2Strategy | null {
     const output = this.strategies.get(strategy as AuthTypes);
     return output || null;
+  }
+
+  public constructor() {
+    this.execute();
   }
 
   public execute(): this {
@@ -65,6 +71,8 @@ export class AuthStrategyRegister {
           }
         },
       ) as OAuth2Strategy;
+
+      console.log(`[BAD] Загружен сервис авторизации ${service}`);
 
       this.strategies.set(service as AuthTypes, ServiceStrategy);
       AuthStrategyRegister.strategies.set(
