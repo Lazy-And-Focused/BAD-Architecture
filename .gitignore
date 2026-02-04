@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# logger
+loggers.json
+
 pnpm-lock.yaml
 tsconfig.build.tsbuildinfo
 

@@ -7,6 +7,7 @@ import { PassportStrategy } from "@nestjs/passport";
 
 import { getPassportEnv } from "f@/env";
 import { Injectable } from "@nestjs/common";
+import { LoggerService } from "@/services";
 
 type Strategies = Map<AuthTypes, OAuth2Strategy>;
 type OAuth2ServiceProperties = {
@@ -37,7 +38,7 @@ export class AuthStrategyRegister {
     return output || null;
   }
 
-  public constructor() {
+  public constructor(private readonly logger: LoggerService) {
     this.execute();
   }
 
@@ -72,7 +73,7 @@ export class AuthStrategyRegister {
         },
       ) as OAuth2Strategy;
 
-      console.log(`[BAD] Загружен сервис авторизации ${service}`);
+      this.logger.execute(`Загружен сервис авторизации ${service}`);
 
       this.strategies.set(service as AuthTypes, ServiceStrategy);
       AuthStrategyRegister.strategies.set(

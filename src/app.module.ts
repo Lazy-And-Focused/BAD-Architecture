@@ -3,6 +3,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { RouterModule } from "@nestjs/core";
 
 import v1Module, { v1Modules } from "./v1/v1.module";
+import { LoggerService } from "./services";
 
 type RegisterModule = {
   module: new () => NestModule;
@@ -31,6 +32,9 @@ const modules: RegisterModule[] = [
       ]),
     ]),
   ],
+  providers: [
+    LoggerService
+  ]
 })
 export default class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

@@ -1,3 +1,5 @@
+import { env } from "f@/env";
+
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { NestFactory } from "@nestjs/core";
 import { init as initSentry, consoleLoggingIntegration } from "@sentry/nestjs";
@@ -8,8 +10,6 @@ import cookieParser = require("cookie-parser");
 
 import Session from "./app/session.app";
 import AppModule from "./app.module";
-
-import { env } from "f@/env";
 
 initSentry({
   dsn: env.SENTRY_URL,

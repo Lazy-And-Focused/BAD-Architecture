@@ -23,6 +23,7 @@ import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
 
 import env from "f@/env";
+import { LoggerService } from "@/services";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 
@@ -46,6 +47,7 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
   ],
   providers: [
     AuthStrategyRegister,
+    LoggerService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,

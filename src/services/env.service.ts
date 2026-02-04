@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { } from "./logger.service";
 
 if (process.env.NODE_ENV !== "production") {
   config({
