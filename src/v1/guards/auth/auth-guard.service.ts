@@ -2,7 +2,7 @@ import type { Request } from "express";
 import type { Auth } from "@1/types";
 
 import Hash from "@1/services/hash.service";
-import authErrors from "@1/errors/guards/auth.errors";
+import AUTH from "@1/errors/guards/auth.errors";
 
 export class Service {
   public static async validateRequest(req: Request) {
@@ -10,29 +10,29 @@ export class Service {
     const { successed, id, token, profile_id } = Hash.parse(req);
 
     if (!successed) {
-      throw new Error(authErrors.hashParseError);
+      throw AUTH.HASH_PARSE.exeption;
     }
 
     const findedUser = {} as Auth;
     // const findedUser = await auth.findOne({ id: id });
 
     if (!findedUser) {
-      throw new Error(authErrors.userNotFound);
+      throw AUTH.USER_NOT_FOUND.exeption;
     }
 
     if (findedUser.profile_id !== profile_id) {
-      throw new Error(authErrors.profileIdError);
+      throw AUTH.PROFILE_ID.exeption;
     }
 
     if (token !== new Hash().execute(findedUser.access_token)) {
-      throw new Error(authErrors.tokenError);
+      throw AUTH.TOKEN_ERROR.exeption;
     }
 
     const profileUser = {};
     // const profileUser = await users.findOne({ id: findedUser.profile_id });
 
     if (!profileUser) {
-      throw new Error(authErrors.profileNotFound);
+      throw AUTH.PROFILE_NOT_FOUND.exeption;
     }
 
     console.log("User access granted");

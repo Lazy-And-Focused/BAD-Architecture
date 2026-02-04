@@ -47,7 +47,6 @@ export class Controller {
     summary: "Protected route",
   })
   @Get(ROUTES.GET)
-  @Public()
   public get() {
     return "Hi from guarded test";
   }
