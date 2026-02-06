@@ -7,7 +7,8 @@ import AUTH from "@1/errors/guards/auth.errors";
 export class Service {
   public static async validateRequest(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, token, profile_id } = HashService.resolveHeaderAuthorizationOrThrow(req);
+    const { id, token, profile_id } =
+      HashService.resolveHeaderAuthorizationOrThrow(req);
 
     const findedUser = {} as Auth;
     // const findedUser = await auth.findOne({ id: id });

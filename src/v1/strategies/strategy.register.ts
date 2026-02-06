@@ -61,7 +61,7 @@ export class AuthStrategyRegister {
     username,
     password,
     email,
-    nickname
+    nickname,
   }: {
     username: string;
     nickname?: string;
@@ -69,12 +69,12 @@ export class AuthStrategyRegister {
     email?: string;
   }) {
     const hash = this.hash.execute(password);
-    
+
     return this.singUp({
       username: username,
       nickname: nickname || username,
       email,
-      password: hash
+      password: hash,
     });
   }
 
@@ -82,12 +82,12 @@ export class AuthStrategyRegister {
     profile,
     accessToken,
     refreshToken,
-    name
+    name,
   }: {
-    profile: Profile,
-    accessToken: string,
+    profile: Profile;
+    accessToken: string;
     refreshToken?: string;
-    name: AuthTypes
+    name: AuthTypes;
   }) {
     const profileUsername = (
       profile.username || profile.displayName
@@ -107,9 +107,9 @@ export class AuthStrategyRegister {
         id: profile.id,
         name: name,
         accessToken,
-        refreshToken
-      }
-    })
+        refreshToken,
+      },
+    });
   }
 
   public async singInByPassword({
@@ -120,7 +120,7 @@ export class AuthStrategyRegister {
     username: string;
   }) {
     const user = await this.prisma.user.findUnique({
-      where: { username: UsernamePipe.validate(username.toLowerCase()) }
+      where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });
 
     if (!user) {
@@ -152,18 +152,18 @@ export class AuthStrategyRegister {
     profile,
     accessToken,
     refreshToken,
-    name
+    name,
   }: {
-    profile: Profile,
+    profile: Profile;
     accessToken: string;
     refreshToken?: string;
-    name: AuthTypes
+    name: AuthTypes;
   }) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
-        name
-      }
+        name,
+      },
     });
 
     if (!service) {
@@ -172,8 +172,8 @@ export class AuthStrategyRegister {
 
     const auth = await this.prisma.auth.findUnique({
       where: {
-        id: service.authId
-      }
+        id: service.authId,
+      },
     });
 
     if (!auth) {
@@ -182,28 +182,31 @@ export class AuthStrategyRegister {
 
     const user = await this.prisma.user.findUnique({
       where: {
-        id: auth.userId
-      }
+        id: auth.userId,
+      },
     });
 
     if (!user) {
-      throw new HttpException(`User with "${auth.userId}" not found`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `User with "${auth.userId}" not found`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const updatedAuth = await this.prisma.service.update({
       where: {
-        id: service.id
+        id: service.id,
       },
       data: {
         accessToken,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
 
     return {
       auth: updatedAuth,
-      user
-    }
+      user,
+    };
   }
 
   public execute(): this {
@@ -227,15 +230,15 @@ export class AuthStrategyRegister {
           accessToken: string,
           refreshToken: string,
           profile: Profile,
-          done: VerifyCallback
+          done: VerifyCallback,
         ) => {
           try {
             const parameters = {
               accessToken,
               refreshToken,
               profile,
-              name: service as AuthTypes
-            }
+              name: service as AuthTypes,
+            };
 
             const signInData = await this.singInByService(parameters);
             if (signInData) {
@@ -268,7 +271,7 @@ export class AuthStrategyRegister {
     email,
     nickname,
     password,
-    service
+    service,
   }: {
     username: string;
     nickname: string;
@@ -299,14 +302,17 @@ export class AuthStrategyRegister {
     const authData = {
       id,
       userId,
-    }
+    };
 
     const passwordData = password
       ? {
-        password: password,
-      } : {};
+          password: password,
+        }
+      : {};
 
-    const token = sign(authData, env.HASH_KEY, { expiresIn: env.TOKEN_EXPIRATION });
+    const token = sign(authData, env.HASH_KEY, {
+      expiresIn: env.TOKEN_EXPIRATION,
+    });
     const auth = await this.prisma.auth.create({
       data: {
         ...authData,
@@ -314,7 +320,7 @@ export class AuthStrategyRegister {
         token,
         email,
         services: { create: service },
-      }
+      },
     });
 
     const user = await this.prisma.user.create({
@@ -322,14 +328,14 @@ export class AuthStrategyRegister {
         id: userId,
         nickname: nickname,
         username: UsernamePipe.validate(username.toLowerCase()),
-      }
+      },
     });
 
     return {
       auth,
       user,
-      token
-    }
+      token,
+    };
   }
 }
 

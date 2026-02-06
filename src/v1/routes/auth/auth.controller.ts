@@ -76,10 +76,7 @@ export class Controller {
           return;
         }
 
-        res.cookie(
-          "id-token",
-          auth.token
-        );
+        res.cookie("id-token", auth.token);
 
         res.redirect(env.CLIENT_URL);
       },

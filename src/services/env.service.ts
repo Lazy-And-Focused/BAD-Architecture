@@ -10,7 +10,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 import { AuthTypes } from "@1/types";
-import { StringValue, validateString as validateExpirationString } from "./unit-time.service";
+import {
+  StringValue,
+  validateString as validateExpirationString,
+} from "./unit-time.service";
 
 export const REQUIRED = [
   "CLIENT_URL",
@@ -21,13 +24,11 @@ export const REQUIRED = [
   "SENTRY_URL",
 ] as const;
 
-export const UNIQUE = [
-  "TOKEN_EXPIRATION"
-] as const;
+export const UNIQUE = ["TOKEN_EXPIRATION"] as const;
 
 export type UniqueProperties = {
   TOKEN_EXPIRATION: StringValue;
-}
+};
 
 export const ALL = [
   ...REQUIRED,
@@ -59,7 +60,7 @@ const DEFAULT: Record<Partial, string> = {
   THROLLER_TIME_TO_LIVE_IN_MILLISECONDS: "20000",
   THROLLER_LIMIT: "20",
   AVAILABLE_USERNAME_SYMBOLS: "abcdefghijklmnopqrstuvwxyz",
-  TOKEN_EXPIRATION: "28d"
+  TOKEN_EXPIRATION: "28d",
 };
 
 type Validators = {
@@ -67,14 +68,14 @@ type Validators = {
 };
 
 const VALIDATORS: Validators = {
-  TOKEN_EXPIRATION: validateExpirationString
+  TOKEN_EXPIRATION: validateExpirationString,
 };
 
 export const env: Env = ((): Env => {
   let errorAppeared: boolean = false;
 
-  const arrayAuthData = AUTH_DATA.flatMap(data => {
-    return Object.keys(AuthTypes).map(type => {
+  const arrayAuthData = AUTH_DATA.flatMap((data) => {
+    return Object.keys(AuthTypes).map((type) => {
       const key = `${type.toUpperCase()}_${data}`;
       const value = process.env[key];
       if (value) {
@@ -82,36 +83,45 @@ export const env: Env = ((): Env => {
       }
 
       errorAppeared = true;
-      const error = logger.error(new Error(`Auth data ${data} for type ${type} is not defined in env`)).base.join("\n");
+      const error = logger
+        .error(
+          new Error(`Auth data ${data} for type ${type} is not defined in env`),
+        )
+        .base.join("\n");
       return [key, error] as [string, string];
     });
   });
 
-  const arrayRequired = REQUIRED.map(key => {
+  const arrayRequired = REQUIRED.map((key) => {
     const value = process.env[key];
     if (value) {
       return [key, value] as [typeof key, string];
     }
 
     errorAppeared = true;
-    const error = logger.error(new Error(`Key ${key} is not defined in env`)).base.join("\n");
+    const error = logger
+      .error(new Error(`Key ${key} is not defined in env`))
+      .base.join("\n");
     return [key, error] as [typeof key, string];
   });
 
-  const arrayUnique = UNIQUE.map(key => {
+  const arrayUnique = UNIQUE.map((key) => {
     const value = process.env[key];
     try {
       return [key, VALIDATORS[key](value)] as const;
     } catch (err) {
       errorAppeared = true;
       const error = logger.error(err).base.join("\n");
-      return [key, error as unknown as ReturnType<(typeof VALIDATORS)[typeof key]>] as const;
+      return [
+        key,
+        error as unknown as ReturnType<(typeof VALIDATORS)[typeof key]>,
+      ] as const;
     }
-  })
-  
+  });
+
   const objectRequired = {
     ...Object.fromEntries(arrayAuthData),
-    ...Object.fromEntries(arrayRequired)
+    ...Object.fromEntries(arrayRequired),
   } as Record<Required, string>;
 
   const objectUnique = Object.fromEntries(arrayUnique) as UniqueProperties;
@@ -124,8 +134,8 @@ export const env: Env = ((): Env => {
     ...DEFAULT,
     ...process.env,
     ...objectRequired,
-    ...objectUnique
-  }
+    ...objectUnique,
+  };
 })();
 
 export const getPassportEnv = (type: Uppercase<AuthTypes>) => {

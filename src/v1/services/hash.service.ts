@@ -16,8 +16,8 @@ type ParsedToken = {
   id: string;
   profile_id: string;
   token: string;
-  successed: true
-}
+  successed: true;
+};
 
 type ParseReturn = ParsedToken | typeof PARSE_ERROR;
 
@@ -37,12 +37,14 @@ export class HashService {
     return { id, profile_id, token: access_token, successed: true };
   }
 
-  public static resolveHeaderAuthorizationOrThrow(request: Request): ParsedToken {
+  public static resolveHeaderAuthorizationOrThrow(
+    request: Request,
+  ): ParsedToken {
     const authorization = request.headers.authorization;
     if (!authorization) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
-    
+
     try {
       const [method, ...tokenData] = authorization.split(" ");
       const token = tokenData.join(" ");
@@ -57,7 +59,11 @@ export class HashService {
         throw error;
       }
 
-      throw new HttpException("Server error", HttpStatus.INTERNAL_SERVER_ERROR, { cause: error });
+      throw new HttpException(
+        "Server error",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      );
     }
   }
 
@@ -78,12 +84,9 @@ export class HashService {
   }
 
   public constructor() {}
-  
+
   public execute(data: string) {
-    return crypto
-      .createHmac("sha512", env.HASH_KEY)
-      .update(data)
-      .digest("hex");
+    return crypto.createHmac("sha512", env.HASH_KEY).update(data).digest("hex");
   }
 
   public generateCode(data: string = (Math.random() * 1000).toString()) {
@@ -104,7 +107,7 @@ export class HashService {
   public resolveToken(token: string): ParseReturn {
     return HashService.resolveToken(token);
   }
-  
+
   public resolveHeaderAuthorization(request: Request) {
     return HashService.resolveHeaderAuthorization(request);
   }

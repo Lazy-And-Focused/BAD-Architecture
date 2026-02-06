@@ -35,11 +35,7 @@ const modules: RegisterModule[] = [
       ]),
     ]),
   ],
-  providers: [
-    PrismaService,
-    LoggerService,
-    HashService,
-  ]
+  providers: [PrismaService, LoggerService, HashService],
 })
 export default class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

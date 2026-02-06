@@ -8,7 +8,7 @@ new Configurator({
   logging: false,
   date: true,
   dir: "./",
-  colors: [Colors.green, Colors.green]
+  colors: [Colors.green, Colors.green],
 });
 
 export const logger = new FockLogger("[BAD]", {
@@ -17,7 +17,8 @@ export const logger = new FockLogger("[BAD]", {
 });
 
 type LoggerType = typeof logger;
-type LoggerParameters<Key extends keyof Pick<LoggerType, "execute"|"error">> = Parameters<LoggerType[Key]>;
+type LoggerParameters<Key extends keyof Pick<LoggerType, "execute" | "error">> =
+  Parameters<LoggerType[Key]>;
 
 @Injectable()
 export class LoggerService {

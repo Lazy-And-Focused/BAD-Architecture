@@ -2,7 +2,12 @@ import type { Request } from "express";
 import type { Observable } from "rxjs";
 
 import { Reflector } from "@nestjs/core";
-import { Injectable, CanActivate, ExecutionContext, HttpException } from "@nestjs/common";
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+} from "@nestjs/common";
 
 import { logger } from "@sentry/nestjs";
 
@@ -31,12 +36,12 @@ export class AuthGuard implements CanActivate {
       if (error instanceof HttpException) {
         throw error;
       }
-      
+
       logger.error(error, {
         hostname: request.hostname,
         body: request.body,
       });
-      
+
       return false;
     }
   }
