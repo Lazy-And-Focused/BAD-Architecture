@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import {
-  Controller,
+  Controller as NestController,
   Get,
   HttpStatus,
   Injectable,
@@ -13,14 +13,12 @@ import {
 import { ROUTE, ROUTES } from "./auth.routes";
 
 import env from "f@/env";
-
-import HashService from "@1/services/hash.service";
 import AuthService from "@1/services/auth.service";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @Injectable()
-@Controller(ROUTE)
+@NestController(ROUTE)
 @ApiResponse({
   status: HttpStatus.OK,
   description: "Ok",
@@ -33,7 +31,7 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
   status: HttpStatus.BAD_REQUEST,
   description: "Redirecting",
 })
-export class AuthController {
+export class Controller {
   @Get()
   @ApiOperation({ summary: "getting all authentication methods" })
   public printMethods() {
@@ -69,13 +67,18 @@ export class AuthController {
       res,
       next,
       (...args) => {
-        const user = args[0];
+        if (args[0]) {
+          return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        if (!user) return;
+        const auth = args[1];
+        if (!auth) {
+          return;
+        }
 
         res.cookie(
           "id-token",
-          `${user.id}-${user.profile_id}-${new HashService().execute(user.access_token)}`,
+          auth.token
         );
 
         res.redirect(env.CLIENT_URL);
@@ -84,4 +87,4 @@ export class AuthController {
   }
 }
 
-export default AuthController;
+export default Controller;

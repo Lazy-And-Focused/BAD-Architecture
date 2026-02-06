@@ -4,6 +4,7 @@ import { RouterModule } from "@nestjs/core";
 
 import v1Module, { v1Modules } from "./v1/v1.module";
 
+import { PrismaService } from "./database/prisma.service";
 import { LoggerService } from "./services";
 import { HashService } from "./v1/services";
 
@@ -35,8 +36,9 @@ const modules: RegisterModule[] = [
     ]),
   ],
   providers: [
+    PrismaService,
     LoggerService,
-    HashService
+    HashService,
   ]
 })
 export default class AppModule implements NestModule {

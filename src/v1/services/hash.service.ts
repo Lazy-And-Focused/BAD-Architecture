@@ -1,9 +1,9 @@
 import type { Request } from "express";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import crypto from "crypto";
 
 import { env } from "f@/env";
-import { HttpException, HttpStatus } from "@nestjs/common";
 
 const PARSE_ERROR = {
   id: false,
@@ -21,6 +21,7 @@ type ParsedToken = {
 
 type ParseReturn = ParsedToken | typeof PARSE_ERROR;
 
+@Injectable()
 export class HashService {
   public static execute(data: string) {
     return new HashService().execute(data);
@@ -43,8 +44,9 @@ export class HashService {
     }
     
     try {
-      const [method, token] = authorization.split(" ");
-    
+      const [method, ...tokenData] = authorization.split(" ");
+      const token = tokenData.join(" ");
+
       if (method === "Bearer") {
         return this.resolveTokenOrThrow(token);
       }

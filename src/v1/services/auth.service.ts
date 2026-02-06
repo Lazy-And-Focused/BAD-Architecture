@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
-import type { Auth, AuthTypes } from "@1/types";
-import { AUTH_TYPES } from "@1/types";
+import type { Auth } from "@1/types";
+import { AuthTypes } from "@1/types";
 
 import { Next, Req, Res } from "@nestjs/common";
 
@@ -28,7 +28,7 @@ export class AuthApi {
   static get methods(): Record<"abbreviations" | "methods", readonly string[]> {
     return {
       abbreviations: Array.from(abbreviations.keys()),
-      methods: AUTH_TYPES,
+      methods: Object.keys(AuthTypes),
     };
   }
 
@@ -44,14 +44,16 @@ export class AuthApi {
       return res.send(body);
     }
 
-    return passport.authenticate(method)(req, res, next);
+    return passport.authenticate(method, {
+      prompt: "consent",
+    })(req, res, next);
   }
 
   public callback(
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    callback: (...args: [Auth | null]) => unknown,
+    callback: (...args: [undefined, Auth | null]) => unknown,
   ): unknown {
     const { successed, method, body } = this.getMethod();
     if (!successed) {
@@ -62,7 +64,7 @@ export class AuthApi {
   }
 
   private getMethod(): { successed: boolean; method: string; body: unknown } {
-    const exists = (<readonly string[]>AUTH_TYPES).includes(this._method);
+    const exists = this._method in AuthTypes;
     if (exists) {
       return this.generateReturn(true);
     }
@@ -76,7 +78,7 @@ export class AuthApi {
       successed: false,
       body: {
         message: "Sorry, but method " + this._method + " not found. Try next:",
-        methods: AUTH_TYPES,
+        methods: Object.keys(AuthTypes),
       },
     });
   }

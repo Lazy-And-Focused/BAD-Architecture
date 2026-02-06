@@ -6,6 +6,9 @@
 # logger
 loggers.json
 
+# prisma
+src/database/generated/
+
 pnpm-lock.yaml
 tsconfig.build.tsbuildinfo
 

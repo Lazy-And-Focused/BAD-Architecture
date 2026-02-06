@@ -19,6 +19,7 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
 
 import { HashService } from "./services";
 import { LoggerService } from "@/services";
+import { PrismaService } from "@/database/prisma.service";
 
 import AuthStrategyRegister from "./strategies/strategy.register";
 import AuthModule from "./routes/auth/auth.module";
@@ -49,6 +50,7 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
   ],
   providers: [
     AuthStrategyRegister,
+    PrismaService,
     LoggerService,
     HashService,
     {

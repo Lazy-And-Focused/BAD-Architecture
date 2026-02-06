@@ -16,11 +16,11 @@ export class Service {
       throw AUTH.USER_NOT_FOUND.exeption;
     }
 
-    if (findedUser.profile_id !== profile_id) {
+    if (findedUser.userId !== profile_id) {
       throw AUTH.PROFILE_ID.exeption;
     }
 
-    if (token !== HashService.execute(findedUser.access_token)) {
+    if (token !== HashService.execute(findedUser.token)) {
       throw AUTH.TOKEN_ERROR.exeption;
     }
 
