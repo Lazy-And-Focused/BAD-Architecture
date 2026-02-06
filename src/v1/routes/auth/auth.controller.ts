@@ -14,7 +14,7 @@ import { ROUTE, ROUTES } from "./auth.routes";
 
 import env from "f@/env";
 
-import Hash from "@1/services/hash.service";
+import HashService from "@1/services/hash.service";
 import AuthService from "@1/services/auth.service";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
@@ -75,7 +75,7 @@ export class AuthController {
 
         res.cookie(
           "id-token",
-          `${user.id}-${user.profile_id}-${new Hash().execute(user.access_token)}`,
+          `${user.id}-${user.profile_id}-${new HashService().execute(user.access_token)}`,
         );
 
         res.redirect(env.CLIENT_URL);

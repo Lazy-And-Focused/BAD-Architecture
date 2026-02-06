@@ -17,13 +17,15 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 
+import { HashService } from "./services";
+import { LoggerService } from "@/services";
+
 import AuthStrategyRegister from "./strategies/strategy.register";
 import AuthModule from "./routes/auth/auth.module";
 import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
 
 import env from "f@/env";
-import { LoggerService } from "@/services";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 
@@ -48,6 +50,7 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
   providers: [
     AuthStrategyRegister,
     LoggerService,
+    HashService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,

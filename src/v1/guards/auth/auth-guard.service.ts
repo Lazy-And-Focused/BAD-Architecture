@@ -1,17 +1,13 @@
 import type { Request } from "express";
 import type { Auth } from "@1/types";
 
-import Hash from "@1/services/hash.service";
+import HashService from "@1/services/hash.service";
 import AUTH from "@1/errors/guards/auth.errors";
 
 export class Service {
   public static async validateRequest(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { successed, id, token, profile_id } = Hash.parse(req);
-
-    if (!successed) {
-      throw AUTH.HASH_PARSE.exeption;
-    }
+    const { id, token, profile_id } = HashService.resolveHeaderAuthorizationOrThrow(req);
 
     const findedUser = {} as Auth;
     // const findedUser = await auth.findOne({ id: id });
@@ -24,7 +20,7 @@ export class Service {
       throw AUTH.PROFILE_ID.exeption;
     }
 
-    if (token !== new Hash().execute(findedUser.access_token)) {
+    if (token !== HashService.execute(findedUser.access_token)) {
       throw AUTH.TOKEN_ERROR.exeption;
     }
 
