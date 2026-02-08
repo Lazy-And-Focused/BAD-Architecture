@@ -1,4 +1,6 @@
-import { AuthTypes } from "@1/types";
+import type { AuthTypes } from "@1/types";
+import type { CreateUserByPasswordEntity, SignInByPasswordUserEntity } from "@1/entities";
+
 import type { Profile } from "passport";
 import type { VerifyCallback } from "passport-oauth2";
 import type OAuth2 from "passport-oauth2";
@@ -13,9 +15,9 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { UsernamePipe } from "@1/pipes";
 
+import { HashService } from "@1/services";
 import { LoggerService } from "@/services";
 import { PrismaService } from "@/database/prisma.service";
-import { HashService } from "../services";
 
 import { v4 as uuid } from "uuid";
 
@@ -62,12 +64,7 @@ export class AuthStrategyRegister {
     password,
     email,
     nickname,
-  }: {
-    username: string;
-    nickname?: string;
-    password: string;
-    email?: string;
-  }) {
+  }: CreateUserByPasswordEntity) {
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -115,10 +112,7 @@ export class AuthStrategyRegister {
   public async singInByPassword({
     password,
     username,
-  }: {
-    password: string;
-    username: string;
-  }) {
+  }: SignInByPasswordUserEntity) {
     const user = await this.prisma.user.findUnique({
       where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });

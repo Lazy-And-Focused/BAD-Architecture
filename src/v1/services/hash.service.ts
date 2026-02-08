@@ -1,4 +1,3 @@
-import type { Request } from "express";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import crypto from "crypto";
@@ -13,8 +12,8 @@ const PARSE_ERROR = {
 } as const;
 
 type ParsedToken = {
-  id: string;
-  profile_id: string;
+  authId: string;
+  userId: string;
   token: string;
   successed: true;
 };
@@ -28,19 +27,18 @@ export class HashService {
   }
 
   public static resolveTokenOrThrow(token: string): ParsedToken {
-    const [id, profile_id, access_token] = token.split("-");
-    const valided = id && profile_id && access_token;
+    const [authId, userId, access_token] = token.split("-");
+    const valided = authId && userId && access_token;
     if (!valided) {
       throw new HttpException("Bad token", HttpStatus.UNAUTHORIZED);
     }
 
-    return { id, profile_id, token: access_token, successed: true };
+    return { authId, userId, token: access_token, successed: true };
   }
 
   public static resolveHeaderAuthorizationOrThrow(
-    request: Request,
+    authorization?: string,
   ): ParsedToken {
-    const authorization = request.headers.authorization;
     if (!authorization) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
@@ -75,9 +73,9 @@ export class HashService {
     }
   }
 
-  public static resolveHeaderAuthorization(request: Request): ParseReturn {
+  public static resolveHeaderAuthorization(authorization?: string): ParseReturn {
     try {
-      return this.resolveHeaderAuthorizationOrThrow(request);
+      return this.resolveHeaderAuthorizationOrThrow(authorization);
     } catch {
       return PARSE_ERROR;
     }
@@ -100,16 +98,16 @@ export class HashService {
     return HashService.resolveTokenOrThrow(token);
   }
 
-  public resolveHeaderAuthorizationOrThrow(request: Request): ParsedToken {
-    return HashService.resolveHeaderAuthorizationOrThrow(request);
+  public resolveHeaderAuthorizationOrThrow(authorization?: string): ParsedToken {
+    return HashService.resolveHeaderAuthorizationOrThrow(authorization);
   }
 
   public resolveToken(token: string): ParseReturn {
     return HashService.resolveToken(token);
   }
 
-  public resolveHeaderAuthorization(request: Request) {
-    return HashService.resolveHeaderAuthorization(request);
+  public resolveHeaderAuthorization(authorization?: string) {
+    return HashService.resolveHeaderAuthorization(authorization);
   }
 }
 
