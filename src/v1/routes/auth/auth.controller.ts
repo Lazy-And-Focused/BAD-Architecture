@@ -11,6 +11,7 @@ import {
   Post,
   Body,
   Headers,
+  Param,
 } from "@nestjs/common";
 
 import { ROUTE, ROUTES } from "./auth.routes";
@@ -20,7 +21,7 @@ import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
 
 import { HashService } from "@/v1/services";
 import { HeadersEnum } from "@/v1/enums/headers.enum";
-import AuthService from "@1/services/auth.service";
+import { PassportStrategy } from "@1/strategies";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
@@ -41,7 +42,8 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 export class Controller {
   public constructor(
     private readonly service: Service,
-    private readonly hash: HashService
+    private readonly hash: HashService,
+    private readonly passport: PassportStrategy
   ) {}
 
   @Get([ROUTES.GET, ROUTES.GET_OAUTH2])
@@ -83,8 +85,9 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
+    @Param("method") method: string
   ) {
-    return new AuthService(req.params.method).auth(req, res, next);
+    return this.passport.auth(method, req, res, next);
   }
 
   @Get(ROUTES.OAUTH2_GET_CALLBACK)
@@ -93,8 +96,10 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
+    @Param("method") method: string
   ) {
-    return new AuthService(req.params.method).callback(
+    return this.passport.callback(
+      method,
       req,
       res,
       next,

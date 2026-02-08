@@ -3,9 +3,9 @@ import type { Auth } from "@/v1/types";
 
 import { Injectable } from "@nestjs/common";
 
-import { AuthStrategyRegister } from "@/v1/strategies";
+import { AuthStrategy } from "@/v1/strategies";
+import { PassportStrategy } from "@1/strategies";
 import PrismaService from "@/database/prisma.service";
-import AuthService from "@1/services/auth.service";
 
 import { env } from "@/services";
 
@@ -15,11 +15,11 @@ const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 export class Service {
   public constructor(
     private readonly prisma: PrismaService,
-    private readonly strategy: AuthStrategyRegister
+    private readonly strategy: AuthStrategy
   ) {}
 
   public getAllMethods() {
-    const { abbreviations, methods } = AuthService.methods;
+    const { abbreviations, methods } = PassportStrategy.methods;
 
     return {
       stringMethods: toStr(methods),
