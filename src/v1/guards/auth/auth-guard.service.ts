@@ -7,8 +7,8 @@ import AUTH from "@1/errors/guards/auth.errors";
 export class Service {
   public static async validateRequest(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, token, profile_id } =
-      HashService.resolveHeaderAuthorizationOrThrow(req);
+    const { authId, token, userId } =
+      HashService.resolveHeaderAuthorizationOrThrow(req.headers.authorization);
 
     const findedUser = {} as Auth;
     // const findedUser = await auth.findOne({ id: id });
@@ -17,7 +17,7 @@ export class Service {
       throw AUTH.USER_NOT_FOUND.exeption;
     }
 
-    if (findedUser.userId !== profile_id) {
+    if (findedUser.userId !== userId) {
       throw AUTH.PROFILE_ID.exeption;
     }
 
@@ -32,7 +32,6 @@ export class Service {
       throw AUTH.PROFILE_NOT_FOUND.exeption;
     }
 
-    console.log("User access granted");
     return true;
   }
 }
