@@ -103,12 +103,12 @@ export class Controller {
       req,
       res,
       next,
-      (error, auth) => {
-        if (error || !auth) {
+      (error, data) => {
+        if (error || !data) {
           return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        const redirectUrl = this.service.getRedirectUrl(auth);
+        const redirectUrl = this.service.getRedirectUrl(data.auth);
         res.redirect(redirectUrl);
       },
     );

@@ -150,13 +150,22 @@ export class AuthStrategy {
       );
     }
 
-    const updatedAuth = await this.prisma.service.update({
+    const update = {
       where: {
-        id: service.id,
+        id: service.id
       },
       data: {
         accessToken,
-        refreshToken,
+        refreshToken
+      }
+    };
+
+    const updatedAuth = await this.prisma.auth.update({
+      where: {
+        id: auth.id,
+      },
+      data: {
+        services: { update }
       },
     });
 
