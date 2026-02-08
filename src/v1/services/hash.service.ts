@@ -1,5 +1,6 @@
 import type { Request } from "express";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { trycatchThrow, trycatch } from "@/utils/trycatch.utils";
 
 import crypto from "crypto";
 
@@ -45,26 +46,26 @@ export class HashService {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
 
-    try {
-      const [method, ...tokenData] = authorization.split(" ");
-      const token = tokenData.join(" ");
+    return trycatch(
+      () => {
+        const [method, ...tokenData] = authorization.split(" ");
+        const token = tokenData.join(" ");
 
-      if (method === "Bearer") {
-        return this.resolveTokenOrThrow(token);
-      }
+        if (method === "Bearer") {
+          return this.resolveTokenOrThrow(token);
+        }
 
-      throw new HttpException("Not acceptable", HttpStatus.NOT_ACCEPTABLE);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
+        throw new HttpException("Not acceptable", HttpStatus.NOT_ACCEPTABLE);
+      },
 
-      throw new HttpException(
-        "Server error",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
-    }
+      () => {
+        throw new HttpException(
+          "Server error",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          { cause: "error" },
+        );
+      },
+    );
   }
 
   public static resolveToken(token: string): ParseReturn {
