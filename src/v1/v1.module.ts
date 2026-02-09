@@ -17,11 +17,11 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 
-import { HashService } from "./services";
+import { HashService, StrategiesService } from "./services";
 import { LoggerService } from "@/services";
 import { PrismaService } from "@/database/prisma.service";
 
-import AuthStrategyRegister from "./strategies/strategy.register";
+import AuthStrategy from "./strategies/auth.strategy";
 import AuthModule from "./routes/auth/auth.module";
 import SentryModule from "./routes/sentry/sentry.module";
 import TestModule from "./routes/test/test.module";
@@ -49,7 +49,8 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
     Sentry.forRoot(),
   ],
   providers: [
-    AuthStrategyRegister,
+    StrategiesService,
+    AuthStrategy,
     PrismaService,
     LoggerService,
     HashService,
