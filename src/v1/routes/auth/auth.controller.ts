@@ -43,7 +43,7 @@ export class Controller {
   public constructor(
     private readonly service: Service,
     private readonly hash: HashService,
-    private readonly passport: PassportStrategy
+    private readonly passport: PassportStrategy,
   ) {}
 
   @Get([ROUTES.GET, ROUTES.GET_OAUTH2])
@@ -62,7 +62,7 @@ export class Controller {
   @ApiOperation({ summary: "creating a user by password" })
   public post(
     @Body() body: CreateUserBodyDto,
-    @Headers() headers: CreateUserHeadersDto
+    @Headers() headers: CreateUserHeadersDto,
   ) {
     return this.service.createUser({
       ...headers,
@@ -72,10 +72,9 @@ export class Controller {
 
   @Get(ROUTES.GET_ME)
   @ApiOperation({ summary: "getting a self user" })
-  public getMe(
-    @Headers(HeadersEnum.authorization) authorization?: string
-  ) {
-    const { authId, userId } = this.hash.resolveHeaderAuthorizationOrThrow(authorization);
+  public getMe(@Headers(HeadersEnum.authorization) authorization?: string) {
+    const { authId, userId } =
+      this.hash.resolveHeaderAuthorizationOrThrow(authorization);
     return this.service.getMe(authId, userId);
   }
 
@@ -85,7 +84,7 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string
+    @Param("method") method: string,
   ) {
     return this.passport.auth(method, req, res, next);
   }
@@ -96,22 +95,16 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string
+    @Param("method") method: string,
   ) {
-    return this.passport.callback(
-      method,
-      req,
-      res,
-      next,
-      (error, data) => {
-        if (error || !data) {
-          return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    return this.passport.callback(method, req, res, next, (error, data) => {
+      if (error || !data) {
+        return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-        const redirectUrl = this.service.getRedirectUrl(data.auth);
-        res.redirect(redirectUrl);
-      },
-    );
+      const redirectUrl = this.service.getRedirectUrl(data.auth);
+      res.redirect(redirectUrl);
+    });
   }
 }
 

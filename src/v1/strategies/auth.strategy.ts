@@ -1,7 +1,7 @@
-import type { AuthTypes } from "@1/types";
-import type { CreateUserByPasswordEntity, SignInByPasswordUserEntity } from "@1/entities";
-
-import type { Profile } from "passport";
+import type {
+  CreateUserByPasswordEntity,
+  SignInByPasswordUserEntity,
+} from "@1/entities";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
@@ -14,48 +14,20 @@ import { PrismaService } from "@/database/prisma.service";
 
 import { v4 as uuid } from "uuid";
 
-<<<<<<< HEAD:src/v1/strategies/strategy.register.ts
-import { PasswordSingUp, singUp, ServiseSingUP } from "./strategies.dto";
+import { singUp, ServiseSingUP } from "./strategies.dto";
 
-type Strategies = Map<AuthTypes, OAuth2Strategy>;
-type OAuth2ServiceProperties = {
-  path: string;
-  scope: string[];
-};
-
-interface PassportStrategyMixin<TValidationResult = unknown> {
-  validate(...args: unknown[]): TValidationResult | Promise<TValidationResult>;
-}
-
-export type OAuth2Strategy = OAuth2 & PassportStrategyMixin;
-
-const oauth2Services: Record<AuthTypes, OAuth2ServiceProperties> = {
-  google: {
-    path: "passport-google-oauth20",
-    scope: ["openid", "profile", "email"],
-  },
-};
-
-=======
->>>>>>> 7f0f88598d9e0b318a5778185c52dd030d791449:src/v1/strategies/auth.strategy.ts
 @Injectable()
 export class AuthStrategy {
   private readonly hash = new HashService();
 
-  public constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  public constructor(private readonly prisma: PrismaService) {}
 
   public singUpByPassword({
     username,
     password,
     email,
     nickname,
-<<<<<<< HEAD:src/v1/strategies/strategy.register.ts
-  }: PasswordSingUp) {
-=======
   }: CreateUserByPasswordEntity) {
->>>>>>> 7f0f88598d9e0b318a5778185c52dd030d791449:src/v1/strategies/auth.strategy.ts
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -170,12 +142,12 @@ export class AuthStrategy {
 
     const update = {
       where: {
-        id: service.id
+        id: service.id,
       },
       data: {
         accessToken,
-        refreshToken
-      }
+        refreshToken,
+      },
     };
 
     const updatedAuth = await this.prisma.auth.update({
@@ -183,7 +155,7 @@ export class AuthStrategy {
         id: auth.id,
       },
       data: {
-        services: { update }
+        services: { update },
       },
     });
 

@@ -10,6 +10,13 @@ import { LoggerService } from "@/services";
 
 @Module({
   controllers: [Controller],
-  providers: [PassportStrategy, HashService, LoggerService, AuthStrategy, PrismaService, Service],
+  providers: [
+    PassportStrategy,
+    HashService,
+    LoggerService,
+    AuthStrategy,
+    PrismaService,
+    Service,
+  ],
 })
 export default class AuthModule {}

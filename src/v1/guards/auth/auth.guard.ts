@@ -7,7 +7,7 @@ import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { logger } from "@sentry/nestjs";
 
 import Service from "./auth-guard.service";
-import { trycatch, trycatchThrow } from "@/utils/trycatch.utils";
+import { trycatch } from "@/utils/trycatch.utils";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { trycatchThrow, trycatch } from "@/utils/trycatch.utils";
+import { trycatch } from "@/utils/trycatch.utils";
 
 import crypto from "crypto";
 
@@ -74,7 +74,9 @@ export class HashService {
     }
   }
 
-  public static resolveHeaderAuthorization(authorization?: string): ParseReturn {
+  public static resolveHeaderAuthorization(
+    authorization?: string,
+  ): ParseReturn {
     try {
       return this.resolveHeaderAuthorizationOrThrow(authorization);
     } catch {
@@ -99,7 +101,9 @@ export class HashService {
     return HashService.resolveTokenOrThrow(token);
   }
 
-  public resolveHeaderAuthorizationOrThrow(authorization?: string): ParsedToken {
+  public resolveHeaderAuthorizationOrThrow(
+    authorization?: string,
+  ): ParsedToken {
     return HashService.resolveHeaderAuthorizationOrThrow(authorization);
   }
 

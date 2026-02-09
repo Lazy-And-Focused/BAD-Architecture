@@ -3,7 +3,14 @@ import type { NextFunction, Request, Response } from "express";
 import type { Auth, User } from "@1/types";
 import { AuthTypes } from "@1/types";
 
-import { HttpException, HttpStatus, Injectable, Next, Req, Res } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Next,
+  Req,
+  Res,
+} from "@nestjs/common";
 import { StrategiesService } from "../services";
 
 import passport = require("passport");
@@ -14,7 +21,10 @@ const abbreviations: Map<string, AuthTypes> = new Map([]);
 export class PassportStrategy {
   public constructor() {}
 
-  public static get methods(): Record<"abbreviations" | "methods", readonly string[]> {
+  public static get methods(): Record<
+    "abbreviations" | "methods",
+    readonly string[]
+  > {
     return {
       abbreviations: Array.from(abbreviations.keys()),
       methods: Object.keys(AuthTypes),
@@ -37,7 +47,9 @@ export class PassportStrategy {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    callback: (...args: [undefined, { auth: Auth, user: User } | null]) => unknown,
+    callback: (
+      ...args: [undefined, { auth: Auth; user: User } | null]
+    ) => unknown,
   ): unknown {
     this.validateMethod(method);
     return passport.authenticate(method, callback)(req, res, next);
@@ -54,7 +66,10 @@ export class PassportStrategy {
       return true;
     }
 
-    throw new HttpException(`Method ${method} not found. Try next: ${Object.keys(AuthTypes)}`, HttpStatus.BAD_REQUEST);
+    throw new HttpException(
+      `Method ${method} not found. Try next: ${Object.keys(AuthTypes)}`,
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   private validateStrategyByMethod(method: string) {

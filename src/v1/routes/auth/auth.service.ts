@@ -15,7 +15,7 @@ const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 export class Service {
   public constructor(
     private readonly prisma: PrismaService,
-    private readonly strategy: AuthStrategy
+    private readonly strategy: AuthStrategy,
   ) {}
 
   public getAllMethods() {
