@@ -19,6 +19,8 @@ import { HashService } from "../services";
 
 import { v4 as uuid } from "uuid";
 
+import { PasswordSingUp, singUp, ServiseSingUP } from "./strategies.dto";
+
 type Strategies = Map<AuthTypes, OAuth2Strategy>;
 type OAuth2ServiceProperties = {
   path: string;
@@ -62,12 +64,7 @@ export class AuthStrategyRegister {
     password,
     email,
     nickname,
-  }: {
-    username: string;
-    nickname?: string;
-    password: string;
-    email?: string;
-  }) {
+  }: PasswordSingUp) {
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -83,12 +80,7 @@ export class AuthStrategyRegister {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: ServiseSingUP) {
     const profileUsername = (
       profile.username || profile.displayName
     ).toLowerCase();
@@ -153,12 +145,7 @@ export class AuthStrategyRegister {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: ServiseSingUP) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
@@ -272,18 +259,7 @@ export class AuthStrategyRegister {
     nickname,
     password,
     service,
-  }: {
-    username: string;
-    nickname: string;
-    email?: string;
-    service?: {
-      id: string;
-      name: AuthTypes;
-      accessToken: string;
-      refreshToken?: string;
-    };
-    password?: string;
-  }) {
+  }: singUp) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         username: UsernamePipe.validate(username),
