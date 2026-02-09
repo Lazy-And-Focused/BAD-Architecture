@@ -14,6 +14,30 @@ import { PrismaService } from "@/database/prisma.service";
 
 import { v4 as uuid } from "uuid";
 
+<<<<<<< HEAD:src/v1/strategies/strategy.register.ts
+import { PasswordSingUp, singUp, ServiseSingUP } from "./strategies.dto";
+
+type Strategies = Map<AuthTypes, OAuth2Strategy>;
+type OAuth2ServiceProperties = {
+  path: string;
+  scope: string[];
+};
+
+interface PassportStrategyMixin<TValidationResult = unknown> {
+  validate(...args: unknown[]): TValidationResult | Promise<TValidationResult>;
+}
+
+export type OAuth2Strategy = OAuth2 & PassportStrategyMixin;
+
+const oauth2Services: Record<AuthTypes, OAuth2ServiceProperties> = {
+  google: {
+    path: "passport-google-oauth20",
+    scope: ["openid", "profile", "email"],
+  },
+};
+
+=======
+>>>>>>> 7f0f88598d9e0b318a5778185c52dd030d791449:src/v1/strategies/auth.strategy.ts
 @Injectable()
 export class AuthStrategy {
   private readonly hash = new HashService();
@@ -27,7 +51,11 @@ export class AuthStrategy {
     password,
     email,
     nickname,
+<<<<<<< HEAD:src/v1/strategies/strategy.register.ts
+  }: PasswordSingUp) {
+=======
   }: CreateUserByPasswordEntity) {
+>>>>>>> 7f0f88598d9e0b318a5778185c52dd030d791449:src/v1/strategies/auth.strategy.ts
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -43,12 +71,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: ServiseSingUP) {
     const profileUsername = (
       profile.username || profile.displayName
     ).toLowerCase();
@@ -110,12 +133,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: ServiseSingUP) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
@@ -181,18 +199,7 @@ export class AuthStrategy {
     nickname,
     password,
     service,
-  }: {
-    username: string;
-    nickname: string;
-    email?: string;
-    service?: {
-      id: string;
-      name: AuthTypes;
-      accessToken: string;
-      refreshToken?: string;
-    };
-    password?: string;
-  }) {
+  }: singUp) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         username: UsernamePipe.validate(username),
