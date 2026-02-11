@@ -11,6 +11,7 @@ import { ROUTE, ROUTES, OPERATIONS } from "./sentry.routes";
 
 import { logger } from "@sentry/nestjs";
 import { ApiOperation } from "@nestjs/swagger";
+import { Queries } from "@/v1/enums/queries.enum";
 
 @Injectable()
 @NestController(ROUTE)
@@ -31,7 +32,7 @@ export class Controller {
 
   @Get(ROUTES.GET_HTTP)
   @ApiOperation(OPERATIONS.GET_HTTP)
-  public getHttp(@Query("status") status?: string) {
+  public getHttp(@Query(Queries.status) status?: string) {
     if (!status) {
       throw new HttpException("Not found TEST", HttpStatus.NOT_FOUND);
     }

@@ -24,6 +24,7 @@ import { HeadersEnum } from "@/v1/enums/headers.enum";
 import { PassportStrategy } from "@1/strategies";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Params } from "@/v1/enums/params.enum";
 
 @Injectable()
 @NestController(ROUTE)
@@ -84,7 +85,7 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string,
+    @Param(Params.method) method: string,
   ) {
     return this.passport.auth(method, req, res, next);
   }
@@ -95,7 +96,7 @@ export class Controller {
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string,
+    @Param(Params.method) method: string,
   ) {
     return this.passport.callback(method, req, res, next, (error, data) => {
       if (error || !data) {
