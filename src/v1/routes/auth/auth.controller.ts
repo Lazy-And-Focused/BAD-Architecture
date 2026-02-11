@@ -14,7 +14,7 @@ import {
   Param,
 } from "@nestjs/common";
 
-import { ROUTE, ROUTES } from "./auth.routes";
+import { ROUTE, ROUTES, OPERATIONS, API } from "./auth.routes";
 import { Service } from "./auth.service";
 
 import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
@@ -25,20 +25,13 @@ import { PassportStrategy } from "@1/strategies";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
+import AUTH_CONTROLLER from "@/v1/errors/auth/controller.errors";
+
 @Injectable()
 @NestController(ROUTE)
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: "Ok",
-})
-@ApiResponse({
-  status: HttpStatus.FOUND,
-  description: "Redirecting",
-})
-@ApiResponse({
-  status: HttpStatus.BAD_REQUEST,
-  description: "Redirecting",
-})
+@ApiResponse(API.API_RESPONSE_FIRST)
+@ApiResponse(API.API_RESPONSE_SECOND)
+@ApiResponse(API.API_RESPONSE_THIRD)
 export class Controller {
   public constructor(
     private readonly service: Service,
@@ -47,19 +40,19 @@ export class Controller {
   ) {}
 
   @Get([ROUTES.GET, ROUTES.GET_OAUTH2])
-  @ApiOperation({ summary: "getting all authentication methods" })
+  @ApiOperation(OPERATIONS.GET)
   public printMethods() {
     const methods = this.service.getAllMethods();
 
     return {
-      message: `Sorry, but you can't auth without method, try methods below by path: ${ROUTE}${ROUTES.OAUTH2_GET}`,
+      message: AUTH_CONTROLLER.errors.PRINT_METHODS.message,
       abbreviations: methods.abbreviations,
       methods: methods.methods,
     };
   }
 
   @Post(ROUTES.POST)
-  @ApiOperation({ summary: "creating a user by password" })
+  @ApiOperation(OPERATIONS.POST)
   public post(
     @Body() body: CreateUserBodyDto,
     @Headers() headers: CreateUserHeadersDto,
@@ -71,7 +64,7 @@ export class Controller {
   }
 
   @Get(ROUTES.GET_ME)
-  @ApiOperation({ summary: "getting a self user" })
+  @ApiOperation(OPERATIONS.GET_ME)
   public getMe(@Headers(HeadersEnum.authorization) authorization?: string) {
     const { authId, userId } =
       this.hash.resolveHeaderAuthorizationOrThrow(authorization);
@@ -79,7 +72,7 @@ export class Controller {
   }
 
   @Get(ROUTES.OAUTH2_GET)
-  @ApiOperation({ summary: "redirecting to authentication system" })
+  @ApiOperation(OPERATIONS.OAUTH2_GET)
   public auth(
     @Req() req: Request,
     @Res() res: Response,
@@ -90,7 +83,7 @@ export class Controller {
   }
 
   @Get(ROUTES.OAUTH2_GET_CALLBACK)
-  @ApiOperation({ summary: "callback from authentication system" })
+  @ApiOperation(OPERATIONS.OAUTH2_GET_CALLBACK)
   public callback(
     @Req() req: Request,
     @Res() res: Response,

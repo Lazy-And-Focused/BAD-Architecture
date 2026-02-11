@@ -14,46 +14,31 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { CacheTTL } from "@nestjs/cache-manager";
 
-import { OPERATIONS, ROUTE, ROUTES } from "./test.routes";
+import { OPERATIONS, ROUTE, ROUTES, API } from "./test.routes";
+import TEST_CONTROLLER from "@/v1/errors/test/controller.errors";
 
 @Injectable()
 @NestController(ROUTE)
 @UseGuards(AuthGuard)
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: "Ok",
-})
-@ApiResponse({
-  status: HttpStatus.FORBIDDEN,
-  description: "Not accesss to route",
-})
-@ApiResponse({
-  status: HttpStatus.TOO_MANY_REQUESTS,
-  description: `A large number of requests`,
-})
-@ApiResponse({
-  status: HttpStatus.UNAUTHORIZED,
-  description:
-    "Does not have an authentication token in headers (`headers.authorization`)",
-})
-@ApiResponse({
-  status: HttpStatus.TOO_MANY_REQUESTS,
-  description: "Too many requests, try later",
-})
+@ApiResponse(API.API_RESPONSE_FIRST)
+@ApiResponse(API.API_RESPONSE_SECOND)
+@ApiResponse(API.API_RESPONSE_THIRD)
+@ApiResponse(API.API_RESPONSE_FOURTH)
+@ApiResponse(API.API_RESPONSE_FIFTH)
 export class Controller {
   public constructor() {}
 
   @ApiOperation(OPERATIONS.GET)
   @Get(ROUTES.GET)
   public get() {
-    return "Hi from guarded test";
+    return TEST_CONTROLLER.GET.message;
   }
 
   @ApiOperation(OPERATIONS.GET_PUBLIC)
   @Get(ROUTES.GET_PUBLIC)
   @Public()
   public getPublic() {
-    return "Hi from public test";
+    return TEST_CONTROLLER.GET_PUBLIC.message;
   }
 
   @ApiOperation(OPERATIONS.GET_TOO_MANY_REQUESTS_NON_PROTECTED)
@@ -62,6 +47,6 @@ export class Controller {
   @CacheTTL(1)
   @Public()
   public getTooManyRequestsNonProtected() {
-    return "Hi from too many requests non protected test";
+    return TEST_CONTROLLER.GET_TOO_MANY_REQUESTS_NON_PROTECTED.message;
   }
 }
