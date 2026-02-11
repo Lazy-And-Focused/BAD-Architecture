@@ -12,7 +12,7 @@ export const trycatch = <T, P>(tryFunc: () => T, catchFunc: () => P): T | P => {
   }
 };
 
-export const trycatchThrow = <T>(tryFunc: () => T): T => {
+export const trycatchThrow = <T>(tryFunc: () => T, onError?: (error: unknown) => void): T => {
   try {
     return tryFunc();
   } catch (error) {
@@ -20,7 +20,9 @@ export const trycatchThrow = <T>(tryFunc: () => T): T => {
       throw error;
     }
 
-    throw new HttpException("Server error", HttpStatus.INTERNAL_SERVER_ERROR, {
+    onError?.(error);
+
+    throw new HttpException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR, {
       cause: error,
     });
   }

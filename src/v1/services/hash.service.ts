@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { trycatch } from "@/utils/trycatch.utils";
+import { Injectable } from "@nestjs/common";
 
-import crypto from "crypto";
+import { HASH_ERRORS } from "@1/errors/services/hash.errors";
+import { trycatchThrow } from "@/utils/trycatch.utils";
 
 import { env } from "f@/env";
+import crypto from "crypto";
 
 const PARSE_ERROR = {
   id: false,
@@ -31,7 +32,7 @@ export class HashService {
     const [authId, userId, access_token] = token.split("-");
     const valided = authId && userId && access_token;
     if (!valided) {
-      throw new HttpException("Bad token", HttpStatus.UNAUTHORIZED);
+      throw HASH_ERRORS.INVALID_TOKEN.exeption;
     }
 
     return { authId, userId, token: access_token, successed: true };
@@ -41,10 +42,10 @@ export class HashService {
     authorization?: string,
   ): ParsedToken {
     if (!authorization) {
-      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+      throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.exeption;
     }
 
-    return trycatch(
+    return trycatchThrow(
       () => {
         const [method, ...tokenData] = authorization.split(" ");
         const token = tokenData.join(" ");
@@ -53,15 +54,7 @@ export class HashService {
           return this.resolveTokenOrThrow(token);
         }
 
-        throw new HttpException("Not acceptable", HttpStatus.NOT_ACCEPTABLE);
-      },
-
-      () => {
-        throw new HttpException(
-          "Server error",
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          { cause: "error" },
-        );
+        throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exeption;
       },
     );
   }

@@ -14,7 +14,7 @@ import {
   Param,
 } from "@nestjs/common";
 
-import { ROUTE, ROUTES, OPERATIONS, API } from "./auth.routes";
+import { ROUTE, ROUTES, OPERATIONS } from "./auth.routes";
 import { Service } from "./auth.service";
 
 import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
@@ -25,13 +25,20 @@ import { PassportStrategy } from "@1/strategies";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-import AUTH_CONTROLLER from "@/v1/errors/auth/controller.errors";
-
 @Injectable()
 @NestController(ROUTE)
-@ApiResponse(API.API_RESPONSE_FIRST)
-@ApiResponse(API.API_RESPONSE_SECOND)
-@ApiResponse(API.API_RESPONSE_THIRD)
+@ApiResponse({
+  status: HttpStatus.OK,
+  description: "Ok",
+})
+@ApiResponse({
+  status: HttpStatus.FOUND,
+  description: "Redirecting",
+})
+@ApiResponse({
+  status: HttpStatus.BAD_REQUEST,
+  description: "Redirecting",
+})
 export class Controller {
   public constructor(
     private readonly service: Service,
@@ -39,13 +46,13 @@ export class Controller {
     private readonly passport: PassportStrategy,
   ) {}
 
-  @Get([ROUTES.GET, ROUTES.GET_OAUTH2])
+  @Get(ROUTES.GET)
   @ApiOperation(OPERATIONS.GET)
   public printMethods() {
     const methods = this.service.getAllMethods();
 
     return {
-      message: AUTH_CONTROLLER.errors.PRINT_METHODS.message,
+      message: `Sorry, but you can't auth without method, try methods below by path: ${ROUTE}${ROUTES.OAUTH2_GET}`,
       abbreviations: methods.abbreviations,
       methods: methods.methods,
     };

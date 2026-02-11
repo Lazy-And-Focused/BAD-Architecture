@@ -1,12 +1,9 @@
+import { RoutesObject } from "@/v1/types/route-object.type";
 import { urlize } from "./urlize.utils";
-
-type Routes = {
-  [key: string]: string;
-};
 
 type UrlizeParameters = Parameters<typeof urlize>[0];
 
-export const createEndpoints = <T extends Routes>({
+export const createEndpoints = <T extends RoutesObject>({
   routes,
   ...data
 }: UrlizeParameters & { routes: T }) => {

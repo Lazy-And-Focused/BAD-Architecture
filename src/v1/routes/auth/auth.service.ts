@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 
 import { AuthStrategy } from "@/v1/strategies";
 import { PassportStrategy } from "@1/strategies";
-import PrismaService from "@/database/prisma.service";
+import { PrismaService}  from "@/database/prisma.service";
 
 import { env } from "@/services";
 

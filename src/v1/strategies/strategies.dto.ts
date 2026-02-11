@@ -1,20 +1,21 @@
-import { AuthTypes } from "@1/types";
+import type { AuthTypes } from "@1/types";
 import type { Profile } from "passport";
 
-export class PasswordSingUp {
+export class SingUpByPasswordData {
   username: string;
   nickname?: string;
   password: string;
   email?: string;
 }
-export class ServiseSingUP {
+
+export class SingInByServiceData {
   profile: Profile;
   accessToken: string;
   refreshToken?: string;
   name: AuthTypes;
 }
 
-export class singUp {
+export class SingUpData {
   username: string;
   nickname: string;
   email?: string;

@@ -4,11 +4,12 @@ import type { VerifyCallback } from "passport-oauth2";
 import type { Profile } from "passport";
 import type { AuthTypes } from "../types";
 
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-
-import { getPassportEnv, LoggerService } from "@/services";
-import { AuthStrategy } from "../strategies";
 import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+
+import { AuthStrategy } from "../strategies";
+import { STRATEGIES_SERVICE_ERROS } from "../errors";
+import { getPassportEnv, LoggerService } from "@/services";
 
 interface PassportStrategyMixin<TValidationResult = unknown> {
   validate(...args: unknown[]): TValidationResult | Promise<TValidationResult>;
@@ -43,10 +44,7 @@ export class StrategiesService {
   public static getStrategy(service: string) {
     const strategy = this.strategies.get(service as AuthTypes);
     if (!strategy) {
-      throw new HttpException(
-        "Strategy can not be find",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw STRATEGIES_SERVICE_ERROS.STRATEGY_NOT_FOUND.exeption;
     }
 
     return strategy;

@@ -1,3 +1,4 @@
 import type { ApiOperationOptions } from "@nestjs/swagger";
+import type { GroupedRoutesObject, RoutesObject } from "./route-object.type";
 
-export type Operations<T extends Readonly<{[key: string]: string}>> = Record<keyof T, ApiOperationOptions>;
+export type Operations<T extends RoutesObject> = GroupedRoutesObject<T, ApiOperationOptions>;

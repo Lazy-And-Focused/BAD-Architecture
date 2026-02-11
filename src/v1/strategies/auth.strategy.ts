@@ -6,15 +6,16 @@ import type {
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { sign } from "jsonwebtoken";
-import env from "f@/env";
+
+import { SingUpData, SingInByServiceData } from "./strategies.dto";
+import { AUTH_STRATEGIES_ERRORS } from "../errors";
 
 import { UsernamePipe } from "@1/pipes";
 import { HashService } from "@1/services";
 import { PrismaService } from "@/database/prisma.service";
+import { env } from "f@/env";
 
 import { v4 as uuid } from "uuid";
-
-import { singUp, ServiseSingUP } from "./strategies.dto";
 
 @Injectable()
 export class AuthStrategy {
@@ -43,7 +44,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: ServiseSingUP) {
+  }: SingInByServiceData) {
     const profileUsername = (
       profile.username || profile.displayName
     ).toLowerCase();
@@ -87,14 +88,11 @@ export class AuthStrategy {
     });
 
     if (!auth) {
-      throw new HttpException(
-        `Auth not found`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.exeption;
     }
 
     if (auth.password !== this.hash.execute(password)) {
-      throw new HttpException("Password not equals", HttpStatus.FORBIDDEN);
+      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.exeption;
     }
 
     return { user, auth };
@@ -105,7 +103,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: ServiseSingUP) {
+  }: SingInByServiceData) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
@@ -171,7 +169,7 @@ export class AuthStrategy {
     nickname,
     password,
     service,
-  }: singUp) {
+  }: SingUpData) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         username: UsernamePipe.validate(username),
