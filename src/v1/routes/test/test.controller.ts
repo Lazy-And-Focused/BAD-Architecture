@@ -6,7 +6,6 @@ import {
   Injectable,
   Get,
   UseGuards,
-  HttpStatus,
 } from "@nestjs/common";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";

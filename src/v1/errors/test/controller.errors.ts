@@ -1,5 +1,4 @@
 import ErrorConstructor from "../constructor";
-import { HttpStatus } from "@nestjs/common";
 
 const TEST_CONTROLLER = new ErrorConstructor("TEST EXEPTION", <const>{
   GET: {
