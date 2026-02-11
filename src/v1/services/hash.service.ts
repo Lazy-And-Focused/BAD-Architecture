@@ -45,18 +45,16 @@ export class HashService {
       throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.exeption;
     }
 
-    return trycatchThrow(
-      () => {
-        const [method, ...tokenData] = authorization.split(" ");
-        const token = tokenData.join(" ");
+    return trycatchThrow(() => {
+      const [method, ...tokenData] = authorization.split(" ");
+      const token = tokenData.join(" ");
 
-        if (method === "Bearer") {
-          return this.resolveTokenOrThrow(token);
-        }
+      if (method === "Bearer") {
+        return this.resolveTokenOrThrow(token);
+      }
 
-        throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exeption;
-      },
-    );
+      throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exeption;
+    });
   }
 
   public static resolveToken(token: string): ParseReturn {

@@ -13,8 +13,8 @@ export const USERNAME_ERRORS = new ErrorConstructor("USERNAME EXEPTION", {
   INVALID_USERNAME: {
     message: `username not valided and must includes only \`${env.AVAILABLE_USERNAME_SYMBOLS}\``,
     description: `Имя пользователя должно содержать только определенный набор символов: \`${env.AVAILABLE_USERNAME_SYMBOLS}\``,
-    status: HttpStatus.BAD_REQUEST
-  }
+    status: HttpStatus.BAD_REQUEST,
+  },
 }).execute();
 
 export default USERNAME_ERRORS;

@@ -2,7 +2,7 @@ type Path = string | string[] | readonly string[];
 
 const resolvePath = (path: Path) => {
   return Array.isArray(path) ? path[0] : path;
-}
+};
 
 export const urlize = ({
   version,

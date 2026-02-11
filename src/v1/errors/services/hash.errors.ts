@@ -5,9 +5,9 @@ export const HASH_ERRORS = new ErrorConstructor("HASH EXEPTION", {
   TOKEN_METHOD_NOT_ACCEPTABLE: {
     message: "Token method not acceptable",
     description: "Метод токена не доступен к использованию",
-    status: HttpStatus.NOT_ACCEPTABLE
+    status: HttpStatus.NOT_ACCEPTABLE,
   },
-  
+
   AUTHORIZATION_UNDEFINED: {
     message: "authroization not defined",
     description: "Заголовок `authorization` не был определен",
@@ -17,8 +17,8 @@ export const HASH_ERRORS = new ErrorConstructor("HASH EXEPTION", {
   INVALID_TOKEN: {
     message: "token not valided",
     description: "Токен не прошёл проверку по некоторым свойствам",
-    status: HttpStatus.UNAUTHORIZED
-  }
+    status: HttpStatus.UNAUTHORIZED,
+  },
 }).execute();
 
 export default HASH_ERRORS;

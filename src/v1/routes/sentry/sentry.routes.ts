@@ -2,7 +2,7 @@ import { Routes } from "@/utils/routes.utils";
 
 export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
   route: "sentry",
-  
+
   routes: {
     GET: "/",
     GET_ERROR: "/error",
@@ -19,5 +19,5 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
     GET_HTTP: {
       summary: "Testing an `HttpExeption` from sentry",
     },
-  }
+  },
 }).execute();

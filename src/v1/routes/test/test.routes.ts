@@ -21,5 +21,5 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
     GET_TOO_MANY_REQUESTS_NON_PROTECTED: {
       summary: "Public non protected route",
     },
-  }
+  },
 }).execute();
