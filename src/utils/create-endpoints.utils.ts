@@ -1,4 +1,4 @@
-import { RoutesObject } from "@/v1/types/route-object.type";
+import type { RoutesObject } from "@/types";
 import { urlize } from "./urlize.utils";
 
 type UrlizeParameters = Parameters<typeof urlize>[0];

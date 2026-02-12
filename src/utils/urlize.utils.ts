@@ -1,5 +1,4 @@
-type ArrayPath = [string, ...string[]];
-type Path = string | ArrayPath | Readonly<ArrayPath>;
+import type { Path } from "@/types";
 
 const resolvePath = (path: Path) => {
   return Array.isArray(path) ? path[0] : path;

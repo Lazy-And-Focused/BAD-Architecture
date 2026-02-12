@@ -1,12 +1,11 @@
-import { Operations } from "@/v1/types/operations.type";
-import { RoutesObject } from "@/v1/types/route-object.type";
+import type { ArrayPath, Operations, RoutesObject, StringPath } from "@/types";
 
 type GroupedRoutes<T extends RoutesObject> = {
-  [P in keyof T]: T[P] extends readonly string[] ? string[] : T[P];
+  [P in keyof T]: T[P] extends Readonly<ArrayPath> ? ArrayPath : T[P];
 };
 
 type ConstructorData<T extends RoutesObject> = {
-  route: string | string[];
+  route: StringPath | ArrayPath;
   routes: T;
   operations: Operations<T>;
 };
