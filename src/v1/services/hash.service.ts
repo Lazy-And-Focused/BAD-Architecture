@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { HASH_ERRORS } from "@1/errors/services/hash.errors";
-import { tryCatchThrow } from "@/utils/trycatch.utils";
+import { tryCatchThrow } from "@/utils/try-catch.utils";
 
 import { env } from "f@/env";
 import crypto from "crypto";
