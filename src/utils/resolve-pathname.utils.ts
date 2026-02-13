@@ -1,19 +1,19 @@
 import type { Path } from "@/types";
 
-const resolvePath = (path: Path) => {
+const resolvePathToString = (path: Path) => {
   return Array.isArray(path) ? path[0] : path;
 };
 
-export const urlize = ({
+export const resolvePathname = ({
   version,
   route,
 }: {
   version: string;
   route: Path;
 }) => {
-  const resolvedRoute = resolvePath(route);
+  const resolvedRoute = resolvePathToString(route);
   return (path: Path) => {
-    const resolvedPath = resolvePath(path);
+    const resolvedPath = resolvePathToString(path);
     return `/${version}/${resolvedRoute}${resolvedPath}`;
   };
 };
