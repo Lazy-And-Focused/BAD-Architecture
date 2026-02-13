@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 
-export const trycatch = <T, P>(tryFunc: () => T, catchFunc: () => P): T | P => {
+export const tryCatch = <T, P>(tryFunc: () => T, catchFunc: () => P): T | P => {
   try {
     return tryFunc();
   } catch (error) {
@@ -12,7 +12,7 @@ export const trycatch = <T, P>(tryFunc: () => T, catchFunc: () => P): T | P => {
   }
 };
 
-export const trycatchThrow = <T>(
+export const tryCatchThrow = <T>(
   tryFunc: () => T,
   onError?: (error: unknown) => void,
 ): T => {
