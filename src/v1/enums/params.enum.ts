@@ -1,3 +1,3 @@
 export const enum Params {
-  method = "method"
+  method = "method",
 }
