@@ -5,4 +5,7 @@ export interface CreateUserByPasswordEntity {
   email?: string;
 }
 
-export type SignInByPasswordUserEntity = Pick<CreateUserByPasswordEntity, "username"|"password">;
+export type SignInByPasswordUserEntity = Pick<
+  CreateUserByPasswordEntity,
+  "username" | "password"
+>;

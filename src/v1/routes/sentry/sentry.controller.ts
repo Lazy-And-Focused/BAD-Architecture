@@ -7,16 +7,17 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 
-import { ROUTE, ROUTES } from "./sentry.routes";
+import { ROUTE, ROUTES, OPERATIONS } from "./sentry.routes";
 
 import { logger } from "@sentry/nestjs";
 import { ApiOperation } from "@nestjs/swagger";
+import { Queries } from "@/v1/enums/queries.enum";
 
 @Injectable()
 @NestController(ROUTE)
 export class Controller {
   @Get(ROUTES.GET)
-  @ApiOperation({ summary: "Using a `logger.info` from `@sentry/nestjs`" })
+  @ApiOperation(OPERATIONS.GET)
   public get() {
     logger.info("Hello", { string: "World" });
 
@@ -24,14 +25,14 @@ export class Controller {
   }
 
   @Get(ROUTES.GET_ERROR)
-  @ApiOperation({ summary: "Testing an error for sentry" })
+  @ApiOperation(OPERATIONS.GET_ERROR)
   public getError() {
     throw new Error("Test error for sentry");
   }
 
   @Get(ROUTES.GET_HTTP)
-  @ApiOperation({ summary: "Testing an `HttpExeption` from sentry" })
-  public getHttp(@Query("status") status?: string) {
+  @ApiOperation(OPERATIONS.GET_HTTP)
+  public getHttp(@Query(Queries.status) status?: string) {
     if (!status) {
       throw new HttpException("Not found TEST", HttpStatus.NOT_FOUND);
     }

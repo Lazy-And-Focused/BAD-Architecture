@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 
 import { AuthStrategy } from "@/v1/strategies";
 import { PassportStrategy } from "@1/strategies";
-import PrismaService from "@/database/prisma.service";
+import { PrismaService } from "@/database/prisma.service";
 
 import { env } from "@/services";
 
@@ -15,7 +15,7 @@ const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 export class Service {
   public constructor(
     private readonly prisma: PrismaService,
-    private readonly strategy: AuthStrategy
+    private readonly strategy: AuthStrategy,
   ) {}
 
   public getAllMethods() {

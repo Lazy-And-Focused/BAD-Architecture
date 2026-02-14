@@ -1,6 +1,3 @@
-import { createWriteStream } from "fs";
-import { join } from "path";
-
 import { logger } from "@/services";
 import { HttpException, HttpStatus } from "@nestjs/common";
 
@@ -26,25 +23,12 @@ type OutputError = {
 };
 
 export class ErrorConstructor<Errors extends Record<string, ErrorType>> {
-  private static readonly stream = createWriteStream(
-    join(__dirname, "errors.md"),
-    {
-      encoding: "utf-8",
-    },
-  );
-
-  public static close() {
-    this.stream.close();
-  }
-
   public constructor(
     public readonly prefix: string,
     public readonly errors: Errors,
   ) {}
 
   public execute(): Record<keyof Errors, OutputError> {
-    ErrorConstructor.stream.write(`## ${this.prefix}\n\n`);
-
     const keys = Object.keys(this.errors);
     const errors = keys.map((key) => {
       const chars = Buffer.from(this.prefix).toString("base64url");
@@ -102,38 +86,25 @@ export class ErrorConstructor<Errors extends Record<string, ErrorType>> {
   private formatError(error: ErrorType, puck: string, code: string) {
     if (typeof error === "string" || "message" in error) {
       const formatted = this.formatStringError(error, puck);
-      return this.registry({
+      return {
         ...formatted,
         code,
-      });
+      };
     }
 
     const output = error(puck);
     if (typeof output === "string") {
-      return this.registry({
+      return {
         message: output,
         description: "NO DESCRIPTION",
         code,
-      });
+      };
     }
 
-    return this.registry({
+    return {
       ...output,
       code,
-    });
-  }
-
-  private registry(error: ExtendedErrorType & { code: string }) {
-    ErrorConstructor.stream.write(
-      [
-        `### \`${error.code}\`\n`,
-        "- " + error.message,
-        "  - " + error.description,
-        "  - Статус: " + error.status,
-      ].join("\n") + "\n\n",
-    );
-
-    return error;
+    };
   }
 }
 

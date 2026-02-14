@@ -14,7 +14,7 @@ import {
   Param,
 } from "@nestjs/common";
 
-import { ROUTE, ROUTES } from "./auth.routes";
+import { ROUTE, ROUTES, OPERATIONS } from "./auth.routes";
 import { Service } from "./auth.service";
 
 import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
@@ -24,6 +24,7 @@ import { HeadersEnum } from "@/v1/enums/headers.enum";
 import { PassportStrategy } from "@1/strategies";
 
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Params } from "@/v1/enums/params.enum";
 
 @Injectable()
 @NestController(ROUTE)
@@ -43,11 +44,11 @@ export class Controller {
   public constructor(
     private readonly service: Service,
     private readonly hash: HashService,
-    private readonly passport: PassportStrategy
+    private readonly passport: PassportStrategy,
   ) {}
 
-  @Get([ROUTES.GET, ROUTES.GET_OAUTH2])
-  @ApiOperation({ summary: "getting all authentication methods" })
+  @Get(ROUTES.GET)
+  @ApiOperation(OPERATIONS.GET)
   public printMethods() {
     const methods = this.service.getAllMethods();
 
@@ -59,10 +60,10 @@ export class Controller {
   }
 
   @Post(ROUTES.POST)
-  @ApiOperation({ summary: "creating a user by password" })
+  @ApiOperation(OPERATIONS.POST)
   public post(
     @Body() body: CreateUserBodyDto,
-    @Headers() headers: CreateUserHeadersDto
+    @Headers() headers: CreateUserHeadersDto,
   ) {
     return this.service.createUser({
       ...headers,
@@ -71,47 +72,40 @@ export class Controller {
   }
 
   @Get(ROUTES.GET_ME)
-  @ApiOperation({ summary: "getting a self user" })
-  public getMe(
-    @Headers(HeadersEnum.authorization) authorization?: string
-  ) {
-    const { authId, userId } = this.hash.resolveHeaderAuthorizationOrThrow(authorization);
+  @ApiOperation(OPERATIONS.GET_ME)
+  public getMe(@Headers(HeadersEnum.authorization) authorization?: string) {
+    const { authId, userId } =
+      this.hash.resolveHeaderAuthorizationOrThrow(authorization);
     return this.service.getMe(authId, userId);
   }
 
   @Get(ROUTES.OAUTH2_GET)
-  @ApiOperation({ summary: "redirecting to authentication system" })
+  @ApiOperation(OPERATIONS.OAUTH2_GET)
   public auth(
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string
+    @Param(Params.method) method: string,
   ) {
     return this.passport.auth(method, req, res, next);
   }
 
   @Get(ROUTES.OAUTH2_GET_CALLBACK)
-  @ApiOperation({ summary: "callback from authentication system" })
+  @ApiOperation(OPERATIONS.OAUTH2_GET_CALLBACK)
   public callback(
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Param("method") method: string
+    @Param(Params.method) method: string,
   ) {
-    return this.passport.callback(
-      method,
-      req,
-      res,
-      next,
-      (error, data) => {
-        if (error || !data) {
-          return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    return this.passport.callback(method, req, res, next, (error, data) => {
+      if (error || !data) {
+        return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-        const redirectUrl = this.service.getRedirectUrl(data.auth);
-        res.redirect(redirectUrl);
-      },
-    );
+      const redirectUrl = this.service.getRedirectUrl(data.auth);
+      res.redirect(redirectUrl);
+    });
   }
 }
 

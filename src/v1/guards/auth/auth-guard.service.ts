@@ -2,7 +2,7 @@ import type { Request } from "express";
 import type { Auth } from "@1/types";
 
 import HashService from "@1/services/hash.service";
-import AUTH from "@1/errors/guards/auth.errors";
+import AUTH_ERRORS from "@1/errors/guards/auth.errors";
 
 export class Service {
   public static async validateRequest(req: Request) {
@@ -14,22 +14,22 @@ export class Service {
     // const findedUser = await auth.findOne({ id: id });
 
     if (!findedUser) {
-      throw AUTH.USER_NOT_FOUND.exeption;
+      throw AUTH_ERRORS.USER_NOT_FOUND.exeption;
     }
 
     if (findedUser.userId !== userId) {
-      throw AUTH.PROFILE_ID.exeption;
+      throw AUTH_ERRORS.PROFILE_ID.exeption;
     }
 
     if (token !== HashService.execute(findedUser.token)) {
-      throw AUTH.TOKEN_ERROR.exeption;
+      throw AUTH_ERRORS.TOKEN_ERROR.exeption;
     }
 
     const profileUser = {};
     // const profileUser = await users.findOne({ id: findedUser.profile_id });
 
     if (!profileUser) {
-      throw AUTH.PROFILE_NOT_FOUND.exeption;
+      throw AUTH_ERRORS.PROFILE_NOT_FOUND.exeption;
     }
 
     return true;

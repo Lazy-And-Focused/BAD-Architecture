@@ -1,4 +1,6 @@
-import { HttpException, HttpStatus, PipeTransform } from "@nestjs/common";
+import { PipeTransform } from "@nestjs/common";
+import { USERNAME_ERRORS } from "../errors/pipes/username.errors";
+
 import { env } from "@/services";
 
 export class UsernamePipe implements PipeTransform {
@@ -8,11 +10,7 @@ export class UsernamePipe implements PipeTransform {
       env.AVAILABLE_USERNAME_SYMBOLS.includes(char),
     );
     if (!usernameValided) {
-      throw new HttpException(
-        "username must includes only this symbols: " +
-          env.AVAILABLE_USERNAME_SYMBOLS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw USERNAME_ERRORS.INVALID_USERNAME.exeption;
     }
 
     return username;
@@ -20,10 +18,7 @@ export class UsernamePipe implements PipeTransform {
 
   public transform(value: unknown) {
     if (typeof value !== "string") {
-      throw new HttpException(
-        "username must be string",
-        HttpStatus.BAD_REQUEST,
-      );
+      throw USERNAME_ERRORS.USERNAME_NOT_STRING.exeption;
     }
 
     return UsernamePipe.validate(value);

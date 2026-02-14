@@ -2,16 +2,12 @@ import type { Request } from "express";
 import type { Observable } from "rxjs";
 
 import { Reflector } from "@nestjs/core";
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-} from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 
 import { logger } from "@sentry/nestjs";
 
-import Service from "./auth-guard.service";
+import { tryCatchThrow } from "@/utils/try-catch.utils";
+import { Service } from "./auth-guard.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -30,20 +26,15 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>();
 
-    try {
-      return Service.validateRequest(request);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      logger.error(error, {
-        hostname: request.hostname,
-        body: request.body,
-      });
-
-      return false;
-    }
+    return tryCatchThrow(
+      () => Service.validateRequest(request),
+      () => {
+        logger.error("error", {
+          hostname: request.hostname,
+          body: request.body,
+        });
+      },
+    );
   }
 }
 

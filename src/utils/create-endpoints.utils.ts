@@ -1,16 +1,13 @@
-import { urlize } from "./urlize.utils";
+import type { RoutesObject } from "@/types";
+import { resolvePathname } from "./resolve-pathname.utils";
 
-type Routes = {
-  [key: string]: string;
-};
+type ResolvePathnameParameters = Parameters<typeof resolvePathname>[0];
 
-type UrlizeParameters = Parameters<typeof urlize>[0];
-
-export const createEndpoints = <T extends Routes>({
+export const createEndpoints = <T extends RoutesObject>({
   routes,
   ...data
-}: UrlizeParameters & { routes: T }) => {
-  const toUrl = urlize(data);
+}: ResolvePathnameParameters & { routes: T }) => {
+  const toUrl = resolvePathname(data);
 
   const endpoints = Object.fromEntries(
     Object.keys(routes).map((key) => {

@@ -1,8 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
-import crypto from "crypto";
+import { HASH_ERRORS } from "@1/errors/services/hash.errors";
+import { tryCatchThrow } from "@/utils/try-catch.utils";
 
 import { env } from "f@/env";
+import crypto from "crypto";
 
 const PARSE_ERROR = {
   id: false,
@@ -30,7 +32,7 @@ export class HashService {
     const [authId, userId, access_token] = token.split("-");
     const valided = authId && userId && access_token;
     if (!valided) {
-      throw new HttpException("Bad token", HttpStatus.UNAUTHORIZED);
+      throw HASH_ERRORS.INVALID_TOKEN.exeption;
     }
 
     return { authId, userId, token: access_token, successed: true };
@@ -40,10 +42,10 @@ export class HashService {
     authorization?: string,
   ): ParsedToken {
     if (!authorization) {
-      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+      throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.exeption;
     }
 
-    try {
+    return tryCatchThrow(() => {
       const [method, ...tokenData] = authorization.split(" ");
       const token = tokenData.join(" ");
 
@@ -51,18 +53,8 @@ export class HashService {
         return this.resolveTokenOrThrow(token);
       }
 
-      throw new HttpException("Not acceptable", HttpStatus.NOT_ACCEPTABLE);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      throw new HttpException(
-        "Server error",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
-    }
+      throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exeption;
+    });
   }
 
   public static resolveToken(token: string): ParseReturn {
@@ -73,7 +65,9 @@ export class HashService {
     }
   }
 
-  public static resolveHeaderAuthorization(authorization?: string): ParseReturn {
+  public static resolveHeaderAuthorization(
+    authorization?: string,
+  ): ParseReturn {
     try {
       return this.resolveHeaderAuthorizationOrThrow(authorization);
     } catch {
@@ -98,7 +92,9 @@ export class HashService {
     return HashService.resolveTokenOrThrow(token);
   }
 
-  public resolveHeaderAuthorizationOrThrow(authorization?: string): ParsedToken {
+  public resolveHeaderAuthorizationOrThrow(
+    authorization?: string,
+  ): ParsedToken {
     return HashService.resolveHeaderAuthorizationOrThrow(authorization);
   }
 

@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import ErrorConstructor from "../constructor";
+import { ErrorConstructor } from "../constructor";
 
-export const AUTH = new ErrorConstructor("AUTH EXEPTION", <const>{
+export const AUTH_ERRORS = new ErrorConstructor("AUTH EXEPTION", <const>{
   HASH_PARSE: {
     message: "Parse exeption",
     description:
@@ -33,4 +33,4 @@ export const AUTH = new ErrorConstructor("AUTH EXEPTION", <const>{
   },
 }).execute();
 
-export default AUTH;
+export default AUTH_ERRORS;

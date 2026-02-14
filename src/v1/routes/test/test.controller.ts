@@ -14,7 +14,7 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { CacheTTL } from "@nestjs/cache-manager";
 
-import { ROUTE, ROUTES } from "./test.routes";
+import { OPERATIONS, ROUTE, ROUTES } from "./test.routes";
 
 @Injectable()
 @NestController(ROUTE)
@@ -43,27 +43,21 @@ import { ROUTE, ROUTES } from "./test.routes";
 export class Controller {
   public constructor() {}
 
-  @ApiOperation({
-    summary: "Protected route",
-  })
   @Get(ROUTES.GET)
+  @ApiOperation(OPERATIONS.GET)
   public get() {
     return "Hi from guarded test";
   }
 
-  @ApiOperation({
-    summary: "Public protected route",
-  })
   @Get(ROUTES.GET_PUBLIC)
+  @ApiOperation(OPERATIONS.GET_PUBLIC)
   @Public()
   public getPublic() {
     return "Hi from public test";
   }
 
-  @ApiOperation({
-    summary: "Public non protected route",
-  })
   @Get(ROUTES.GET_TOO_MANY_REQUESTS_NON_PROTECTED)
+  @ApiOperation(OPERATIONS.GET_TOO_MANY_REQUESTS_NON_PROTECTED)
   @SkipThrottle()
   @CacheTTL(1)
   @Public()

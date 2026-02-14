@@ -1,16 +1,19 @@
-import type { AuthTypes } from "@1/types";
-import type { CreateUserByPasswordEntity, SignInByPasswordUserEntity } from "@1/entities";
-
-import type { Profile } from "passport";
+import type {
+  CreateUserByPasswordEntity,
+  SignInByPasswordUserEntity,
+} from "@1/entities";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { sign } from "jsonwebtoken";
-import env from "f@/env";
+
+import { SingUpData, SingInByServiceData } from "./strategies.dto";
+import { AUTH_STRATEGIES_ERRORS } from "../errors";
 
 import { UsernamePipe } from "@1/pipes";
 import { HashService } from "@1/services";
 import { PrismaService } from "@/database/prisma.service";
+import { env } from "f@/env";
 
 import { v4 as uuid } from "uuid";
 
@@ -18,9 +21,7 @@ import { v4 as uuid } from "uuid";
 export class AuthStrategy {
   private readonly hash = new HashService();
 
-  public constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  public constructor(private readonly prisma: PrismaService) {}
 
   public singUpByPassword({
     username,
@@ -43,12 +44,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: SingInByServiceData) {
     const profileUsername = (
       profile.username || profile.displayName
     ).toLowerCase();
@@ -92,14 +88,11 @@ export class AuthStrategy {
     });
 
     if (!auth) {
-      throw new HttpException(
-        `Auth not found`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.exeption;
     }
 
     if (auth.password !== this.hash.execute(password)) {
-      throw new HttpException("Password not equals", HttpStatus.FORBIDDEN);
+      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.exeption;
     }
 
     return { user, auth };
@@ -110,12 +103,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: {
-    profile: Profile;
-    accessToken: string;
-    refreshToken?: string;
-    name: AuthTypes;
-  }) {
+  }: SingInByServiceData) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
@@ -152,12 +140,12 @@ export class AuthStrategy {
 
     const update = {
       where: {
-        id: service.id
+        id: service.id,
       },
       data: {
         accessToken,
-        refreshToken
-      }
+        refreshToken,
+      },
     };
 
     const updatedAuth = await this.prisma.auth.update({
@@ -165,7 +153,7 @@ export class AuthStrategy {
         id: auth.id,
       },
       data: {
-        services: { update }
+        services: { update },
       },
     });
 
@@ -181,18 +169,7 @@ export class AuthStrategy {
     nickname,
     password,
     service,
-  }: {
-    username: string;
-    nickname: string;
-    email?: string;
-    service?: {
-      id: string;
-      name: AuthTypes;
-      accessToken: string;
-      refreshToken?: string;
-    };
-    password?: string;
-  }) {
+  }: SingUpData) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         username: UsernamePipe.validate(username),
