@@ -1,15 +1,38 @@
-const ROUTE = "<%= name %>";
+import { Routes } from "@/utils";
 
-const ROUTES = {
-  GET: "/",
-  GET_ONE: "/:id",
+export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
+  route: "<%= name %>",
 
-  POST: "/",
+  routes: {
+    GET: "/",
+    GET_ONE: "/:id",
 
-  PUT: "/:id",
-  PATCH: "/:id",
+    POST: "/",
 
-  DELETE: "/:id",
-} as const;
+    PUT: "/:id",
+    PATCH: "/:id",
 
-export { ROUTE, ROUTES };
+    DELETE: "/:id",
+  } as const,
+
+  operations: {
+    GET: {
+      summary: "Getting an array of <%= name %>"
+    },
+    GET_ONE: {
+      summary: "Getting a <%= name %> by id"
+    },
+    POST: {
+      summary: "Creaing a <%= name %>"
+    },
+    PUT: {
+      summary: "Updating a <%= name %>"
+    },
+    PATCH: {
+      summary: "Updating a <%= name %>"
+    },
+    DELETE: {
+      summary: "Deleting a <%= name %>"
+    },
+  } as const,
+}).execute();

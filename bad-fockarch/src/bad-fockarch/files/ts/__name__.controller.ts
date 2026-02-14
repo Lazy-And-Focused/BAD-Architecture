@@ -15,49 +15,28 @@ import {
   Patch,
   Delete,
   UseGuards,
-  HttpStatus
 } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation } from "@nestjs/swagger";
 
-import { ROUTE, ROUTES } from "./<%= name %>.routes";
+import { ROUTE, ROUTES, OPERATIONS } from "./<%= name %>.routes";
 import { Service } from "./<%= name %>.service"
 
 @Injectable()
 @NestController(ROUTE)
 @UseGuards(AuthGuard)
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: "Ok"
-})
-@ApiResponse({
-  status: HttpStatus.FORBIDDEN,
-  description: "Not accesss to route"
-})
-@ApiResponse({
-  status: HttpStatus.TOO_MANY_REQUESTS,
-  description: `A large number of requests`
-})
-@ApiResponse({
-  status: HttpStatus.UNAUTHORIZED,
-  description: "Does not have an authentication token in headers (`headers.authorization`)"
-})
 export class Controller {
   public constructor(
     private readonly service: Service
   ) {}
 
-  @ApiOperation({
-    summary: "Getting an array of <%= name %>"
-  })
+  @ApiOperation(OPERATIONS.GET)
   @Get(ROUTES.GET)
   @Public()
   public get() {
     return this.service.get()
   }
 
-  @ApiOperation({
-    summary: "Getting a <%= name %> by id"
-  })
+  @ApiOperation(OPERATIONS.GET_ONE)
   @Get(ROUTES.GET_ONE)
   @Public()
   public getOne(
@@ -66,9 +45,7 @@ export class Controller {
     return this.service.getOne(id);
   }
 
-  @ApiOperation({
-    summary: "Creaing a <%= name %>"
-  })
+  @ApiOperation(OPERATIONS.POST)
   @Post(ROUTES.POST)
   public post(
     @Body() data: <%= classify(name) %>CreateDto 
@@ -76,9 +53,7 @@ export class Controller {
     return this.service.post(data);
   }
 
-  @ApiOperation({
-    summary: "Updating a <%= name %>"
-  })
+  @ApiOperation(OPERATIONS.PUT)
   @Put(ROUTES.PUT)
   public put(
     @Param("id") id: string,
@@ -87,9 +62,7 @@ export class Controller {
     return this.service.put(id, data);
   }
 
-  @ApiOperation({
-    summary: "Updating a <%= name %>"
-  })
+  @ApiOperation(OPERATIONS.PATCH)
   @Patch(ROUTES.PATCH)
   public patch(
     @Param("id") id: string,
@@ -98,9 +71,7 @@ export class Controller {
     return this.service.patch(id, data);
   }
   
-  @ApiOperation({
-    summary: "Deleting a <%= name %>"
-  })
+  @ApiOperation(OPERATIONS.DELETE)
   @Delete(ROUTES.DELETE)
   public delete(
     @Param("id") id: string

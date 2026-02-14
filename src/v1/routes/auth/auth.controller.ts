@@ -23,23 +23,11 @@ import { HashService } from "@/v1/services";
 import { HeadersEnum } from "@/v1/enums/headers.enum";
 import { PassportStrategy } from "@1/strategies";
 
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation } from "@nestjs/swagger";
 import { Params } from "@/v1/enums/params.enum";
 
 @Injectable()
 @NestController(ROUTE)
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: "Ok",
-})
-@ApiResponse({
-  status: HttpStatus.FOUND,
-  description: "Redirecting",
-})
-@ApiResponse({
-  status: HttpStatus.BAD_REQUEST,
-  description: "Redirecting",
-})
 export class Controller {
   public constructor(
     private readonly service: Service,
