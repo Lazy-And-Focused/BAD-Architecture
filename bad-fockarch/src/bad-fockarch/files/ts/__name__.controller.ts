@@ -1,5 +1,5 @@
-import type { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
-import type { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
+import { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
+import { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
 
 import { Public } from "@/decorators";
 import { AuthGuard } from "@1/guards/auth/auth.guard";
