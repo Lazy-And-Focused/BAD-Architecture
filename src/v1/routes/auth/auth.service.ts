@@ -8,7 +8,9 @@ import { PrismaService } from "@/database";
 
 import { env } from "@/services";
 
-const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
+const toStringJson = (value: unknown) => {
+  return JSON.stringify(value, undefined, 4);
+};
 
 @Injectable()
 export class AuthService {
@@ -21,8 +23,8 @@ export class AuthService {
     const { abbreviations, methods } = PassportStrategy.methods;
 
     return {
-      stringMethods: toStr(methods),
-      stringAbbreviations: toStr(abbreviations),
+      stringMethods: toStringJson(methods),
+      stringAbbreviations: toStringJson(abbreviations),
       abbreviations,
       methods,
     };
