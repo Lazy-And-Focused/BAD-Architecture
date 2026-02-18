@@ -1,11 +1,10 @@
-import { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
-import { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
+import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
 
 import { Public } from "@/decorators";
-import { AuthGuard } from "@1/guards/auth/auth.guard";
+import { AuthGuard } from "@1/guards";
 
 import {
-  Controller as NestController,
+  Controller,
   Injectable,
   Get,
   Param,
@@ -19,14 +18,14 @@ import {
 import { ApiOperation } from "@nestjs/swagger";
 
 import { ROUTE, ROUTES, OPERATIONS } from "./<%= plural %>.routes";
-import { Service } from "./<%= plural %>.service"
+import { <%= classify(plural) %>Service } from "./<%= plural %>.service"
 
 @Injectable()
-@NestController(ROUTE)
+@Controller(ROUTE)
 @UseGuards(AuthGuard)
-export class Controller {
+export class <%= classify(plural) %>Controller {
   public constructor(
-    private readonly service: Service
+    private readonly service: <%= classify(plural) %>Service
   ) {}
 
   @ApiOperation(OPERATIONS.GET)
@@ -79,3 +78,5 @@ export class Controller {
     return this.service.delete(id);
   }
 }
+
+export default <%= classify(plural) %>Controller;

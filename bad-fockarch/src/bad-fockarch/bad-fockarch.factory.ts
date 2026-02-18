@@ -14,6 +14,7 @@ import {
   NameParser,
   normalizeToKebabOrSnakeCase,
   mergeSourceRoot,
+  toConstantCase,
 } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";
@@ -39,6 +40,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
   const location: Location = new NameParser().parse(target);
 
   target.name = normalizeToKebabOrSnakeCase(location.name);
+  target.constant = toConstantCase(location.name);
   target.path = normalizeToKebabOrSnakeCase(location.path);
   target.language = target.language !== undefined ? target.language : "ts";
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
@@ -48,6 +50,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);
+    
   return target;
 }
 
@@ -72,5 +75,5 @@ const generate = (options: BadFockarchOptions): Source => {
 
 export const main = (options: BadFockarchOptions): Rule => {
   options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
+  return chain([mergeSourceRoot(options), mergeWith(generate(options)), (tree, context) => { console.log({tree, context}) }]);
 };

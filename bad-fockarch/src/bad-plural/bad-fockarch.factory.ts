@@ -14,6 +14,7 @@ import {
   NameParser,
   normalizeToKebabOrSnakeCase,
   mergeSourceRoot,
+  toConstantCase,
 } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";
@@ -63,6 +64,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
 
   target.name = normalizeToKebabOrSnakeCase(location.name);
   target.plural = normalizeToKebabOrSnakeCase(pluralize(location.name));
+  target.constant = toConstantCase(pluralize(location.name));
   target.path = normalizeToKebabOrSnakeCase(location.path);
   target.language = target.language !== undefined ? target.language : "ts";
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
@@ -72,6 +74,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.plural);
+
   return target;
 }
 

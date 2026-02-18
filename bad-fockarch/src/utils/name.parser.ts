@@ -25,3 +25,11 @@ export class NameParser {
     };
   }
 }
+
+export const toConstantCase = (input: string): string => {
+  return input
+    .replace(/([a-z])([A-Z])/g, '$1_$2')
+    .replace(/[\s\-_]+/g, '_')
+    .replace(/[^\w]/g, '')
+    .toUpperCase();
+}

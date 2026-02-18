@@ -1,9 +1,7 @@
-import type { <%= classify(name) %> } from "@1/types/<%= name %>.types";
-import type { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
-import type { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
+import type { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
 
 import { Test, TestingModule } from "@nestjs/testing";
-import { Service } from "./<%= name %>.service";
+import { <%= classify(plural) %>Service as Service } from "./<%= plural %>.service";
 
 describe("<%= classify(plural) %> Service", () => {
   let service: Service;
