@@ -16,9 +16,9 @@ export const logger = new FockLogger("[BAD]", {
   logging: false,
 });
 
-type LoggerType = typeof logger;
-type LoggerParameters<Key extends keyof Pick<LoggerType, "execute" | "error">> =
-  Parameters<LoggerType[Key]>;
+type Logger = FockLogger<string, string>;
+type LoggerParameters<Key extends keyof Pick<Logger, "execute" | "error">> =
+  Parameters<Logger[Key]>;
 
 @Injectable()
 export class LoggerService {

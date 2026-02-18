@@ -1,5 +1,5 @@
-import type { CreateUserByPasswordEntity } from "@1/entities";
-import type { Auth } from "@1/types";
+import type { CreateUserByPassword } from "@1/entities";
+import type { Auth } from "@1/entities";
 
 import { Injectable } from "@nestjs/common";
 
@@ -39,7 +39,7 @@ export class AuthService {
     return { auth, user };
   }
 
-  public async createUser(data: CreateUserByPasswordEntity) {
+  public async createUser(data: CreateUserByPassword) {
     return this.strategy.singUpByPassword(data);
   }
 

@@ -1,6 +1,6 @@
 import type {
-  CreateUserByPasswordEntity,
-  SignInByPasswordUserEntity,
+  CreateUserByPassword,
+  SignInByPasswordUser,
 } from "@1/entities";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
@@ -28,7 +28,7 @@ export class AuthStrategy {
     password,
     email,
     nickname,
-  }: CreateUserByPasswordEntity) {
+  }: CreateUserByPassword) {
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -71,7 +71,7 @@ export class AuthStrategy {
   public async singInByPassword({
     password,
     username,
-  }: SignInByPasswordUserEntity) {
+  }: SignInByPasswordUser) {
     const user = await this.prisma.user.findUnique({
       where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });

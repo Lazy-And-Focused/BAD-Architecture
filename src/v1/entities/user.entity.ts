@@ -1,11 +1,11 @@
-export interface CreateUserByPasswordEntity {
+export type { User } from "@/database/generated/client";
+
+export interface SignInByPasswordUser {
   username: string;
-  nickname?: string;
   password: string;
-  email?: string;
 }
 
-export type SignInByPasswordUserEntity = Pick<
-  CreateUserByPasswordEntity,
-  "username" | "password"
->;
+export interface CreateUserByPassword extends SignInByPasswordUser {
+  nickname?: string;
+  email?: string;
+}

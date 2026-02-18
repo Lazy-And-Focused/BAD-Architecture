@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-import type { Auth, User } from "@1/types";
+import type { Auth, User } from "@1/entities";
 import { AuthTypes } from "@1/types";
 
 import {
