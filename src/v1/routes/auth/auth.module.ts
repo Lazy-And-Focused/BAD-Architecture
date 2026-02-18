@@ -1,22 +1,25 @@
 import { Module } from "@nestjs/common";
 
-import { Controller } from "./auth.controller";
-import { Service } from "./auth.service";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
 
 import { AuthStrategy, PassportStrategy } from "@1/strategies";
-import { HashService } from "@/v1/services";
-import { PrismaService } from "@/database/prisma.service";
+
+import { PrismaService } from "@/database";
 import { LoggerService } from "@/services";
+import { HashService } from "@1/services";
 
 @Module({
-  controllers: [Controller],
+  controllers: [AuthController],
   providers: [
     PassportStrategy,
     HashService,
     LoggerService,
     AuthStrategy,
     PrismaService,
-    Service,
+    AuthService,
   ],
 })
-export default class AuthModule {}
+export class AuthModule {}
+
+export default AuthModule;

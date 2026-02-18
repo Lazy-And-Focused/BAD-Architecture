@@ -7,11 +7,14 @@ import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { logger } from "@sentry/nestjs";
 
 import { tryCatchThrow } from "@/utils/try-catch.utils";
-import { Service } from "./auth-guard.service";
+import { AuthGuardService } from "./auth-guard.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  public constructor(private readonly reflector: Reflector) {}
+  public constructor(
+    private readonly reflector: Reflector,
+    private readonly service: AuthGuardService
+  ) {}
 
   public canActivate(
     context: ExecutionContext,
@@ -27,7 +30,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
 
     return tryCatchThrow(
-      () => Service.validateRequest(request),
+      () => this.service.validateRequest(request),
       () => {
         logger.error("error", {
           hostname: request.hostname,

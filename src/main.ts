@@ -1,8 +1,8 @@
-import { env } from "f@/env";
+import { env } from "@/services";
 
+import { init as initSentry, consoleLoggingIntegration } from "@sentry/nestjs";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { NestFactory } from "@nestjs/core";
-import { init as initSentry, consoleLoggingIntegration } from "@sentry/nestjs";
 
 import { json, urlencoded } from "express";
 

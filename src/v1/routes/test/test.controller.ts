@@ -1,8 +1,8 @@
 import { Public } from "@/decorators";
-import { AuthGuard } from "@1/guards/auth/auth.guard";
+import { AuthGuard } from "@1/guards";
 
 import {
-  Controller as NestController,
+  Controller,
   Injectable,
   Get,
   UseGuards,
@@ -16,9 +16,9 @@ import { CacheTTL } from "@nestjs/cache-manager";
 import { OPERATIONS, ROUTE, ROUTES } from "./test.routes";
 
 @Injectable()
-@NestController(ROUTE)
+@Controller(ROUTE)
 @UseGuards(AuthGuard)
-export class Controller {
+export class TestController {
   public constructor() {}
 
   @Get(ROUTES.GET)

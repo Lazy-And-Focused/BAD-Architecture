@@ -1,18 +1,17 @@
-import type { CreateUserByPasswordEntity } from "../../entities/user.entity";
-import type { Auth } from "@/v1/types";
+import type { CreateUserByPasswordEntity } from "@1/entities";
+import type { Auth } from "@1/types";
 
 import { Injectable } from "@nestjs/common";
 
-import { AuthStrategy } from "@/v1/strategies";
-import { PassportStrategy } from "@1/strategies";
-import { PrismaService } from "@/database/prisma.service";
+import { AuthStrategy, PassportStrategy } from "@1/strategies";
+import { PrismaService } from "@/database";
 
 import { env } from "@/services";
 
 const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
 
 @Injectable()
-export class Service {
+export class AuthService {
   public constructor(
     private readonly prisma: PrismaService,
     private readonly strategy: AuthStrategy,

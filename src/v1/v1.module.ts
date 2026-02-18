@@ -15,18 +15,18 @@ import {
 } from "@sentry/nestjs/setup";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
-import { LoggerMiddleware } from "./middleware/logger.middleware";
+import { LoggerMiddleware } from "./middleware";
 
 import { HashService, StrategiesService } from "./services";
 import { LoggerService } from "@/services";
-import { PrismaService } from "@/database/prisma.service";
+import { PrismaService } from "@/database";
 
-import AuthStrategy from "./strategies/auth.strategy";
-import AuthModule from "./routes/auth/auth.module";
-import SentryModule from "./routes/sentry/sentry.module";
-import TestModule from "./routes/test/test.module";
+import { AuthStrategy } from "./strategies";
 
-import env from "f@/env";
+import { GuardsModule } from "./guards";
+import { AuthModule, SentryModule, TestModule } from "./routes"
+
+import { env } from "@/services";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 
@@ -47,6 +47,7 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
       isGlobal: true,
     }),
     Sentry.forRoot(),
+    GuardsModule,
   ],
   providers: [
     StrategiesService,
@@ -68,8 +69,11 @@ export const v1Modules = [AuthModule, SentryModule, TestModule];
     },
   ],
 })
-export default class v1Module implements NestModule {
+export class v1Module implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes("/");
   }
 }
+
+export default v1Module;
+

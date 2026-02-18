@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import {
-  Controller as NestController,
+  Controller,
   Get,
   HttpStatus,
   Injectable,
@@ -15,22 +15,21 @@ import {
 } from "@nestjs/common";
 
 import { ROUTE, ROUTES, OPERATIONS } from "./auth.routes";
-import { Service } from "./auth.service";
+import { AuthService } from "./auth.service";
 
 import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
 
-import { HashService } from "@/v1/services";
-import { HeadersEnum } from "@/v1/enums/headers.enum";
+import { Headers as HeadersEnum, Params } from "@/v1/enums";
 import { PassportStrategy } from "@1/strategies";
+import { HashService } from "@/v1/services";
 
 import { ApiOperation } from "@nestjs/swagger";
-import { Params } from "@/v1/enums/params.enum";
 
 @Injectable()
-@NestController(ROUTE)
-export class Controller {
+@Controller(ROUTE)
+export class AuthController {
   public constructor(
-    private readonly service: Service,
+    private readonly service: AuthService,
     private readonly hash: HashService,
     private readonly passport: PassportStrategy,
   ) {}
@@ -97,4 +96,4 @@ export class Controller {
   }
 }
 
-export default Controller;
+export default AuthController;

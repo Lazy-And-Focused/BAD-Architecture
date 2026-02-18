@@ -1,4 +1,4 @@
-import { Routes } from "@/utils/routes.utils";
+import { Routes } from "@/utils";
 
 export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
   route: "auth",

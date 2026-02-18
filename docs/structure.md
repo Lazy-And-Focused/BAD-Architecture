@@ -30,8 +30,8 @@ src/
 │   │       ├── {routeName}.service.ts
 │   │       ├── {routeName}.module.ts
 │   │       ├── {routeName}.routes.ts
-│   │       ├── {routeName}.controller.test.ts (?)
-│   │       ├── {routeName}.service.test.ts (?)
+│   │       ├── {routeName}.controller.test.ts
+│   │       ├── {routeName}.service.test.ts
 │   │       └── {subRouteName}/...  # Подроуты (вложенность до 3–4 уровней)
 │   │── guards/                # guards (?)
 │   │   └── {guardName}/

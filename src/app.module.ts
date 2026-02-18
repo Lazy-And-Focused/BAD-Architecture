@@ -2,9 +2,9 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { RouterModule } from "@nestjs/core";
 
-import v1Module, { v1Modules } from "./v1/v1.module";
+import { v1Module, v1Modules } from "./v1/v1.module";
 
-import { PrismaService } from "./database/prisma.service";
+import { PrismaService } from "./database";
 import { LoggerService } from "./services";
 import { HashService } from "./v1/services";
 

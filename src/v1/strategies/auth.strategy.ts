@@ -12,8 +12,8 @@ import { AUTH_STRATEGIES_ERRORS } from "../errors";
 
 import { UsernamePipe } from "@1/pipes";
 import { HashService } from "@1/services";
-import { PrismaService } from "@/database/prisma.service";
-import { env } from "f@/env";
+import { PrismaService } from "@/database";
+import { env } from "@/services/env/config/config.service";
 
 import { v4 as uuid } from "uuid";
 

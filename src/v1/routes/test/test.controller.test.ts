@@ -5,7 +5,7 @@ import { ThrottlerStorage } from "@nestjs/throttler";
 import { Test, type TestingModule } from "@nestjs/testing";
 import request from "supertest";
 
-import { Controller } from "./test.controller";
+import { TestController } from "./test.controller";
 import { ROUTE, ROUTES } from "./test.routes";
 
 import { createEndpoints } from "@/utils";
@@ -18,16 +18,16 @@ const endpoints = createEndpoints({
 });
 
 describe(ROUTE + " controller", () => {
-  let controller: Controller;
+  let controller: TestController;
   let app: INestApplication<App>;
   let throttlerStorage: ThrottlerStorage;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      controllers: [Controller],
+      controllers: [TestController],
     }).compile();
 
-    controller = moduleRef.get(Controller);
+    controller = moduleRef.get(TestController);
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [v1Module],

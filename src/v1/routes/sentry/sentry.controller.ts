@@ -1,5 +1,5 @@
 import {
-  Controller as NestController,
+  Controller,
   Get,
   Injectable,
   HttpException,
@@ -9,13 +9,13 @@ import {
 
 import { ROUTE, ROUTES, OPERATIONS } from "./sentry.routes";
 
+import { Queries } from "@/v1/enums";
 import { logger } from "@sentry/nestjs";
 import { ApiOperation } from "@nestjs/swagger";
-import { Queries } from "@/v1/enums/queries.enum";
 
 @Injectable()
-@NestController(ROUTE)
-export class Controller {
+@Controller(ROUTE)
+export class SentryController {
   @Get(ROUTES.GET)
   @ApiOperation(OPERATIONS.GET)
   public get() {
@@ -41,4 +41,4 @@ export class Controller {
   }
 }
 
-export default Controller;
+export default SentryController;

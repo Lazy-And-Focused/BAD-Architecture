@@ -7,12 +7,11 @@
 dryrun
 
 # logger
-loggers.json
+/loggers.json
 
 # prisma
 src/database/generated/
 
-pnpm-lock.yaml
 tsconfig.build.tsbuildinfo
 
 # Logs
@@ -50,13 +49,6 @@ lerna-debug.log*
 # dotenv environment variable files
 .env
 .env.*
-.env.development
-.env.production
-.env.test
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
 
 # temp directory
 .temp

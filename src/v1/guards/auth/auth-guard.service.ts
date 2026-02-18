@@ -1,34 +1,47 @@
 import type { Request } from "express";
-import type { Auth } from "@1/types";
 
-import HashService from "@1/services/hash.service";
-import AUTH_ERRORS from "@1/errors/guards/auth.errors";
+import { Injectable } from "@nestjs/common";
 
-export class Service {
-  public static async validateRequest(req: Request) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { HashService } from "@1/services/hash.service";
+import { PrismaService } from "@/database";
+import { AUTH_ERRORS } from "@1/errors/guards/auth.errors";
+
+@Injectable()
+export class AuthGuardService {
+  public constructor(
+    private readonly prisma: PrismaService,
+    private readonly hash: HashService
+  ) {}
+
+  public async validateRequest(req: Request) {
     const { authId, token, userId } =
       HashService.resolveHeaderAuthorizationOrThrow(req.headers.authorization);
 
-    const findedUser = {} as Auth;
-    // const findedUser = await auth.findOne({ id: id });
+    const auth = await this.prisma.auth.findUnique({
+      where: {
+        id: authId
+      }
+    });
 
-    if (!findedUser) {
+    if (!auth) {
       throw AUTH_ERRORS.USER_NOT_FOUND.exeption;
     }
 
-    if (findedUser.userId !== userId) {
+    if (auth.userId !== userId) {
       throw AUTH_ERRORS.PROFILE_ID.exeption;
     }
 
-    if (token !== HashService.execute(findedUser.token)) {
+    if (token !== this.hash.execute(auth.token)) {
       throw AUTH_ERRORS.TOKEN_ERROR.exeption;
     }
 
-    const profileUser = {};
-    // const profileUser = await users.findOne({ id: findedUser.profile_id });
+    const user = this.prisma.user.findUnique({
+      where: {
+        id: auth.userId
+      }
+    });
 
-    if (!profileUser) {
+    if (!user) {
       throw AUTH_ERRORS.PROFILE_NOT_FOUND.exeption;
     }
 
@@ -36,4 +49,4 @@ export class Service {
   }
 }
 
-export default Service;
+export default AuthGuardService;

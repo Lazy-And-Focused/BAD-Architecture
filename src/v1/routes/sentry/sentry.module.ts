@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
-import { Controller } from "./sentry.controller";
+import { SentryController } from "./sentry.controller";
 
 @Module({
-  controllers: [Controller],
+  controllers: [SentryController],
 })
-export default class SentryModule {}
+export class SentryModule {}
+
+export default SentryModule;
