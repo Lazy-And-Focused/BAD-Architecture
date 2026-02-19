@@ -5,6 +5,7 @@ import {
   HttpException,
   Query,
   HttpStatus,
+  ParseIntPipe,
 } from "@nestjs/common";
 
 import { ROUTE, ROUTES, OPERATIONS } from "./sentry.routes";
@@ -32,12 +33,12 @@ export class SentryController {
 
   @Get(ROUTES.GET_HTTP)
   @ApiOperation(OPERATIONS.GET_HTTP)
-  public getHttp(@Query(Queries.status) status?: string) {
+  public getHttp(@Query(Queries.status, ParseIntPipe) status?: number) {
     if (!status) {
       throw new HttpException("Not found TEST", HttpStatus.NOT_FOUND);
     }
 
-    throw new HttpException("Exeption TEST", +status);
+    throw new HttpException("Exeption TEST", status);
   }
 }
 
