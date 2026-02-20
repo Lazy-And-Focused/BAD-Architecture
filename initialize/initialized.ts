@@ -10,16 +10,16 @@ export const INITIALIZED = (() => {
       return 0 as const;
     }
     throw new Error("DRY RUN DISABLED");
-  } catch (error) {
+  } catch {
     try {
-      const inited = readFileSync(join(ROOT, "initialized"), "utf-8");
+      const initialized = readFileSync(join(ROOT, "initialized"), "utf-8");
   
-      if (inited === "false") {
+      if (initialized === "false") {
         return false as const;
       }
   
       return 0 as const;
-    } catch (error) {
+    } catch {
       return process.exit();
     }
   }
