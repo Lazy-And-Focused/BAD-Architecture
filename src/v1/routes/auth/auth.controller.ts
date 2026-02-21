@@ -19,9 +19,9 @@ import { AuthService } from "./auth.service";
 
 import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
 
-import { Headers as HeadersEnum, Params } from "@/v1/enums";
+import { Headers as HeadersEnum, Params } from "@1/enums";
 import { PassportStrategy } from "@1/strategies";
-import { HashService } from "@/v1/services";
+import { HashService } from "@1/services";
 
 import { ApiOperation } from "@nestjs/swagger";
 

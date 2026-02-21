@@ -1,8 +1,3 @@
-import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
-
-import { Public } from "@/decorators";
-import { AuthGuard } from "@1/guards";
-
 import {
   Controller,
   Injectable,
@@ -16,6 +11,12 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
+
+import { Public } from "@/decorators";
+import { AuthGuard } from "@1/guards";
+import { Params } from "@1/enums"
+
+import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
 
 import { ROUTE, ROUTES, OPERATIONS } from "./<%= name %>.routes";
 import { <%= classify(name) %>Service } from "./<%= name %>.service"
@@ -39,7 +40,7 @@ export class <%= classify(name) %>Controller {
   @Get(ROUTES.GET_ONE)
   @Public()
   public getOne(
-    @Param("id") id: string
+    @Param(Params.id) id: string
   ) {
     return this.service.getOne(id);
   }
@@ -55,7 +56,7 @@ export class <%= classify(name) %>Controller {
   @ApiOperation(OPERATIONS.PUT)
   @Put(ROUTES.PUT)
   public put(
-    @Param("id") id: string,
+    @Param(Params.id) id: string,
     @Body() data: <%= classify(name) %>UpdateDto 
   ) {
     return this.service.put(id, data);
@@ -64,7 +65,7 @@ export class <%= classify(name) %>Controller {
   @ApiOperation(OPERATIONS.PATCH)
   @Patch(ROUTES.PATCH)
   public patch(
-    @Param("id") id: string,
+    @Param(Params.id) id: string,
     @Body() data: <%= classify(name) %>UpdateDto 
   ) {
     return this.service.patch(id, data);
@@ -73,7 +74,7 @@ export class <%= classify(name) %>Controller {
   @ApiOperation(OPERATIONS.DELETE)
   @Delete(ROUTES.DELETE)
   public delete(
-    @Param("id") id: string
+    @Param(Params.id) id: string
   ) {
     return this.service.delete(id);
   }
