@@ -31,12 +31,9 @@ BAD подойдёт командам и индивидуальным разра
 - [Структура рабочей области (workspace)](workspace.md)
 - [Структура проекта (src)](project-structure.md)
 - [Правила стиля и соглашения](conventions.md)
-<!-- - [Работа с роутами](routes.md)
+- [Работа с роутами](routes.md)
 - [Обработка ошибок](errors.md)
-- [Глобальные компоненты](global-components.md)
 - [Конфигурация и окружение](configuration.md)
-- [Развёртывание](deployment.md)
-- [Часто задаваемые вопросы](faq.md) -->
 
 ## Участие в разработке
 
@@ -45,3 +42,5 @@ BAD подойдёт командам и индивидуальным разра
 ## Лицензия
 
 BAD Architecture распространяется под лицензией MIT. Подробности в файле [LICENSE](https://github.com/Lazy-And-Focused/BAD-template/blob/main/LICENSE).
+
+> # LAF with love
