@@ -19,6 +19,7 @@
   "scripts": {
     "build": "nest build",
     "init": "tsc ./initialize/index.ts --outDir ./dist && node ./dist/index.js",
+    "swagger": "set PROGRAMM_MODE=swagger&& nest start",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "set PROGRAMM_MODE=production&& nest start",
     "start:watch": "set PROGRAMM_MODE=production&& nest start --watch",

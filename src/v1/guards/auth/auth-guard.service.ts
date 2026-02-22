@@ -31,7 +31,7 @@ export class AuthGuardService {
       throw AUTH_ERRORS.PROFILE_ID.exeption;
     }
 
-    if (token !== this.hash.execute(auth.token)) {
+    if (token !== auth.token) {
       throw AUTH_ERRORS.TOKEN_ERROR.exeption;
     }
 

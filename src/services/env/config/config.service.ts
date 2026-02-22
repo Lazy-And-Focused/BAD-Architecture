@@ -20,7 +20,7 @@ export const env: Env = ((): Env => {
     transformUnique()
   ] as const;
 
-  if (data.some(v => v.errorAppeared)) {
+  if (data.some(v => v.errorAppeared) && process.env.IGNORE !== "true") {
     process.exit();
   }
 

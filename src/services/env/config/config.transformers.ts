@@ -66,6 +66,10 @@ export const formatProperties = <
 }
 
 export const defaultValueTransformer = (value?: string) => {
+  if (process.env.IGNORE === "true") {
+    return value || "IGNOR ENABLED";
+  }
+
   if (!value) {
     throw new Error("value is not defined");
   }

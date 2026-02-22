@@ -1,7 +1,6 @@
-import { env } from "@/services";
+import { env, PROGRAMM_MODE } from "@/services";
 
 import { init as initSentry, consoleLoggingIntegration } from "@sentry/nestjs";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { NestFactory } from "@nestjs/core";
 
 import { json, urlencoded } from "express";
@@ -10,6 +9,8 @@ import cookieParser = require("cookie-parser");
 
 import Session from "./app/session.app";
 import AppModule from "./app.module";
+
+import { swagger } from "./swagger";
 
 initSentry({
   dsn: env.SENTRY_URL,
@@ -21,6 +22,10 @@ initSentry({
 });
 
 (async () => {
+  if (PROGRAMM_MODE === "swagger") {
+    return swagger();
+  }
+
   const app = await NestFactory.create(AppModule, {
     cors: { origin: [env.CLIENT_URL], credentials: true },
   });
@@ -28,18 +33,10 @@ initSentry({
   new Session(env.SESSION_SECRET, app).create();
 
   app.use(cookieParser());
-  app.use(json());
   app.use(urlencoded());
+  app.use(json());
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle("API documentation")
-    .setDescription("API documentation")
-    .setVersion("1.0")
-    .addTag("api")
-    .build();
-
-  const documentFactory = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup("api/docs", app, documentFactory);
+  swagger(app);
 
   await app.listen(env.PORT);
 })();

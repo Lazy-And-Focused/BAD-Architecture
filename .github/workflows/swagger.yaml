@@ -1,0 +1,43 @@
+name: Deploy Swagger Docs to GitHub Pages
+
+on:
+  push:
+    branches: [ main, main--code-refactoring ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Swagger JSON
+        run: npm run swagger
+        env:
+          IGNORE: true
+
+      - name: Prepare documentation folder
+        run: |
+          mkdir -p public
+          cp -r swagger/*.json public/
+          echo '<!DOCTYPE html><html><head><title>API Docs</title></head><body><h1>API Documentation</h1><ul>' > public/index.html
+          for file in swagger/*.json; do
+            version=$(basename "$file" .json)
+            echo "<li><a href=\"./?url=./$version.json\">Version $version</a></li>" >> public/index.html
+          done
+          echo '</ul><script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css"><div id="swagger-ui"></div><script>const urlParams = new URLSearchParams(window.location.search);const url = urlParams.get("url") || "./v1.json";SwaggerUIBundle({url: url, dom_id: "#swagger-ui"});</script></body></html>' >> public/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages

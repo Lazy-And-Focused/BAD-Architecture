@@ -4,6 +4,8 @@ export const MODES = [
   
   "prod",
   "production",
+
+  "swagger",
   
   "test",
   "testing",

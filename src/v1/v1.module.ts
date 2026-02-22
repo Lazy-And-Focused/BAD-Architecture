@@ -1,6 +1,7 @@
 import type { NestModule, MiddlewareConsumer } from "@nestjs/common";
 
 import { Module } from "@nestjs/common";
+import { DocumentBuilder } from "@nestjs/swagger";
 
 import {
   APP_FILTER,
@@ -18,17 +19,30 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { LoggerMiddleware } from "./middleware";
 
 import { HashService, StrategiesService } from "./services";
-import { LoggerService } from "@/services";
+import { LoggerService, env } from "@/services";
+import { createSwaggerConfig } from "@/utils";
 import { PrismaService } from "@/database";
 
 import { AuthStrategy } from "./strategies";
 
 import { GuardsModule } from "./guards";
-import { AuthModule, SentryModule, TestModule } from "./routes"
-
-import { env } from "@/services";
+import { AuthModule, CreateUserBodyDto, CreateUserHeadersDto, SentryModule, TestModule } from "./routes";
+import { AuthEntity, UserEntity } from "./entities";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
+export const v1Swagger = createSwaggerConfig({
+  version: "v1",
+  document: new DocumentBuilder()
+    .setTitle("OPEN API v1 documentation"),
+  documentOptions: {
+    extraModels: [
+      CreateUserBodyDto,
+      CreateUserHeadersDto,
+      UserEntity,
+      AuthEntity
+    ]
+  }
+});
 
 @Module({
   imports: [
