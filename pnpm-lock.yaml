@@ -54,8 +54,8 @@ importers:
         specifier: ^1.18.2
         version: 1.18.2
       fock-logger:
-        specifier: ^6.3.1
-        version: 6.3.1
+        specifier: ^6.3.2
+        version: 6.3.2
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -2399,8 +2399,8 @@ packages:
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
 
-  fock-logger@6.3.1:
-    resolution: {integrity: sha512-P41EDqbUqX/fzmI43H4Yde4U754dR3UrjaW0ErSoupTQt+FvhNTiypouU5//ceFE+kfLvXEamSzc5HzvgbxQww==}
+  fock-logger@6.3.2:
+    resolution: {integrity: sha512-CRepGFvTZCTaFYA6rNg+EbXGCsRWG0dNnOqfXGRQqF8mDgiPC8tEkUrWWxIS8MnsF19MH8n62TfL26fVYKBitg==}
     engines: {node: '>=7.6.0'}
 
   foreground-child@3.3.1:
@@ -6740,7 +6740,7 @@ snapshots:
 
   flatted@3.3.3: {}
 
-  fock-logger@6.3.1: {}
+  fock-logger@6.3.2: {}
 
   foreground-child@3.3.1:
     dependencies:

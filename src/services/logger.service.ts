@@ -4,7 +4,8 @@ import { Configurator } from "fock-logger/config";
 import FockLogger, { Colors } from "fock-logger";
 
 new Configurator({
-  create_file: false,
+  create_file: true,
+  overwrite_file: true,
   logging: false,
   date: true,
   dir: "./",
