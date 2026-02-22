@@ -8,19 +8,25 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm i
+        run: pnpm i --frozen-lockfile
 
       - name: Generate Swagger JSON
-        run: npm run swagger
+        run: pnpm run swagger
         env:
           IGNORE: true
 
