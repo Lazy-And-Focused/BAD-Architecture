@@ -18,7 +18,7 @@ src/
 │   ├── {version}.module.ts
 │   ├── types/             # Типы, специфичные для версии
 │   ├── services/          # Сервисы уровня версии
-│   ├── middleware/        # Middleware, применяемые только в этой версии
+│   ├── middlewares/        # Middleware, применяемые только в этой версии
 │   ├── errors/            # Кастомные ошибки для версии
 │   ├── decorators/        # Декораторы, специфичные для версии
 │   ├── constants/         # Константы для версии (?)
@@ -38,7 +38,7 @@ src/
 │   │       ├── index.ts
 │   │       ├── {guardName}.guard.ts        # сам guard
 │   │       └── {guardName}.service.ts      # сервис для guard (?)
-│   ├── middleware/            # middleware (?)
+│   ├── middlewares/            # middleware (?)
 │   │   ├── index.ts
 │   │   └── {middlwareName}.middleware.ts
 │   ├── errors/                # ошибки (?)
@@ -71,7 +71,7 @@ src/
 │       ├── index.ts
 │       └── {strategyName}.strategies.ts
 ├── database/              # База данных (?)
-├── middleware/            # Глобальные middlewares (?)
+├── middlewares/            # Глобальные middlewares (?)
 ├── errors/                # Глобальные ошибки (?)
 ├── decorators/            # Глобальные декораторы (?)
 ├── constants/             # Глобальные константы (?)

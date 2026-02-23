@@ -16,7 +16,7 @@ import {
 } from "@sentry/nestjs/setup";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
-import { LoggerMiddleware } from "./middleware";
+import { LoggerMiddleware } from "./middlewares";
 
 import { HashService, StrategiesService } from "./services";
 import { LoggerService, env } from "@/services";
