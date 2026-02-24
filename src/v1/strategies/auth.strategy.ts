@@ -122,7 +122,10 @@ export class AuthStrategy {
     });
 
     if (!auth) {
-      return null;
+      throw new HttpException(
+        `Auth with "${service.authId}" not found`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const user = await this.prisma.user.findUnique({
