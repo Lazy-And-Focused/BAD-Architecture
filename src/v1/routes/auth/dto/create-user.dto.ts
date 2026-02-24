@@ -8,11 +8,14 @@ import {
   MinLength,
 } from "class-validator";
 
+import { Transform } from "class-transformer";
+
 export class CreateUserBodyDto {
   @ApiProperty()
   @IsString()
   @MaxLength(64)
   @MinLength(2)
+  @Transform(({ value }) => value.toLowerCase())
   username: string;
 
   @ApiProperty()
