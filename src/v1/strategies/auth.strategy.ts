@@ -1,13 +1,13 @@
 import type {
-  SignInData,
-  SignInRequiredData,
+  ServiceCredentials,
+  SignUpByPasswordData,
+  SignUpData
 } from "@1/entities";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { sign } from "jsonwebtoken";
 
-import { SingUpData, SingInByServiceData } from "./strategies.dto";
 import { AUTH_STRATEGIES_ERRORS } from "../errors";
 
 import { UsernamePipe } from "@1/pipes";
@@ -28,7 +28,7 @@ export class AuthStrategy {
     password,
     email,
     nickname,
-  }: SignInData) {
+  }: SignUpByPasswordData) {
     const hash = this.hash.execute(password);
 
     return this.singUp({
@@ -44,7 +44,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: SingInByServiceData) {
+  }: ServiceCredentials) {
     const profileUsername = (
       profile.username || profile.displayName
     ).toLowerCase();
@@ -71,7 +71,7 @@ export class AuthStrategy {
   public async singInByPassword({
     password,
     username,
-  }: SignInRequiredData) {
+  }: SignUpByPasswordData) {
     const user = await this.prisma.user.findUnique({
       where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });
@@ -103,7 +103,7 @@ export class AuthStrategy {
     accessToken,
     refreshToken,
     name,
-  }: SingInByServiceData) {
+  }: ServiceCredentials) {
     const service = await this.prisma.service.findUnique({
       where: {
         id: profile.id,
@@ -169,7 +169,7 @@ export class AuthStrategy {
     nickname,
     password,
     service,
-  }: SingUpData) {
+  }: SignUpData) {
     const existedUser = await this.prisma.user.findUnique({
       where: {
         username: UsernamePipe.validate(username),
@@ -212,7 +212,7 @@ export class AuthStrategy {
     const user = await this.prisma.user.create({
       data: {
         id: userId,
-        nickname: nickname,
+        nickname: nickname || username,
         username: UsernamePipe.validate(username.toLowerCase()),
       },
     });
