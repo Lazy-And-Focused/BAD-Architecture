@@ -1,12 +1,7 @@
 import { Public } from "@/decorators";
 import { AuthGuard } from "@1/guards";
 
-import {
-  Controller,
-  Injectable,
-  Get,
-  UseGuards,
-} from "@nestjs/common";
+import { Controller, Injectable, Get, UseGuards } from "@nestjs/common";
 
 import { ApiOperation } from "@nestjs/swagger";
 

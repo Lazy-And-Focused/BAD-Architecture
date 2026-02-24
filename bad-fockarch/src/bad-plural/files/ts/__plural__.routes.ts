@@ -17,22 +17,22 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
 
   operations: {
     GET: {
-      summary: "Getting an array of <%= name %>"
+      summary: "Getting an array of <%= name %>",
     },
     GET_ONE: {
-      summary: "Getting a <%= name %> by id"
+      summary: "Getting a <%= name %> by id",
     },
     POST: {
-      summary: "Creaing a <%= name %>"
+      summary: "Creaing a <%= name %>",
     },
     PUT: {
-      summary: "Updating a <%= name %>"
+      summary: "Updating a <%= name %>",
     },
     PATCH: {
-      summary: "Updating a <%= name %>"
+      summary: "Updating a <%= name %>",
     },
     DELETE: {
-      summary: "Deleting a <%= name %>"
+      summary: "Deleting a <%= name %>",
     },
   } as const,
 }).execute();

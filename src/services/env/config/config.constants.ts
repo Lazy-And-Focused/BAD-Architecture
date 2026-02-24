@@ -22,7 +22,11 @@ export const ALL_VALUES = [
   "AVAILABLE_USERNAME_SYMBOLS",
 ] as const;
 
-export const AUTH_DATA = ["CLIENT_ID", "CLIENT_SECRET", "CALLBACK_URL"] as const;
+export const AUTH_DATA = [
+  "CLIENT_ID",
+  "CLIENT_SECRET",
+  "CALLBACK_URL",
+] as const;
 
 export const DEFAULT_VALUES: Record<PartialProperties, string> = {
   ENCODING_TYPE: "hex",

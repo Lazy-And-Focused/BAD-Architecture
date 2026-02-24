@@ -7,20 +7,18 @@ import { ApiProperty, ApiSchema } from "@nestjs/swagger";
 export class UserEntity implements User {
   @ApiProperty()
   id: string;
-  
+
   @ApiProperty()
   username: string;
-  
+
   @ApiProperty()
   nickname: string;
-  
+
   @ApiProperty()
   updatedAt: Date;
-  
+
   @ApiProperty()
   createdAt: Date;
 }
 
-export type { 
-  User
-}
+export type { User };

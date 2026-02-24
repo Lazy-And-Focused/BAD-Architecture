@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { ENV_FILE_NAME } from "../programm-mode";
 
 config({
-  path: ENV_FILE_NAME
+  path: ENV_FILE_NAME,
 });
 
 import type { Env } from "./config.types";
@@ -11,27 +11,33 @@ import type { UnionToIntersection } from "@/types/utility.types";
 import { AuthTypes } from "@1/types";
 
 import { DEFAULT_VALUES } from "./config.constants";
-import { transformAuthData, transformRequired, transformUnique } from "./config.transformers";
+import {
+  transformAuthData,
+  transformRequired,
+  transformUnique,
+} from "./config.transformers";
 
 export const env: Env = ((): Env => {
   const data = [
     transformAuthData(),
     transformRequired(),
-    transformUnique()
+    transformUnique(),
   ] as const;
 
-  if (data.some(v => v.errorAppeared) && process.env.IGNORE !== "true") {
+  if (data.some((v) => v.errorAppeared) && process.env.IGNORE !== "true") {
     process.exit();
   }
 
   type Config = UnionToIntersection<(typeof data)[number]["data"]>;
-  const config = data.map(v => v.data).reduce((p, c) => Object.assign(p, c)) as Config;
+  const config = data
+    .map((v) => v.data)
+    .reduce((p, c) => Object.assign(p, c)) as Config;
 
   return {
     ...DEFAULT_VALUES,
     ...process.env,
-    ...config
-  }
+    ...config,
+  };
 })();
 
 export const getPassportEnv = (type: Uppercase<AuthTypes>) => {

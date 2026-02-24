@@ -32,21 +32,18 @@ export const resolveChooseFilesAndDelete = async (
   const files = filterFiles(await readdir(dir));
   const chooseFileData = parseChooseFileName(option, chooseFile(files, option));
 
-  const oldName = join(dir, chooseFileData.fullName)
-  const newName = join(dir, chooseFileData.name)
+  const oldName = join(dir, chooseFileData.fullName);
+  const newName = join(dir, chooseFileData.name);
   console.log("Creating:", newName, "with", oldName);
   if (INITIALIZED === false) {
-    await copyFile(
-      oldName,
-      newName,
-    );
+    await copyFile(oldName, newName);
   }
-  
+
   for (const file of files) {
     if (file === chooseFileData.name) {
       continue;
     }
-    
+
     const path = join(dir, file);
     console.log("Deleting:", path);
     if (INITIALIZED === false) {

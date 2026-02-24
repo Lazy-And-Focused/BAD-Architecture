@@ -13,11 +13,11 @@ export const INITIALIZED = (() => {
   } catch {
     try {
       const initialized = readFileSync(join(ROOT, "initialized"), "utf-8");
-  
+
       if (initialized === "false") {
         return false as const;
       }
-  
+
       return 0 as const;
     } catch {
       return process.exit();

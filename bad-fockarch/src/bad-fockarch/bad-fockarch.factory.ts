@@ -50,7 +50,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);
-    
+
   return target;
 }
 
@@ -75,5 +75,11 @@ const generate = (options: BadFockarchOptions): Source => {
 
 export const main = (options: BadFockarchOptions): Rule => {
   options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options)), (tree, context) => { console.log({tree, context}) }]);
+  return chain([
+    mergeSourceRoot(options),
+    mergeWith(generate(options)),
+    (tree, context) => {
+      console.log({ tree, context });
+    },
+  ]);
 };

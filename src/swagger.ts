@@ -21,14 +21,16 @@ export const swagger = async (app?: INestApplication) => {
     const nestFactory = await NestFactory.create(AppModule);
 
     for (const createSwagger of swaggers) {
-      const { factory, app, options, pathname, version } = createSwagger({ app: nestFactory });
+      const { factory, app, options, pathname, version } = createSwagger({
+        app: nestFactory,
+      });
 
       const folderPath = join(process.cwd(), "swagger");
       const filePath = join(folderPath, `${version}.json`);
-      
-      await mkdir(folderPath, { recursive: true })
+
+      await mkdir(folderPath, { recursive: true });
       await writeFile(filePath, JSON.stringify(factory));
-      
+
       SwaggerModule.setup(pathname, app, factory, options);
     }
 
@@ -42,8 +44,13 @@ export const swagger = async (app?: INestApplication) => {
 
   return () => {
     for (const createSwagger of swaggers) {
-      const { factory, app: currentApp, options, pathname } = createSwagger({ app });
+      const {
+        factory,
+        app: currentApp,
+        options,
+        pathname,
+      } = createSwagger({ app });
       SwaggerModule.setup(pathname, currentApp, factory, options);
     }
-  }
+  };
 };

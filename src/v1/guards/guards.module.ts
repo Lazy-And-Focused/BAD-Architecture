@@ -5,11 +5,7 @@ import { AuthGuardService } from "./auth";
 import { HashService } from "../services";
 
 @Module({
-  providers: [
-    AuthGuardService,
-    PrismaService,
-    HashService
-  ]
+  providers: [AuthGuardService, PrismaService, HashService],
 })
 export class GuardsModule {}
 

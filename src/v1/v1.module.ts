@@ -26,22 +26,27 @@ import { PrismaService } from "@/database";
 import { AuthStrategy } from "./strategies";
 
 import { GuardsModule } from "./guards";
-import { AuthModule, CreateUserBodyDto, CreateUserHeadersDto, SentryModule, TestModule } from "./routes";
+import {
+  AuthModule,
+  CreateUserBodyDto,
+  CreateUserHeadersDto,
+  SentryModule,
+  TestModule,
+} from "./routes";
 import { AuthEntity, UserEntity } from "./entities";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
 export const v1Swagger = createSwaggerConfig({
   version: "v1",
-  document: new DocumentBuilder()
-    .setTitle("OPEN API v1 documentation"),
+  document: new DocumentBuilder().setTitle("OPEN API v1 documentation"),
   documentOptions: {
     extraModels: [
       CreateUserBodyDto,
       CreateUserHeadersDto,
       UserEntity,
-      AuthEntity
-    ]
-  }
+      AuthEntity,
+    ],
+  },
 });
 
 @Module({
@@ -90,4 +95,3 @@ export class v1Module implements NestModule {
 }
 
 export default v1Module;
-

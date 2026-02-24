@@ -2,7 +2,7 @@ name: Deploy Swagger Docs to GitHub Pages
 
 on:
   push:
-    branches: [ main, main--code-refactoring ]
+    branches: [main, main--code-refactoring]
 
 jobs:
   build-and-deploy:
@@ -23,8 +23,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm i
@@ -57,4 +57,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: gh-pages
-          

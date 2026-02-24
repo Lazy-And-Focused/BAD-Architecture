@@ -13,7 +13,7 @@ import { AuthGuardService } from "./auth-guard.service";
 export class AuthGuard implements CanActivate {
   public constructor(
     private readonly reflector: Reflector,
-    private readonly service: AuthGuardService
+    private readonly service: AuthGuardService,
   ) {}
 
   public canActivate(

@@ -12,7 +12,12 @@ import { INITIALIZED } from "./initialized";
   }
 
   const initializeDirPath = join(ROOT, "initialize");
-  console.log("Deleting:", initializeDirPath, "and", readdirSync(initializeDirPath, { recursive: true }));
+  console.log(
+    "Deleting:",
+    initializeDirPath,
+    "and",
+    readdirSync(initializeDirPath, { recursive: true }),
+  );
   if (INITIALIZED === false) {
     rmSync(initializeDirPath, { recursive: true, force: true });
   }

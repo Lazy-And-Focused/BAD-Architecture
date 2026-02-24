@@ -40,31 +40,29 @@ export interface SignUpData {
 }
 
 @ApiSchema({
-  name: "AuthSchema"
+  name: "AuthSchema",
 })
 export class AuthEntity implements Auth {
   @ApiProperty()
   id: string;
-  
+
   @ApiProperty()
   userId: string;
-  
+
   @ApiProperty()
   token: string;
-  
-  @ApiPropertyOptional({ type: "string", nullable: true  })
+
+  @ApiPropertyOptional({ type: "string", nullable: true })
   email: string | null;
-  
+
   @ApiPropertyOptional({ type: "string", nullable: true })
   password: string | null;
-  
+
   @ApiProperty()
   createdAt: Date;
-  
+
   @ApiProperty()
   updatedAt: Date;
 }
 
-export type {
-  Auth
-}
+export type { Auth };

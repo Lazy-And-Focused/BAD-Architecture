@@ -1,7 +1,7 @@
 import type {
   ServiceCredentials,
   SignUpByPasswordData,
-  SignUpData
+  SignUpData,
 } from "@1/entities";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
@@ -68,10 +68,7 @@ export class AuthStrategy {
     });
   }
 
-  public async singInByPassword({
-    password,
-    username,
-  }: SignUpByPasswordData) {
+  public async singInByPassword({ password, username }: SignUpByPasswordData) {
     const user = await this.prisma.user.findUnique({
       where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });

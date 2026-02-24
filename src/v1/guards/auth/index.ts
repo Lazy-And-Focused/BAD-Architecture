@@ -8,5 +8,5 @@ export * from "./auth.guard";
 export const AUTH_GUARD_PROVIDERS = [
   AuthGuardService,
   PrismaService,
-  HashService
+  HashService,
 ] as const;

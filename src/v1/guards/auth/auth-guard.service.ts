@@ -10,7 +10,7 @@ import { AUTH_ERRORS } from "@1/errors/guards/auth.errors";
 export class AuthGuardService {
   public constructor(
     private readonly prisma: PrismaService,
-    private readonly hash: HashService
+    private readonly hash: HashService,
   ) {}
 
   public async validateRequest(req: Request) {
@@ -19,8 +19,8 @@ export class AuthGuardService {
 
     const auth = await this.prisma.auth.findUnique({
       where: {
-        id: authId
-      }
+        id: authId,
+      },
     });
 
     if (!auth) {
@@ -37,8 +37,8 @@ export class AuthGuardService {
 
     const user = this.prisma.user.findUnique({
       where: {
-        id: auth.userId
-      }
+        id: auth.userId,
+      },
     });
 
     if (!user) {
