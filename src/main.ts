@@ -7,8 +7,8 @@ import { json, urlencoded } from "express";
 
 import cookieParser = require("cookie-parser");
 
-import Session from "./app/session.app";
-import AppModule from "./app.module";
+import { Session } from "./app.session";
+import { AppModule } from "./app.module";
 
 import { swagger } from "./swagger";
 

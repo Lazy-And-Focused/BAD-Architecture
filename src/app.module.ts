@@ -37,8 +37,10 @@ const modules: RegisterModule[] = [
   ],
   providers: [PrismaService, LoggerService, HashService],
 })
-export default class AppModule implements NestModule {
+export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer.apply().forRoutes("/");
   }
 }
+
+export default AppModule;

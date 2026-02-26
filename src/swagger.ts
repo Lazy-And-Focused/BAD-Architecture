@@ -7,7 +7,7 @@ import { SwaggerModule } from "@nestjs/swagger";
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
 
-import AppModule from "./app.module";
+import { AppModule } from "./app.module";
 import { v1Swagger } from "./v1/v1.module";
 
 const swaggers = [v1Swagger];
