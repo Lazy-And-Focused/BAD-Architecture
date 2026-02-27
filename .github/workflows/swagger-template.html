@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>BAD-Architecture API</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
+    <style>
+        :root {
+            --selected-version: #49cc90;
+        }
+
+        #ba-sc .active-version-badge {
+            background-color: var(--selected-version);
+        }
+    </style>
+</head>
+
+<body class="swagger-ui">
+    <h1>BAD-Architecture API</h1>
+    <div class="swagger-ui" id="ba-sc"></div>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+
+    <script>
+        (function () {
+            // [Не менять]!: будут подсставлен массив чисел из CI, например [1,2,3]
+            const VERSIONS = __VERSIONS_LIST__;
+
+            let currentVersion;
+            let currentType = 'json';
+            let swaggerUiInstance = null;
+
+            function getVersionFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                let v = urlParams.get('version') || urlParams.get('v');
+                if (v && VERSIONS.includes(parseInt(v))) {
+                    return parseInt(v);
+                }
+                return VERSIONS[0];
+            }
+
+            function updateURL(version) {
+                const url = new URL(window.location);
+                url.searchParams.set('v', version);
+                if (url.searchParams.has('version')) {
+                    url.searchParams.delete('version');
+                }
+                window.history.pushState({ version }, '', url);
+            }
+
+            function renderVersions(activeVersion) {
+                const container = document.getElementById('ba-sc');
+                container.innerHTML = '';
+
+                VERSIONS.forEach(version => {
+                    const isActive = (version === activeVersion);
+
+                    const wrapper = document.createElement('span');
+                    const block = document.createElement('div');
+                    block.className = 'opblock opblock-get';
+
+                    const summary = document.createElement('div');
+                    summary.className = 'opblock-summary';
+
+                    const button = document.createElement('button');
+                    button.className = 'opblock-summary-control';
+
+                    const methodSpan = document.createElement('span');
+                    methodSpan.className = 'opblock-summary-method' + (isActive ? ' active-version-badge' : '');
+                    methodSpan.textContent = isActive ? 'SELECTED' : `v${version}`;
+
+                    const pathSpan = document.createElement('span');
+                    pathSpan.className = 'opblock-summary-path';
+                    pathSpan.setAttribute('data-path', `/api/v${version}`);
+                    const pathLink = document.createElement('a');
+                    pathLink.className = 'nostyle';
+                    pathLink.innerHTML = `<span>./v${version}.json</span>`;
+                    pathSpan.appendChild(pathLink);
+
+                    const descSpan = document.createElement('div');
+                    descSpan.className = 'opblock-summary-description';
+                    descSpan.textContent = `api specification for ${version} version`;
+
+                    button.appendChild(methodSpan);
+                    button.appendChild(pathSpan);
+                    button.appendChild(descSpan);
+                    summary.appendChild(button);
+                    block.appendChild(summary);
+                    wrapper.appendChild(block);
+
+                    wrapper.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        updateVersion(version);
+                    });
+
+                    container.appendChild(wrapper);
+                });
+            }
+
+            function loadSwaggerUI(version, type) {
+                // Относительный путь к JSON-файлу
+                const specificationPath = `./v${version}.${type}`;
+                if (swaggerUiInstance) {
+                    document.getElementById('swagger-ui').innerHTML = '';
+                }
+                swaggerUiInstance = SwaggerUIBundle({
+                    url: specificationPath,
+                    dom_id: "#swagger-ui"
+                });
+            }
+
+            function updateVersion(newVersion) {
+                if (newVersion === currentVersion) return;
+                currentVersion = newVersion;
+                updateURL(currentVersion);
+                renderVersions(currentVersion);
+                loadSwaggerUI(currentVersion, currentType);
+            }
+
+            function init() {
+                currentVersion = getVersionFromURL();
+                currentType = new URLSearchParams(window.location.search).get('type') || 'json';
+                renderVersions(currentVersion);
+                loadSwaggerUI(currentVersion, currentType);
+            }
+
+            window.addEventListener('popstate', () => {
+                const version = getVersionFromURL();
+                if (version !== currentVersion) {
+                    currentVersion = version;
+                    renderVersions(currentVersion);
+                    loadSwaggerUI(currentVersion, currentType);
+                }
+            });
+
+            init();
+        })();
+    </script>
+</body>
+
+</html>
