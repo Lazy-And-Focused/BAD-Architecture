@@ -25,7 +25,7 @@
 
     <script>
         (function () {
-            // [Не менять]!: будут подсставлен массив чисел из CI, например [1,2,3]
+            // [Не менять]!: будет подставлен массив чисел из CI, например [1,2,3]
             const VERSIONS = __VERSIONS_LIST__;
 
             let currentVersion;
@@ -100,7 +100,6 @@
             }
 
             function loadSwaggerUI(version, type) {
-                // Относительный путь к JSON-файлу
                 const specificationPath = `./v${version}.${type}`;
                 if (swaggerUiInstance) {
                     document.getElementById('swagger-ui').innerHTML = '';
