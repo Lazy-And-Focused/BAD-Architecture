@@ -9,11 +9,13 @@ export type UniqueProperties = {
   TOKEN_EXPIRATION: StringValue;
 };
 
+export type AuthProperties = `${Uppercase<AuthTypes>}_${AuthData}`;
+
 export type RequiredProperties =
   | (typeof REQUIRED_VALUES)[number]
-  | `${Uppercase<AuthTypes>}_${AuthData}`;
+  | AuthProperties;
 
-export type AllProperties = (typeof ALL_VALUES)[number];
+export type AllProperties = AuthProperties | (typeof ALL_VALUES)[number];
 export type UssualyProperties = Exclude<AllProperties, keyof UniqueProperties>;
 export type PartialProperties = Exclude<AllProperties, RequiredProperties>;
 

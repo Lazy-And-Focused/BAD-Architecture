@@ -1,8 +1,10 @@
 import type { App } from "supertest/types";
 import type { INestApplication } from "@nestjs/common";
-import { ThrottlerStorage } from "@nestjs/throttler";
+import type { TestingModule } from "@nestjs/testing";
 
-import { Test, type TestingModule } from "@nestjs/testing";
+import { ThrottlerStorage } from "@nestjs/throttler";
+import { Test } from "@nestjs/testing";
+
 import request from "supertest";
 
 import { TestController } from "./test.controller";
@@ -10,6 +12,7 @@ import { ROUTE, ROUTES } from "./test.routes";
 
 import { createEndpoints } from "@/utils";
 import v1Module from "@1/v1.module";
+import { AUTH_GUARD_PROVIDERS } from "@1/guards";
 
 const endpoints = createEndpoints({
   route: ROUTE,
@@ -25,6 +28,7 @@ describe(ROUTE + " controller", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [TestController],
+      providers: [...AUTH_GUARD_PROVIDERS],
     }).compile();
 
     controller = moduleRef.get(TestController);

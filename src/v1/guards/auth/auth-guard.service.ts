@@ -10,7 +10,6 @@ import { AUTH_ERRORS } from "@1/errors/guards/auth.errors";
 export class AuthGuardService {
   public constructor(
     private readonly prisma: PrismaService,
-    private readonly hash: HashService,
   ) {}
 
   public async validateRequest(req: Request) {

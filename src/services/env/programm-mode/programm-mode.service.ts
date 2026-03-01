@@ -1,4 +1,4 @@
-import { NotAliasMode } from "./programm-mode.types";
+import { Alias, NotAliasMode } from "./programm-mode.types";
 import { ALIASES, DEFAULT_MODE } from "./programm-mode.constants";
 import { isAlias, isMode } from "./programm-mode.validators";
 
@@ -14,13 +14,13 @@ export const PROGRAMM_MODE: NotAliasMode = (() => {
 
   const outputMode = (() => {
     if (isAlias(mode)) {
-      return ALIASES[mode];
+      return ALIASES[mode as Alias];
     }
 
     return mode;
   })();
 
-  return outputMode;
+  return outputMode as NotAliasMode;
 })();
 
 const DEFAULT_ENV_FILE_NAME = ".env" as const;

@@ -109,7 +109,7 @@ export class StrategiesService {
           await this.authStrategy.singUpByService(parameters);
         return done(false, signedUpData);
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(error as Error);
         return done(error, false);
       }
     };

@@ -5,7 +5,7 @@ import { NestFactory } from "@nestjs/core";
 
 import { json, urlencoded } from "express";
 
-import cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
 
 import { Session } from "./app.session";
 import { AppModule } from "./app.module";

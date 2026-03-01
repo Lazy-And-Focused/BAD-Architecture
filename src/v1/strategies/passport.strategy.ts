@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 import { StrategiesService } from "../services";
 
-import passport = require("passport");
+import passport from "passport";
 
 const abbreviations: Map<string, AuthTypes> = new Map([]);
 

@@ -10,7 +10,7 @@ import type { UnionToIntersection } from "@/types/utility.types";
 
 import { AuthTypes } from "@1/types";
 
-import { DEFAULT_VALUES } from "./config.constants";
+import { AUTH_DATA, DEFAULT_VALUES } from "./config.constants";
 import {
   transformAuthData,
   transformRequired,
@@ -41,10 +41,14 @@ export const env: Env = ((): Env => {
 })();
 
 export const getPassportEnv = (type: Uppercase<AuthTypes>) => {
+  const id = `${type}_${AUTH_DATA[0]}` as const;
+  const secret = `${type}_${AUTH_DATA[1]}` as const;
+  const callback = `${type}_${AUTH_DATA[2]}` as const;
+
   return {
-    id: env[type + "_CLIENT_ID"],
-    secret: env[type + "_CLIENT_SECRET"],
-    callback: env[type + "_CALLBACK_URL"],
+    id: env[id],
+    secret: env[secret],
+    callback: env[callback]
   } as const;
 };
 
