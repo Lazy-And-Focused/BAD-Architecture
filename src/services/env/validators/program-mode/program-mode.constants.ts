@@ -18,3 +18,5 @@ export const ALIASES = {
 } as const;
 
 export const DEFAULT_MODE = "production" as const;
+
+export const ALIASES_KEYS = Object.keys(ALIASES);

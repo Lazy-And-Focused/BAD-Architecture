@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - PROGRAMM_MODE=production
+      - PROGRAM_MODE=production
     volumes:
       - ./:/app
       - /app/node_modules

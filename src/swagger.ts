@@ -1,4 +1,4 @@
-import { PROGRAMM_MODE } from "./services";
+import { PROGRAM_MODE } from "./services";
 
 import { INestApplication } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -13,9 +13,9 @@ import { v1Swagger } from "./v1/v1.module";
 const swaggers = [v1Swagger];
 
 export const swagger = async (app?: INestApplication) => {
-  if (PROGRAMM_MODE === "swagger") {
+  if (PROGRAM_MODE === "swagger") {
     if (app) {
-      throw new Error("app can not be defined with mode " + PROGRAMM_MODE);
+      throw new Error("app can not be defined with mode " + PROGRAM_MODE);
     }
 
     const nestFactory = await NestFactory.create(AppModule);

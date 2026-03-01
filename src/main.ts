@@ -1,4 +1,4 @@
-import { env, PROGRAMM_MODE } from "@/services";
+import { env, PROGRAM_MODE } from "@/services";
 
 import { init as initSentry, consoleLoggingIntegration } from "@sentry/nestjs";
 import { NestFactory } from "@nestjs/core";
@@ -22,7 +22,7 @@ initSentry({
 });
 
 (async () => {
-  if (PROGRAMM_MODE === "swagger") {
+  if (PROGRAM_MODE === "swagger") {
     return swagger();
   }
 

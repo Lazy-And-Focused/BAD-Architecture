@@ -1,2 +1,1 @@
-export * from "./config";
-export * from "./programm-mode";
+export * from "./env.service";
