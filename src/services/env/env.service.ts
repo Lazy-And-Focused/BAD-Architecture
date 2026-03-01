@@ -1,3 +1,11 @@
+import { config } from "dotenv";
+
+import { getEnvFileName } from "./validators";
+
+config({
+  path: getEnvFileName()
+});
+
 import type { Unique } from "./env.validators";
 import { VALIDATORS } from "./env.validators";
 
@@ -35,7 +43,9 @@ export const env = Env.create<Unique>(process.env)({
     AVAILABLE_USERNAME_SYMBOLS: "abcdefghijklmnopqrstuvwxyz",
   },
 
-  unique: VALIDATORS
+  unique: VALIDATORS,
+
+  dangerousIgnoreErrors: process.env.IGNORE === "true"
 });
 
 export const getPassportEnv = (type: Uppercase<AuthTypes>) => {

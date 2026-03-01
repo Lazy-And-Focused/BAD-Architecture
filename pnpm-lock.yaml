@@ -57,8 +57,8 @@ importers:
         specifier: ^1.18.2
         version: 1.18.2
       fenviee:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       fock-logger:
         specifier: ^6.3.2
         version: 6.3.2
@@ -2426,8 +2426,8 @@ packages:
   fb-watchman@2.0.2:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
 
-  fenviee@0.1.0:
-    resolution: {integrity: sha512-f3jrKTmnvezMvDhrBb7tlS0nOBdWhD2elSMDlmOQ/D6ESiRmppMHMo1c3DoUgm+QSCTkM3DZjg6u6ANEE3k/Yw==}
+  fenviee@0.1.1:
+    resolution: {integrity: sha512-yMVQ4VrthLqJSQdPbDsEr392tET/dOjQnyb/lMLZpu2pnupidLXb4TeoJOtz/B2Jrs89bUC2j9wfU819c8GZQg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
 
   fflate@0.8.2:
@@ -6902,7 +6902,7 @@ snapshots:
     dependencies:
       bser: 2.1.1
 
-  fenviee@0.1.0: {}
+  fenviee@0.1.1: {}
 
   fflate@0.8.2: {}
 

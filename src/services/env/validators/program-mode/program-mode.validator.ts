@@ -30,3 +30,12 @@ export const validateProgramMode = (mode?: string): ProgramMode => {
     return mode as ProgramMode;
   })();
 }
+
+export const getEnvFileName = () => {
+  const mode = validateProgramMode(process.env.PROGRAM_MODE);
+  if (mode === "production") {
+    return ".env" as const;
+  }
+
+  return `.env.${mode}` as const;
+}
