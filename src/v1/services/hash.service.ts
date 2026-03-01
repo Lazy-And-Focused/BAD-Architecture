@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { HASH_ERRORS } from "@1/errors/services/hash.errors";
 import { tryCatchThrow } from "@/utils/try-catch.utils";
 
-import { env } from "@/services/env/config/config.service";
+import { env } from "@/services";
 import crypto from "crypto";
 
 const PARSE_ERROR = {

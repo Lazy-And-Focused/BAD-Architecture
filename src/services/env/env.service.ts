@@ -1,23 +1,10 @@
 import type { Unique } from "./env.validators";
 import { VALIDATORS } from "./env.validators";
 
+import { AUTH_PROPERTIES, GROUPED_AUTH_PROPERTIES } from "./env.auth";
+
 import { AuthTypes } from "@1/types";
 import { Env } from "fenviee";
-
-export type AuthData = (typeof AUTH_DATA)[number];
-export type AuthProperty = `${Uppercase<AuthTypes>}_${AuthData}`;
-
-export const AUTH_TYPES = Object.keys(AuthTypes).map(key => key.toUpperCase() as Uppercase<AuthTypes>);
-
-export const AUTH_DATA = [
-  "CLIENT_ID",
-  "CLIENT_SECRET",
-  "CALLBACK_URL",
-] as const;
-
-export const AUTH_PROPERTIES = AUTH_TYPES.flatMap(type => {
-  return AUTH_DATA.map(data => `${type}_${data}` as AuthProperty);
-});
 
 export const env = Env.create<Unique>(process.env)({
   required: [
@@ -50,5 +37,15 @@ export const env = Env.create<Unique>(process.env)({
 
   unique: VALIDATORS
 });
+
+export const getPassportEnv = (type: Uppercase<AuthTypes>) => {
+  const { CLIENT_ID, CLIENT_SECRET, CALLBACK_URL } = GROUPED_AUTH_PROPERTIES[type];
+ 
+  return {
+    id: CLIENT_ID,
+    secret: CLIENT_SECRET,
+    callback: CALLBACK_URL
+  }
+}
 
 export const { PROGRAM_MODE } = env;
