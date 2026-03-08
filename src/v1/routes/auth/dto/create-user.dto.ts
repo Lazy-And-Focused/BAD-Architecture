@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsOptional,
   IsString,
-  IsStrongPassword,
   MaxLength,
   MinLength,
 } from "class-validator";
@@ -34,6 +33,5 @@ export class CreateUserHeadersDto {
 
   @ApiProperty()
   @IsString()
-  @IsStrongPassword()
   password: string;
 }

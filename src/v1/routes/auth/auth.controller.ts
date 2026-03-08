@@ -24,6 +24,7 @@ import { PassportStrategy } from "@1/strategies";
 import { HashService } from "@1/services";
 
 import { ApiOperation } from "@nestjs/swagger";
+import { UseHeadersDto } from "@/decorators/use-headers-dto.decorator";
 
 @Injectable()
 @Controller(ROUTE)
@@ -50,7 +51,7 @@ export class AuthController {
   @ApiOperation(OPERATIONS.POST)
   public post(
     @Body() body: CreateUserBodyDto,
-    @Headers() headers: CreateUserHeadersDto,
+    @UseHeadersDto(CreateUserHeadersDto) headers: CreateUserHeadersDto,
   ) {
     return this.service.createUser({
       ...headers,
