@@ -199,23 +199,26 @@ export class AuthStrategy {
     const token = sign(authData, env.HASH_KEY, {
       expiresIn: env.TOKEN_EXPIRATION,
     });
-    const auth = await this.prisma.auth.create({
-      data: {
-        ...authData,
-        ...passwordData,
-        token,
-        email,
-        services: { create: service },
-      },
-    });
 
-    const user = await this.prisma.user.create({
-      data: {
-        id: userId,
-        nickname: nickname || username,
-        username: UsernamePipe.validate(username.toLowerCase()),
-      },
-    });
+    const [ auth, user ] = await this.prisma.$transaction([
+      this.prisma.auth.create({
+        data: {
+          ...authData,
+          ...passwordData,
+          token,
+          email,
+          services: { create: service },
+        },
+      }),
+  
+      this.prisma.user.create({
+        data: {
+          id: userId,
+          nickname: nickname || username,
+          username: UsernamePipe.validate(username.toLowerCase()),
+        },
+      })
+    ]);
 
     return {
       auth,
