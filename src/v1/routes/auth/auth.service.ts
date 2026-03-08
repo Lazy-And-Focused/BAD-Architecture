@@ -51,3 +51,5 @@ export class AuthService {
     return url.href;
   }
 }
+
+export default AuthService;
