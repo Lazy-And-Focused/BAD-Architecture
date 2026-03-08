@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   public async createUser(data: SignUpByPasswordData) {
-    return this.strategy.singUpByPassword(data);
+    return this.strategy.signUpByPassword(data);
   }
 
   public getRedirectUrl(auth: Auth) {

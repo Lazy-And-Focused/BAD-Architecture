@@ -23,7 +23,7 @@ export class AuthStrategy {
 
   public constructor(private readonly prisma: PrismaService) {}
 
-  public singUpByPassword({
+  public signUpByPassword({
     username,
     password,
     email,
@@ -31,7 +31,7 @@ export class AuthStrategy {
   }: SignUpByPasswordData) {
     const hash = this.hash.execute(password);
 
-    return this.singUp({
+    return this.signUp({
       username: username,
       nickname: nickname || username,
       email,
@@ -39,7 +39,7 @@ export class AuthStrategy {
     });
   }
 
-  public async singUpByService({
+  public async signUpByService({
     profile,
     accessToken,
     refreshToken,
@@ -56,7 +56,7 @@ export class AuthStrategy {
       ? uuid()
       : profileUsername;
 
-    return this.singUp({
+    return this.signUp({
       username,
       nickname,
       service: {
@@ -68,7 +68,7 @@ export class AuthStrategy {
     });
   }
 
-  public async singInByPassword({ password, username }: SignUpByPasswordData) {
+  public async signInByPassword({ password, username }: SignUpByPasswordData) {
     const user = await this.prisma.user.findUnique({
       where: { username: UsernamePipe.validate(username.toLowerCase()) },
     });
@@ -95,7 +95,7 @@ export class AuthStrategy {
     return { user, auth };
   }
 
-  public async singInByService({
+  public async signInByService({
     profile,
     accessToken,
     refreshToken,
@@ -163,7 +163,7 @@ export class AuthStrategy {
     };
   }
 
-  protected async singUp({
+  protected async signUp({
     username,
     email,
     nickname,

@@ -100,13 +100,13 @@ export class StrategiesService {
         };
 
         const signedInData =
-          await this.authStrategy.singInByService(parameters);
+          await this.authStrategy.signInByService(parameters);
         if (signedInData) {
           return done(false, signedInData);
         }
 
         const signedUpData =
-          await this.authStrategy.singUpByService(parameters);
+          await this.authStrategy.signUpByService(parameters);
         return done(false, signedUpData);
       } catch (error) {
         this.logger.error(error as Error);
