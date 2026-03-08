@@ -37,7 +37,7 @@ export class AuthController {
 
   @Get(ROUTES.GET)
   @ApiOperation(OPERATIONS.GET)
-  public printMethods() {
+  public get() {
     const methods = this.service.getAllMethods();
 
     return {
