@@ -1,24 +1,25 @@
-import { readdirSync, rmSync } from "fs";
+import { readdir, rm } from "fs/promises";
 import { join } from "path";
 
-import { ROOT } from "./package-manager";
-import { INITIALIZED } from "./initialized";
+import { INITIALIZE_DIR, ROOT, SETTINGS_FILE_NAME } from "./constants";
+import { SETTINGS } from "./settings";
 
-(() => {
-  const initializedPath = join(ROOT, "initialized");
-  console.log("Deleteing:", initializedPath);
-  if (INITIALIZED === false) {
-    rmSync(initializedPath, { recursive: true, force: true });
+(async () => {
+  const settingsPath = join(ROOT, SETTINGS_FILE_NAME);
+  console.log("Deleting:", settingsPath);
+  if (!SETTINGS.dryrunEnabled) {
+    await rm(settingsPath, { recursive: true, force: true });
   }
 
-  const initializeDirPath = join(ROOT, "initialize");
+  const initializeDirPath = join(ROOT, INITIALIZE_DIR);
   console.log(
     "Deleting:",
     initializeDirPath,
     "and",
-    readdirSync(initializeDirPath, { recursive: true }),
+    await readdir(initializeDirPath, { recursive: true }),
   );
-  if (INITIALIZED === false) {
-    rmSync(initializeDirPath, { recursive: true, force: true });
+
+  if (!SETTINGS.dryrunEnabled) {
+    await rm(initializeDirPath, { recursive: true, force: true });
   }
 })();
