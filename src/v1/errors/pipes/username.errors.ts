@@ -1,5 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
-import { ErrorConstructor } from "../constructor";
+import { ErrorConstructor } from "@/errors";
 
 import { env } from "@/services";
 

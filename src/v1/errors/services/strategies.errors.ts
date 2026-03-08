@@ -1,5 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
-import ErrorConstructor from "../constructor";
+import { ErrorConstructor } from "@/errors";
 
 export const STRATEGIES_SERVICE_ERROS = new ErrorConstructor(
   "STRATEGIES SERVICE EXEPTION",

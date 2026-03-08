@@ -26,7 +26,7 @@ import { PassportStrategy } from "@1/strategies";
 import { HashService } from "@1/services";
 
 import { ApiOperation } from "@nestjs/swagger";
-import { BasicHeadersAuthorization } from "@/decorators/base-header-authorization.decorator";
+import { UseHeadersValidation } from "@/decorators/use-headers-validation.decorator";
 
 @Injectable()
 @Controller(ROUTE)
@@ -53,10 +53,10 @@ export class AuthController {
   @ApiOperation(OPERATIONS.POST)
   public post(
     @Body() body: CreateUserDto,
-    @BasicHeadersAuthorization(CreateUserCredentials) authorization: CreateUserCredentials
+    @UseHeadersValidation(CreateUserCredentials) credential: CreateUserCredentials
   ) {
     return this.service.createUser({
-      ...authorization,
+      ...credential,
       ...body,
     });
   }

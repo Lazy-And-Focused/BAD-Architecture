@@ -1,5 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
-import { ErrorConstructor } from "../constructor";
+import { ErrorConstructor } from "@/errors";
 
 export const HASH_ERRORS = new ErrorConstructor("HASH EXEPTION", {
   TOKEN_METHOD_NOT_ACCEPTABLE: {
