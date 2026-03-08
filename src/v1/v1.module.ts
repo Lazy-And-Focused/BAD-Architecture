@@ -28,8 +28,8 @@ import { AuthStrategy } from "./strategies";
 import { GuardsModule } from "./guards";
 import {
   AuthModule,
-  CreateUserBodyDto,
-  CreateUserHeadersDto,
+  CreateUserDto,
+  CreateUserCredentials,
   SentryModule,
   TestModule,
 } from "./routes";
@@ -41,8 +41,8 @@ export const v1Swagger = createSwaggerConfig({
   document: new DocumentBuilder().setTitle("OPEN API v1 documentation"),
   documentOptions: {
     extraModels: [
-      CreateUserBodyDto,
-      CreateUserHeadersDto,
+      CreateUserDto,
+      CreateUserCredentials,
       UserEntity,
       AuthEntity,
     ],

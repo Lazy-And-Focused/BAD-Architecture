@@ -9,7 +9,7 @@ import {
 
 import { Transform } from "class-transformer";
 
-export class CreateUserBodyDto {
+export class CreateUserDto {
   @ApiProperty()
   @IsString()
   @MaxLength(64)
@@ -25,7 +25,7 @@ export class CreateUserBodyDto {
   nickname?: string;
 }
 
-export class CreateUserHeadersDto {
+export class CreateUserCredentials {
   @ApiProperty()
   @IsEmail()
   @IsOptional()

@@ -17,14 +17,16 @@ import {
 import { ROUTE, ROUTES, OPERATIONS } from "./auth.routes";
 import { AuthService } from "./auth.service";
 
-import { CreateUserBodyDto, CreateUserHeadersDto } from "./dto/create-user.dto";
+import { CreateUserDto, CreateUserCredentials } from "./dto/create-user.dto";
 
-import { Headers as HeadersEnum, Params } from "@1/enums";
+import { Headers as HeadersEnum } from "@/enums";
+import { Params } from "@1/enums";
+
 import { PassportStrategy } from "@1/strategies";
 import { HashService } from "@1/services";
 
 import { ApiOperation } from "@nestjs/swagger";
-import { UseHeadersDto } from "@/decorators/use-headers-dto.decorator";
+import { BasicHeadersAuthorization } from "@/decorators/base-header-authorization.decorator";
 
 @Injectable()
 @Controller(ROUTE)
@@ -50,11 +52,11 @@ export class AuthController {
   @Post(ROUTES.POST)
   @ApiOperation(OPERATIONS.POST)
   public post(
-    @Body() body: CreateUserBodyDto,
-    @UseHeadersDto(CreateUserHeadersDto) headers: CreateUserHeadersDto,
+    @Body() body: CreateUserDto,
+    @BasicHeadersAuthorization(CreateUserCredentials) authorization: CreateUserCredentials
   ) {
     return this.service.createUser({
-      ...headers,
+      ...authorization,
       ...body,
     });
   }
