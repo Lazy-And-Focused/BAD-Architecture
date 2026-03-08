@@ -1,6 +1,6 @@
 import type { ProgramMode, TokenExpiration } from "./validators";
 
-import { validateProgramMode, validateTokenExpiration } from "./validators";
+import { normalizeProgramMode, validateTokenExpiration } from "./validators";
 
 export type Unique = {
   TOKEN_EXPIRATION: TokenExpiration;
@@ -13,5 +13,5 @@ export type Validators = {
 
 export const VALIDATORS: Validators = {
   TOKEN_EXPIRATION: validateTokenExpiration,
-  PROGRAM_MODE: validateProgramMode
+  PROGRAM_MODE: normalizeProgramMode
 }

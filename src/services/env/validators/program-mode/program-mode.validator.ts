@@ -13,26 +13,24 @@ export {
   ProgramMode
 }
 
-export const validateProgramMode = (mode?: string): ProgramMode => {
+export const normalizeProgramMode = (mode?: string): ProgramMode => {
   if (!mode) {
     return DEFAULT_MODE;
   }
 
   if (!isMode(mode)) {
-    throw new Error(`unknown programm mode in .env: ${mode}`);
+    throw new Error(`unknown program mode in .env: ${mode}`);
   }
 
-  return (() => {
-    if (isAlias(mode)) {
-      return ALIASES[mode as Alias];
-    }
+  if (isAlias(mode)) {
+    return ALIASES[mode as Alias];
+  }
 
-    return mode as ProgramMode;
-  })();
+  return mode as ProgramMode;
 }
 
 export const getEnvFileName = () => {
-  const mode = validateProgramMode(process.env.PROGRAM_MODE);
+  const mode = normalizeProgramMode(process.env.PROGRAM_MODE);
   if (mode === "production") {
     return ".env" as const;
   }
