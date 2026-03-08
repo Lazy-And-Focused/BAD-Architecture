@@ -30,7 +30,7 @@ import {
   url,
 } from "@angular-devkit/schematics";
 
-function pluralize(name: string) {
+const pluralize = (name: string) => {
   if (
     name.endsWith("y") &&
     !name.endsWith("ay") &&
@@ -53,29 +53,28 @@ function pluralize(name: string) {
   }
 }
 
-function transform(options: BadFockarchOptions): BadFockarchOptions {
-  const target: BadFockarchOptions = Object.assign({}, options);
-
-  if (!target.name) {
+const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
+  const options: BadFockarchOptions = Object.assign({}, badOptions);
+  if (!options.name) {
     throw new SchematicsException("Option (name) is required.");
   }
 
-  const location: Location = new NameParser().parse(target);
+  const location: Location = new NameParser().parse(options);
 
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.plural = normalizeToKebabOrSnakeCase(pluralize(location.name));
-  target.constant = toConstantCase(pluralize(location.name));
-  target.path = normalizeToKebabOrSnakeCase(location.path);
-  target.language = target.language !== undefined ? target.language : "ts";
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
-    options.specFileSuffix || "test",
+  options.name = normalizeToKebabOrSnakeCase(location.name);
+  options.plural = normalizeToKebabOrSnakeCase(pluralize(location.name));
+  options.constant = toConstantCase(pluralize(location.name));
+  options.path = normalizeToKebabOrSnakeCase(location.path);
+  options.language = options.language !== undefined ? options.language : "ts";
+  options.specFileSuffix = normalizeToKebabOrSnakeCase(
+    badOptions.specFileSuffix || "test",
   );
 
-  target.path = target.flat
-    ? target.path
-    : join(target.path as Path, target.plural);
+  options.path = options.flat
+    ? options.path
+    : join(options.path as Path, options.plural);
 
-  return target;
+  return options;
 }
 
 const generate = (options: BadFockarchOptions): Source => {
@@ -97,7 +96,7 @@ const generate = (options: BadFockarchOptions): Source => {
     ])(context);
 };
 
-export const main = (options: BadFockarchOptions): Rule => {
-  options = transform(options);
+export const main = (badOptions: BadFockarchOptions): Rule => {
+  const options = transform(badOptions);
   return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
 };
