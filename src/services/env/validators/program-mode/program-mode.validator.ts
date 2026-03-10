@@ -1,5 +1,10 @@
 import type { Alias, ProgramMode } from "./program-mode.types";
-import { ALIASES, ALIASES_KEYS, DEFAULT_MODE, MODES } from "./program-mode.constants";
+import {
+  ALIASES,
+  ALIASES_KEYS,
+  DEFAULT_MODE,
+  MODES,
+} from "./program-mode.constants";
 
 const isAlias = (value: string): boolean => {
   return ALIASES_KEYS.includes(value);
@@ -9,9 +14,7 @@ const isMode = (value: string): boolean => {
   return (MODES as readonly string[]).includes(value);
 };
 
-export {
-  ProgramMode
-}
+export { ProgramMode };
 
 export const normalizeProgramMode = (mode?: string): ProgramMode => {
   if (!mode) {
@@ -27,7 +30,7 @@ export const normalizeProgramMode = (mode?: string): ProgramMode => {
   }
 
   return mode as ProgramMode;
-}
+};
 
 export const getEnvFileName = () => {
   const mode = normalizeProgramMode(process.env.PROGRAM_MODE);
@@ -36,4 +39,4 @@ export const getEnvFileName = () => {
   }
 
   return `.env.${mode}` as const;
-}
+};

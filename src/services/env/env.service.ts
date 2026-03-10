@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import { getEnvFileName } from "./validators";
 
 config({
-  path: getEnvFileName()
+  path: getEnvFileName(),
 });
 
 import type { Unique } from "./env.validators";
@@ -45,17 +45,18 @@ export const env = Env.create<Unique>(process.env)({
 
   unique: VALIDATORS,
 
-  dangerousIgnoreErrors: process.env.IGNORE === "true"
+  dangerousIgnoreErrors: process.env.IGNORE === "true",
 });
 
 export const getPassportEnv = (type: Uppercase<AuthTypes>) => {
-  const { CLIENT_ID, CLIENT_SECRET, CALLBACK_URL } = GROUPED_AUTH_PROPERTIES[type];
- 
+  const { CLIENT_ID, CLIENT_SECRET, CALLBACK_URL } =
+    GROUPED_AUTH_PROPERTIES[type];
+
   return {
     id: CLIENT_ID,
     secret: CLIENT_SECRET,
-    callback: CALLBACK_URL
-  }
-}
+    callback: CALLBACK_URL,
+  };
+};
 
 export const { PROGRAM_MODE } = env;

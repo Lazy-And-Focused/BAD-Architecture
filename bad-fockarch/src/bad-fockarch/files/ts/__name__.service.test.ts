@@ -1,8 +1,10 @@
-import type { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
-
-import { Test, TestingModule } from "@nestjs/testing";
+import type {
+  <%= classify(name) %>CreateDto,
+  <%= classify(name) %>UpdateDto
+} from "./dto";
 
 import { <%= classify(name) %>Service as Service } from "./<%= name %>.service";
+import { Test, TestingModule } from "@nestjs/testing";
 
 describe("<%= classify(name) %> Service", () => {
   let service: Service;

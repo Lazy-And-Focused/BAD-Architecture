@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from "@nestjs/common";
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  ValidationPipe,
+} from "@nestjs/common";
 
 import { APP_PIPE, RouterModule } from "@nestjs/core";
 
@@ -44,7 +49,7 @@ const modules: RegisterModule[] = [
       useValue: new ValidationPipe({
         transform: true,
       }),
-    }
+    },
   ],
 })
 export class AppModule implements NestModule {

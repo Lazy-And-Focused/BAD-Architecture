@@ -40,12 +40,7 @@ export const v1Swagger = createSwaggerConfig({
   version: "v1",
   document: new DocumentBuilder().setTitle("OPEN API v1 documentation"),
   documentOptions: {
-    extraModels: [
-      CreateUserDto,
-      CreateUserCredentials,
-      UserEntity,
-      AuthEntity,
-    ],
+    extraModels: [CreateUserDto, CreateUserCredentials, UserEntity, AuthEntity],
   },
 });
 

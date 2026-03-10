@@ -51,7 +51,7 @@ const pluralize = (name: string) => {
   } else {
     return name + "s";
   }
-}
+};
 
 const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
   const options: BadFockarchOptions = Object.assign({}, badOptions);
@@ -75,7 +75,7 @@ const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
     : join(options.path as Path, options.plural);
 
   return options;
-}
+};
 
 const generate = (options: BadFockarchOptions): Source => {
   return (context: SchematicContext) =>

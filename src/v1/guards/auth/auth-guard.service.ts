@@ -8,9 +8,7 @@ import { AUTH_ERRORS } from "@1/errors/guards/auth.errors";
 
 @Injectable()
 export class AuthGuardService {
-  public constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  public constructor(private readonly prisma: PrismaService) {}
 
   public async validateRequest(req: Request) {
     const { authId, token, userId } =

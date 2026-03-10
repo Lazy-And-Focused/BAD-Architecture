@@ -1,3 +1,3 @@
 export const enum AuthorizationTypes {
-  Basic = "Basic"
+  Basic = "Basic",
 }

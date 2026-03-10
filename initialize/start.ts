@@ -36,7 +36,7 @@ export const resolveChooseFilesAndDelete = async (
   const newName = join(dir, chooseFileData.name);
 
   console.log("Creating:", newName, "with", oldName);
-  
+
   if (!SETTINGS.dryrunEnabled) {
     await copyFile(oldName, newName);
   }

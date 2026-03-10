@@ -9,20 +9,25 @@ import { AuthorizationTypes, Headers } from "@/enums";
 import { validateInstanceByClass } from "@/utils/validate-instance-by-class.utils";
 import { BASE_HEADERS_AUTHORIZATION } from "@/errors";
 
-export const BasicHeadersAuthorization = createParamDecorator(async (classConstructor: ClassConstructor<object>, context: ExecutionContext) => {
-  const { headers } = context.switchToHttp().getRequest() as Request;
-  const { [Headers.authorization]: authorization } = headers;
-  if (!authorization) {
-    throw BASE_HEADERS_AUTHORIZATION.AUTHORIZATION_NOT_DEFINED.exeption;
-  }
+export const BasicHeadersAuthorization = createParamDecorator(
+  async (
+    classConstructor: ClassConstructor<object>,
+    context: ExecutionContext,
+  ) => {
+    const { headers } = context.switchToHttp().getRequest() as Request;
+    const { [Headers.authorization]: authorization } = headers;
+    if (!authorization) {
+      throw BASE_HEADERS_AUTHORIZATION.AUTHORIZATION_NOT_DEFINED.exeption;
+    }
 
-  const [ type, ...data ] = authorization.split(" ");
-  if (type !== AuthorizationTypes.Basic) {
-    throw BASE_HEADERS_AUTHORIZATION.BAD_TYPE.exeption;
-  }
-  
-  const base64 = data.join(" ");
-  const json = JSON.parse(atob(base64));
+    const [type, ...data] = authorization.split(" ");
+    if (type !== AuthorizationTypes.Basic) {
+      throw BASE_HEADERS_AUTHORIZATION.BAD_TYPE.exeption;
+    }
 
-  return validateInstanceByClass(json, classConstructor);
-});
+    const base64 = data.join(" ");
+    const json = JSON.parse(atob(base64));
+
+    return validateInstanceByClass(json, classConstructor);
+  },
+);

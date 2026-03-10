@@ -1,5 +1,8 @@
-import type { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
 import type { <%= classify(name) %> } from "@1/entities";
+import type {
+  <%= classify(name) %>CreateDto,
+  <%= classify(name) %>UpdateDto
+} from "./dto";
 
 import { Injectable } from "@nestjs/common";
 

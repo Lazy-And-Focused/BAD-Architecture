@@ -53,7 +53,8 @@ export class AuthController {
   @ApiOperation(OPERATIONS.POST)
   public post(
     @Body() body: CreateUserDto,
-    @UseHeadersValidation(CreateUserCredentials) credential: CreateUserCredentials
+    @UseHeadersValidation(CreateUserCredentials)
+    credential: CreateUserCredentials,
   ) {
     return this.service.createUser({
       ...credential,

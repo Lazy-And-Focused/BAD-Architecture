@@ -19,14 +19,14 @@ import { Params } from "@1/enums"
 import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
 
 import { ROUTE, ROUTES, OPERATIONS } from "./<%= plural %>.routes";
-import { <%= classify(plural) %>Service } from "./<%= plural %>.service"
+import { <%= classify(plural) %>Service as Service } from "./<%= plural %>.service";
 
 @Injectable()
 @Controller(ROUTE)
 @UseGuards(AuthGuard)
 export class <%= classify(plural) %>Controller {
   public constructor(
-    private readonly service: <%= classify(plural) %>Service
+    private readonly service: Service
   ) {}
 
   @ApiOperation(OPERATIONS.GET)

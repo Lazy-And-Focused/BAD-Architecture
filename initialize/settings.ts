@@ -7,7 +7,7 @@ const rawSettings = (() => {
   if (!existsSync(path)) {
     return {
       initialized: true,
-      dryrunEnabled: false
+      dryrunEnabled: false,
     };
   }
 
@@ -23,6 +23,6 @@ export const SETTINGS = (() => {
 
   return {
     initialized,
-    dryrunEnabled
+    dryrunEnabled,
   } as const;
 })();

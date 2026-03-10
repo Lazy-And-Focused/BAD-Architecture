@@ -51,7 +51,7 @@ const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
     : join(options.path as Path, options.name);
 
   return options;
-}
+};
 
 const generate = (options: BadFockarchOptions): Source => {
   return (context: SchematicContext) =>
