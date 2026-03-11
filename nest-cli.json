@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
-  "collection": "bad-fockarch",
+  "collection": "D:\\projects\\laf\\BAD-template\\bad-fockarch",
   "sourceRoot": "./src",
   "language": "ts",
   "root": "./",

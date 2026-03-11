@@ -12,9 +12,10 @@ import type { Location } from "../utils";
 
 import {
   NameParser,
-  normalizeToKebabOrSnakeCase,
+  convertNormalizeToKebabOrSnakeCase,
   mergeSourceRoot,
-  toConstantCase,
+  convertToConstantCase,
+  pluralize
 } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";
@@ -30,29 +31,6 @@ import {
   url,
 } from "@angular-devkit/schematics";
 
-const pluralize = (name: string) => {
-  if (
-    name.endsWith("y") &&
-    !name.endsWith("ay") &&
-    !name.endsWith("ey") &&
-    !name.endsWith("iy") &&
-    !name.endsWith("oy") &&
-    !name.endsWith("uy")
-  ) {
-    return name.slice(0, -1) + "ies";
-  } else if (
-    name.endsWith("s") ||
-    name.endsWith("x") ||
-    name.endsWith("z") ||
-    name.endsWith("ch") ||
-    name.endsWith("sh")
-  ) {
-    return name + "es";
-  } else {
-    return name + "s";
-  }
-};
-
 const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
   const options: BadFockarchOptions = Object.assign({}, badOptions);
   if (!options.name) {
@@ -61,12 +39,12 @@ const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
 
   const location: Location = new NameParser().parse(options);
 
-  options.name = normalizeToKebabOrSnakeCase(location.name);
-  options.plural = normalizeToKebabOrSnakeCase(pluralize(location.name));
-  options.constant = toConstantCase(pluralize(location.name));
-  options.path = normalizeToKebabOrSnakeCase(location.path);
+  options.name = convertNormalizeToKebabOrSnakeCase(location.name);
+  options.plural = convertNormalizeToKebabOrSnakeCase(pluralize(location.name));
+  options.constant = convertToConstantCase(pluralize(location.name));
+  options.path = convertNormalizeToKebabOrSnakeCase(location.path);
   options.language = options.language !== undefined ? options.language : "ts";
-  options.specFileSuffix = normalizeToKebabOrSnakeCase(
+  options.specFileSuffix = convertNormalizeToKebabOrSnakeCase(
     badOptions.specFileSuffix || "test",
   );
 

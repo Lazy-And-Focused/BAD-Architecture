@@ -12,9 +12,9 @@ import type { Location } from "../utils";
 
 import {
   NameParser,
-  normalizeToKebabOrSnakeCase,
+  convertNormalizeToKebabOrSnakeCase,
   mergeSourceRoot,
-  toConstantCase,
+  convertToConstantCase,
 } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";
@@ -38,11 +38,11 @@ const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
 
   const location: Location = new NameParser().parse(options);
 
-  options.name = normalizeToKebabOrSnakeCase(location.name);
-  options.constant = toConstantCase(location.name);
-  options.path = normalizeToKebabOrSnakeCase(location.path);
+  options.name = convertNormalizeToKebabOrSnakeCase(location.name);
+  options.constant = convertToConstantCase(location.name);
+  options.path = convertNormalizeToKebabOrSnakeCase(location.path);
   options.language = options.language !== undefined ? options.language : "ts";
-  options.specFileSuffix = normalizeToKebabOrSnakeCase(
+  options.specFileSuffix = convertNormalizeToKebabOrSnakeCase(
     badOptions.specFileSuffix || "test",
   );
 
