@@ -22,6 +22,10 @@
     "./README.md",
     "./tsconfig.json"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lazy-And-Focused/BAD-Architecture.git"
+  },
   "author": {
     "name": "FOCKUSTY",
     "email": "viserd.yt@gmail.com",
