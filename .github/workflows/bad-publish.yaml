@@ -30,11 +30,11 @@ jobs:
           restore-keys: |
             npm-${{ runner.os }}-node-
 
-      - run: npm i
-      - run: npm run build
+      - run: cd bad-fockarch && npm i
+      - run: cd bad-fockarch && npm run build
 
       - name: Dry-run publish (optional)
-        run: npm publish --access public --dry-run
+        run: cd bad-fockarch && npm publish --access public --dry-run
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: cd bad-fockarch && npm publish --access public
