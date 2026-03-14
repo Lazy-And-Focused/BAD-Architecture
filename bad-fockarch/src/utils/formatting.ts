@@ -8,7 +8,7 @@ const STRING_SPACE_REGEXP = /\s/g;
  * @description normalizes input to supported path and file name format.
  * Changes camelCase strings to kebab-case, replaces spaces with dash and keeps underscores.
  */
-export function convertNormalizeToKebabOrSnakeCase(input: string) {
+export function convertToKebabCase(input: string) {
   return input
     ?.trim()
     ?.replace(STRING_DECAMELIZE_REGEXP, "$1-$2")

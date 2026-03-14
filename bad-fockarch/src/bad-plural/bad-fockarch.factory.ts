@@ -12,7 +12,7 @@ import type { Location } from "../utils";
 
 import {
   NameParser,
-  convertNormalizeToKebabOrSnakeCase,
+  convertToKebabCase,
   mergeSourceRoot,
   convertToConstantCase,
   pluralize
@@ -39,12 +39,12 @@ const transform = (badOptions: BadFockarchOptions): BadFockarchOptions => {
 
   const location: Location = new NameParser().parse(options);
 
-  options.name = convertNormalizeToKebabOrSnakeCase(location.name);
-  options.plural = convertNormalizeToKebabOrSnakeCase(pluralize(location.name));
+  options.name = convertToKebabCase(location.name);
+  options.plural = convertToKebabCase(pluralize(location.name));
   options.constant = convertToConstantCase(pluralize(location.name));
-  options.path = convertNormalizeToKebabOrSnakeCase(location.path);
+  options.path = convertToKebabCase(location.path);
   options.language = options.language !== undefined ? options.language : "ts";
-  options.specFileSuffix = convertNormalizeToKebabOrSnakeCase(
+  options.specFileSuffix = convertToKebabCase(
     badOptions.specFileSuffix || "test",
   );
 

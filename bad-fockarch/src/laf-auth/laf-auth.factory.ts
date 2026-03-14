@@ -12,7 +12,7 @@ import type { Location } from "../utils";
 
 import {
   NameParser,
-  convertNormalizeToKebabOrSnakeCase,
+  convertToKebabCase,
   mergeSourceRoot,
 } from "../utils";
 
@@ -38,10 +38,10 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
 
   const location: Location = new NameParser().parse(target);
 
-  target.name = convertNormalizeToKebabOrSnakeCase(location.name);
-  target.path = convertNormalizeToKebabOrSnakeCase(location.path);
+  target.name = convertToKebabCase(location.name);
+  target.path = convertToKebabCase(location.path);
   target.language = target.language !== undefined ? target.language : "ts";
-  target.specFileSuffix = convertNormalizeToKebabOrSnakeCase(
+  target.specFileSuffix = convertToKebabCase(
     options.specFileSuffix || "test",
   );
 
