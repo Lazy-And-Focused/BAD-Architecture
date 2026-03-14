@@ -1,5 +1,5 @@
 {
-  "name": "bad-template",
+  "name": "bad-architecture",
   "version": "2.0.0",
   "description": "backend after drinking",
   "author": {
@@ -18,20 +18,24 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
+    "init": "tsc ./initialize/index.ts --outDir ./dist && node ./dist/index.js",
+    "swagger": "set PROGRAM_MODE=swagger&& nest start",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "set NODE_ENV=production&& nest start",
-    "dev": "set NODE_ENV=development&& nest start --watch",
+    "start": "set PROGRAM_MODE=production&& nest start",
+    "start:watch": "set PROGRAM_MODE=production&& nest start --watch",
+    "start:dev": "set PROGRAM_MODE=development&& nest start",
+    "dev": "set PROGRAM_MODE=development&& nest start --watch",
     "debug": "nest start --debug --watch",
-    "docker:build": "docker build -f npm.dockerfile -t bad-template .",
-    "docker:dev": "docker run -e NODE_ENV=development -p 3000:3000 bad-template",
-    "docker:prod": "docker run -e NODE_ENV=production -p 3000:3000 bad-template",
+    "docker:build": "docker build -f dockerfile -t bad-architecture .",
+    "docker:dev": "docker run -e PROGRAM_MODE=development -p 8080:8080 bad-architecture",
+    "docker:prod": "docker run -e PROGRAM_MODE=production -p 8080:8080 bad-architecture",
     "prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --config ./test/jest.json",
+    "test": "jest --config ./test/jest.config.js",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.config.js"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.1",
@@ -44,16 +48,21 @@
     "@sentry/nestjs": "^10.12.0",
     "bad-fockarch": ">=2.0.0",
     "cache-manager": "^7.1.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "fenviee": "^0.1.1",
+    "fock-logger": "^6.3.2",
+    "jsonwebtoken": "^9.0.3",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-oauth2": "^1.8.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "13.0.0"
   },
   "devDependencies": {
     "@angular-devkit/schematics-cli": "^20.1.6",
@@ -63,11 +72,14 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.2",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.10.7",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
@@ -80,30 +92,15 @@
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
+    "prisma": "^7.3.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.4.6",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  }
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
 }

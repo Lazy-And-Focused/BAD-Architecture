@@ -1,5 +1,5 @@
-import { Tree } from "@angular-devkit/schematics";
 import { SchematicTestRunner } from "@angular-devkit/schematics/testing";
+import { Tree } from "@angular-devkit/schematics";
 import { join } from "path";
 
 const collectionPath = join(__dirname, "../collection.json");

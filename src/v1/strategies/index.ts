@@ -1,1 +1,2 @@
-export * from "./strategy.register";
+export * from "./auth.strategy";
+export * from "./passport.strategy";

@@ -10,7 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2024",
+    "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -18,39 +18,12 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"],
-
-      "f@/env": ["./src/services/env.service"],
-
-      "@/services/*": ["./src/services/*"],
-      "@/services": ["./src/services"],
-
       "@1/*": ["./src/v1/*"],
-
-      "@1/constants/*": ["./src/v1/constants/*"],
-      "@1/constants": ["./src/v1/constants"],
-
-      "@1/utils/*": ["src/utils/*"],
-      "@1/utils": ["src/utils"],
-
-      "@1/errors/*": ["./src/v1/errors/*"],
-      "@1/errors": ["./src/v1/errors"],
-
-      "@1/services/*": ["./src/v1/services/*"],
-      "@1/services": ["./src/v1/services"],
-
-      "@1/decorators/*": ["src/decorators/*"],
-      "@1/decorators": ["src/decorators"],
-
-      "@1/guards/*": ["./src/v1/guards/*"],
-      "@1/guards": ["./src/v1/guards"],
-
-      "@1/types/*": ["./src/v1/types/*"],
-      "@1/types": ["./src/v1/types"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["./**/*.ts"],

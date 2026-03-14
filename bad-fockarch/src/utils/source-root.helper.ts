@@ -1,6 +1,7 @@
+import type { Rule } from "@angular-devkit/schematics";
+
 import { join, normalize } from "@angular-devkit/core";
 import { Tree } from "@angular-devkit/schematics";
-import type { Rule } from "@angular-devkit/schematics";
 
 export function isInRootDirectory(
   host: Tree,

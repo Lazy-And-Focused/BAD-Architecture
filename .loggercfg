@@ -1,0 +1,40 @@
+{
+  "logging": false,
+  "dir": "./",
+  "level": "info",
+  "defaultLevel": "info",
+  "levels": {
+    "info": 1,
+    "warn": 2,
+    "error": 3
+  },
+  "deletion_interval": 7,
+  "date": true,
+  "colors": [
+    "\u001b[32m",
+    "\u001b[32m"
+  ],
+  "loggers": {
+    "[BAD]": {
+      "name": "[BAD]",
+      "colors": [
+        "\u001b[32m",
+        "\u001b[32m"
+      ]
+    },
+    "Fail": {
+      "name": "Fail",
+      "colors": [
+        "\u001b[0m",
+        "\u001b[0m"
+      ]
+    },
+    "Success": {
+      "name": "Success",
+      "colors": [
+        "\u001b[0m",
+        "\u001b[0m"
+      ]
+    }
+  }
+}

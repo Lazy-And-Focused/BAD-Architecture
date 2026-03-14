@@ -1,0 +1,59 @@
+name: Deploy Swagger Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main, main--code-refactoring]
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Generate Prisma Client
+        run: pnpx prisma generate
+        env:
+          DATABASE_URL: "prisma+postgres://"
+
+      - name: Generate Swagger JSON
+        run: pnpm run swagger
+        env:
+          IGNORE: true
+          PROGRAM_MODE: "swagger"
+
+      - name: Prepare documentation folder
+        run: |
+          mkdir -p public
+          cp -r swagger/*.json public/
+          echo '<!DOCTYPE html><html><head><title>API Docs</title></head><body><h1>API Documentation</h1><ul>' > public/index.html
+          for file in swagger/*.json; do
+            version=$(basename "$file" .json)
+            echo "<li><a href=\"./?url=./$version.json\">Version $version</a></li>" >> public/index.html
+          done
+          echo '</ul><script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css"><div id="swagger-ui"></div><script>const urlParams = new URLSearchParams(window.location.search);const url = urlParams.get("url") || "./v1.json";SwaggerUIBundle({url: url, dom_id: "#swagger-ui"});</script></body></html>' >> public/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages

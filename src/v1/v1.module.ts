@@ -1,6 +1,7 @@
 import type { NestModule, MiddlewareConsumer } from "@nestjs/common";
 
 import { Module } from "@nestjs/common";
+import { DocumentBuilder } from "@nestjs/swagger";
 
 import {
   APP_FILTER,
@@ -15,19 +16,33 @@ import {
 } from "@sentry/nestjs/setup";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
-import { LoggerMiddleware } from "./middleware/logger.middleware";
+import { LoggerMiddleware } from "./middlewares";
 
-import AuthStrategyRegister from "./strategies/strategy.register";
-import AuthModule from "./routes/auth/auth.module";
-import SentryModule from "./routes/sentry/sentry.module";
-import TestModule from "./routes/test/test.module";
+import { HashService, StrategiesService } from "./services";
+import { LoggerService, env } from "@/services";
+import { createSwaggerConfig } from "@/utils";
+import { PrismaService } from "@/database";
 
-import env from "f@/env";
+import { AuthStrategy } from "./strategies";
+
+import { GuardsModule } from "./guards";
+import {
+  AuthModule,
+  CreateUserDto,
+  CreateUserCredentials,
+  SentryModule,
+  TestModule,
+} from "./routes";
+import { AuthEntity, UserEntity } from "./entities";
 
 export const v1Modules = [AuthModule, SentryModule, TestModule];
-
-const authStrategyRegister = new AuthStrategyRegister();
-authStrategyRegister.execute();
+export const v1Swagger = createSwaggerConfig({
+  version: "v1",
+  document: new DocumentBuilder().setTitle("OPEN API v1 documentation"),
+  documentOptions: {
+    extraModels: [CreateUserDto, CreateUserCredentials, UserEntity, AuthEntity],
+  },
+});
 
 @Module({
   imports: [
@@ -46,8 +61,14 @@ authStrategyRegister.execute();
       isGlobal: true,
     }),
     Sentry.forRoot(),
+    GuardsModule,
   ],
   providers: [
+    StrategiesService,
+    AuthStrategy,
+    PrismaService,
+    LoggerService,
+    HashService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
@@ -62,8 +83,10 @@ authStrategyRegister.execute();
     },
   ],
 })
-export default class v1Module implements NestModule {
+export class v1Module implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes("/");
   }
 }
+
+export default v1Module;

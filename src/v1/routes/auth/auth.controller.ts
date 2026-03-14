@@ -8,79 +8,95 @@ import {
   Next,
   Req,
   Res,
+  Post,
+  Body,
+  Headers,
+  Param,
 } from "@nestjs/common";
 
-import { ROUTE, ROUTES } from "./auth.routes";
+import { ROUTE, ROUTES, OPERATIONS } from "./auth.routes";
+import { AuthService } from "./auth.service";
 
-import env from "f@/env";
+import { CreateUserDto, CreateUserCredentials } from "./dto/create-user.dto";
 
-import Hash from "@1/services/hash.service";
-import AuthService from "@1/services/auth.service";
+import { Headers as HeadersEnum } from "@/enums";
+import { Params } from "@1/enums";
 
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { PassportStrategy } from "@1/strategies";
+import { HashService } from "@1/services";
+
+import { ApiOperation } from "@nestjs/swagger";
+import { UseHeadersValidation } from "@/decorators/use-headers-validation.decorator";
 
 @Injectable()
 @Controller(ROUTE)
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: "Ok",
-})
-@ApiResponse({
-  status: HttpStatus.FOUND,
-  description: "Redirecting",
-})
-@ApiResponse({
-  status: HttpStatus.BAD_REQUEST,
-  description: "Redirecting",
-})
 export class AuthController {
-  @Get()
-  @ApiOperation({ summary: "getting all authentication methods" })
-  public printMethods() {
-    const { abbreviations, methods } = AuthService.methods;
-    const toStr = (str: unknown) => JSON.stringify(str, undefined, 4);
+  public constructor(
+    private readonly service: AuthService,
+    private readonly hash: HashService,
+    private readonly passport: PassportStrategy,
+  ) {}
+
+  @Get(ROUTES.GET)
+  @ApiOperation(OPERATIONS.GET)
+  public get() {
+    const methods = this.service.getAllMethods();
 
     return {
-      message: `Sorry, but you can't auth without method, try next methods:\n${toStr(methods)}\nAnd this abbreviations:\n${toStr(abbreviations)}`,
-      abbreviations,
-      methods,
+      message: `Sorry, but you can't auth without method, try methods below by path: ${ROUTE}${ROUTES.OAUTH2_GET}`,
+      abbreviations: methods.abbreviations,
+      methods: methods.methods,
     };
   }
 
-  @Get(ROUTES.GET)
-  @ApiOperation({ summary: "redirecting to authentication system" })
+  @Post(ROUTES.POST)
+  @ApiOperation(OPERATIONS.POST)
+  public post(
+    @Body() body: CreateUserDto,
+    @UseHeadersValidation(CreateUserCredentials)
+    credential: CreateUserCredentials,
+  ) {
+    return this.service.createUser({
+      ...credential,
+      ...body,
+    });
+  }
+
+  @Get(ROUTES.GET_ME)
+  @ApiOperation(OPERATIONS.GET_ME)
+  public getMe(@Headers(HeadersEnum.authorization) authorization?: string) {
+    const { authId, userId } =
+      this.hash.resolveHeaderAuthorizationOrThrow(authorization);
+    return this.service.getMe(authId, userId);
+  }
+
+  @Get(ROUTES.OAUTH2_GET)
+  @ApiOperation(OPERATIONS.OAUTH2_GET)
   public auth(
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
+    @Param(Params.method) method: string,
   ) {
-    return new AuthService(req.params.method).auth(req, res, next);
+    return this.passport.auth(method, req, res, next);
   }
 
-  @Get(ROUTES.GET_CALLBACK)
-  @ApiOperation({ summary: "callback from authentication system" })
+  @Get(ROUTES.OAUTH2_GET_CALLBACK)
+  @ApiOperation(OPERATIONS.OAUTH2_GET_CALLBACK)
   public callback(
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
+    @Param(Params.method) method: string,
   ) {
-    return new AuthService(req.params.method).callback(
-      req,
-      res,
-      next,
-      (...args) => {
-        const user = args[0];
+    return this.passport.callback(method, req, res, next, (error, data) => {
+      if (error || !data) {
+        return res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
-        if (!user) return;
-
-        res.cookie(
-          "id-token",
-          `${user.id}-${user.profile_id}-${new Hash().execute(user.access_token)}`,
-        );
-
-        res.redirect(env.CLIENT_URL);
-      },
-    );
+      const redirectUrl = this.service.getRedirectUrl(data.auth);
+      res.redirect(redirectUrl);
+    });
   }
 }
 

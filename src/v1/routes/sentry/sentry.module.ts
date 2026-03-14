@@ -1,7 +1,11 @@
 import { Module } from "@nestjs/common";
-import { Controller } from "./sentry.controller";
+import { SentryController } from "./sentry.controller";
+import { AUTH_GUARD_PROVIDERS } from "@1/guards";
 
 @Module({
-  controllers: [Controller],
+  controllers: [SentryController],
+  providers: [...AUTH_GUARD_PROVIDERS],
 })
-export default class SentryModule {}
+export class SentryModule {}
+
+export default SentryModule;

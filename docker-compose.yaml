@@ -5,9 +5,9 @@ services:
       dockerfile: dockerfile
 
     ports:
-      - "3001:3001"
+      - "8080:8080"
     environment:
-      - NODE_ENV=production
+      - PROGRAM_MODE=production
     volumes:
       - ./:/app
       - /app/node_modules

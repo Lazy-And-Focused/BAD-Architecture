@@ -1,43 +1,49 @@
 import type { Request } from "express";
-import type { Auth } from "@1/types";
 
-import Hash from "@1/services/hash.service";
-import authErrors from "@1/errors/guards/auth.errors";
+import { Injectable } from "@nestjs/common";
 
-export class Service {
-  public static async validateRequest(req: Request) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { successed, id, token, profile_id } = Hash.parse(req);
+import { HashService } from "@1/services/hash.service";
+import { PrismaService } from "@/database";
+import { AUTH_ERRORS } from "@1/errors/guards/auth.errors";
 
-    if (!successed) {
-      throw new Error(authErrors.hashParseError);
+@Injectable()
+export class AuthGuardService {
+  public constructor(private readonly prisma: PrismaService) {}
+
+  public async validateRequest(req: Request) {
+    const { authId, token, userId } =
+      HashService.resolveHeaderAuthorizationOrThrow(req.headers.authorization);
+
+    const auth = await this.prisma.auth.findUnique({
+      where: {
+        id: authId,
+      },
+    });
+
+    if (!auth) {
+      throw AUTH_ERRORS.USER_NOT_FOUND.exeption;
     }
 
-    const findedUser = {} as Auth;
-    // const findedUser = await auth.findOne({ id: id });
-
-    if (!findedUser) {
-      throw new Error(authErrors.userNotFound);
+    if (auth.userId !== userId) {
+      throw AUTH_ERRORS.PROFILE_ID.exeption;
     }
 
-    if (findedUser.profile_id !== profile_id) {
-      throw new Error(authErrors.profileIdError);
+    if (token !== auth.token) {
+      throw AUTH_ERRORS.TOKEN_ERROR.exeption;
     }
 
-    if (token !== new Hash().execute(findedUser.access_token)) {
-      throw new Error(authErrors.tokenError);
+    const user = this.prisma.user.findUnique({
+      where: {
+        id: auth.userId,
+      },
+    });
+
+    if (!user) {
+      throw AUTH_ERRORS.PROFILE_NOT_FOUND.exeption;
     }
 
-    const profileUser = {};
-    // const profileUser = await users.findOne({ id: findedUser.profile_id });
-
-    if (!profileUser) {
-      throw new Error(authErrors.profileNotFound);
-    }
-
-    console.log("User access granted");
     return true;
   }
 }
 
-export default Service;
+export default AuthGuardService;

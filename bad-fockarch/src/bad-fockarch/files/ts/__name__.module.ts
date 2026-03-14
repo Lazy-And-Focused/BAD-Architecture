@@ -1,11 +1,13 @@
 import { Module } from "@nestjs/common";
 
-import { Controller } from "./<%= name %>.controller";
-import { Service } from "./<%= name %>.service";
+import { <%= classify(name) %>Controller } from "./<%= name %>.controller";
+import { <%= classify(name) %>Service } from "./<%= name %>.service";
 
 @Module({
   imports: [],
-  controllers: [Controller],
-  providers: [Service]
+  controllers: [<%= classify(name) %>Controller],
+  providers: [<%= classify(name) %>Service]
 })
-export default class <%= classify(name) %>Module {}
+export class <%= classify(name) %>Module {}
+
+export default <%= classify(name) %>Module;

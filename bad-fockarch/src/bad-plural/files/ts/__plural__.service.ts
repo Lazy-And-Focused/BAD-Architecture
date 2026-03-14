@@ -1,12 +1,13 @@
-import type { <%= classify(name) %> } from "@1/types/<%= name %>.types";
-
-import type { <%= classify(name) %>CreateDto } from "./dto/<%= name %>-create.dto";
-import type { <%= classify(name) %>UpdateDto } from "./dto/<%= name %>-update.dto";
+import type { <%= classify(name) %> } from "@1/entities";
+import type {
+  <%= classify(name) %>CreateDto,
+  <%= classify(name) %>UpdateDto
+} from "./dto";
 
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class Service {
+export class <%= classify(plural) %>Service {
   public async get(): Promise<<%= classify(name) %>[]> {
     return [];
   }
@@ -31,3 +32,5 @@ export class Service {
     return "deleted";
   }
 }
+
+export default <%= classify(plural) %>Service;

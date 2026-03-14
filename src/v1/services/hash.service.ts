@@ -1,84 +1,110 @@
-import type { Request } from "express";
+import { Injectable } from "@nestjs/common";
 
+import { HASH_ERRORS } from "@1/errors/services/hash.errors";
+import { tryCatchThrow } from "@/utils/try-catch.utils";
+
+import { env } from "@/services";
 import crypto from "crypto";
 
-import { env } from "f@/env";
-
 const PARSE_ERROR = {
-  successed: false,
   id: false,
   profile_id: false,
   token: false,
+  successed: false,
 } as const;
 
-type ParseReturnType =
-  | Readonly<{
-      successed: true;
-      id: string;
-      profile_id: string;
-      token: string;
-    }>
-  | typeof PARSE_ERROR;
+type ParsedToken = {
+  authId: string;
+  userId: string;
+  token: string;
+  successed: true;
+};
 
-export class Hash {
-  private readonly _hmac: crypto.Hmac;
+type ParseReturn = ParsedToken | typeof PARSE_ERROR;
 
-  public constructor() {
-    this._hmac = crypto.createHmac("sha512", env.HASH_KEY);
+@Injectable()
+export class HashService {
+  public static execute(data: string) {
+    return new HashService().execute(data);
   }
+
+  public static resolveTokenOrThrow(token: string): ParsedToken {
+    const [authId, userId, access_token] = token.split("-");
+    const valided = authId && userId && access_token;
+    if (!valided) {
+      throw HASH_ERRORS.INVALID_TOKEN.exeption;
+    }
+
+    return { authId, userId, token: access_token, successed: true };
+  }
+
+  public static resolveHeaderAuthorizationOrThrow(
+    authorization?: string,
+  ): ParsedToken {
+    if (!authorization) {
+      throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.exeption;
+    }
+
+    return tryCatchThrow(() => {
+      const [method, ...tokenData] = authorization.split(" ");
+      const token = tokenData.join(" ");
+
+      if (method === "Bearer") {
+        return this.resolveTokenOrThrow(token);
+      }
+
+      throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exeption;
+    });
+  }
+
+  public static resolveToken(token: string): ParseReturn {
+    try {
+      return this.resolveTokenOrThrow(token);
+    } catch {
+      return PARSE_ERROR;
+    }
+  }
+
+  public static resolveHeaderAuthorization(
+    authorization?: string,
+  ): ParseReturn {
+    try {
+      return this.resolveHeaderAuthorizationOrThrow(authorization);
+    } catch {
+      return PARSE_ERROR;
+    }
+  }
+
+  public constructor() {}
 
   public execute(data: string) {
-    this._hmac.update(data);
-    return this._hmac.digest("hex");
+    return crypto.createHmac("sha512", env.HASH_KEY).update(data).digest("hex");
   }
 
-  public static generateCode(data: string = (Math.random() * 1000).toString()) {
+  public generateCode(data: string = (Math.random() * 1000).toString()) {
     return crypto
       .createHmac("sha512", env.HASH_KEY)
       .update(new Date().getTime().toString() + data)
       .digest("base64");
   }
 
-  public static resolveToken(token: string): ParseReturnType {
-    const [method, hash] = token.split(" ");
-
-    const tokenValided = method && hash;
-    if (!tokenValided) {
-      return PARSE_ERROR;
-    }
-
-    if (method === "Bearer") {
-      const [id, profile_id, access_token] = hash.split("-");
-
-      const valided = id && profile_id && access_token;
-      if (!valided) {
-        return PARSE_ERROR;
-      }
-
-      return {
-        successed: true,
-        id,
-        profile_id,
-        token: access_token,
-      };
-    } else {
-      return PARSE_ERROR;
-    }
+  public resolveTokenOrThrow(token: string): ParsedToken {
+    return HashService.resolveTokenOrThrow(token);
   }
 
-  public static parse(req: Request): ParseReturnType {
-    const hash = req.headers.Authorization;
+  public resolveHeaderAuthorizationOrThrow(
+    authorization?: string,
+  ): ParsedToken {
+    return HashService.resolveHeaderAuthorizationOrThrow(authorization);
+  }
 
-    if (hash === undefined) {
-      return PARSE_ERROR;
-    }
+  public resolveToken(token: string): ParseReturn {
+    return HashService.resolveToken(token);
+  }
 
-    try {
-      return Hash.resolveToken(hash.toString());
-    } catch {
-      return PARSE_ERROR;
-    }
+  public resolveHeaderAuthorization(authorization?: string) {
+    return HashService.resolveHeaderAuthorization(authorization);
   }
 }
 
-export default Hash;
+export default HashService;

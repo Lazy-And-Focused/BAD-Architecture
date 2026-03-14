@@ -1,1 +1,1 @@
-export * from "./auth.types";
+export { AuthTypes } from "@/database/generated/client";

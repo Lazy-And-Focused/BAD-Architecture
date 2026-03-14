@@ -1,7 +1,23 @@
-export const ROUTE = "sentry";
+import { Routes } from "@/utils/routes.utils";
 
-export const ROUTES = {
-  GET: "/",
-  GET_ERROR: "/error",
-  GET_HTTP: "/http",
-};
+export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
+  route: "sentry",
+
+  routes: {
+    GET: "/",
+    GET_ERROR: "/error",
+    GET_HTTP: "/http",
+  },
+
+  operations: {
+    GET: {
+      summary: "Using a `logger.info` from `@sentry/nestjs`",
+    },
+    GET_ERROR: {
+      summary: "Testing an error for sentry",
+    },
+    GET_HTTP: {
+      summary: "Testing an `HttpExeption` from sentry",
+    },
+  },
+}).execute();
