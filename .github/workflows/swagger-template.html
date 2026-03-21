@@ -40,7 +40,12 @@
                 if (!VERSIONS.includes(version)) {
                     return VERSIONS[0];
                 }
-                return version
+                return version;
+            }
+
+            function getType() {
+                const query = new URLSearchParams(window.location.search);
+                return query.get('type') || DEFAULT_DOCS_FILE_TYPE;
             }
 
             function updateUrl(version) {
@@ -52,21 +57,28 @@
                 window.history.pushState({ version }, '', url);
             }
 
-            function render(currentVersion, currentType = DEFAULT_DOCS_FILE_TYPE) {
-                renderVersions(currentVersion);
-                loadSwaggerUi(currentVersion, currentType);
+            function render(version, type = DEFAULT_DOCS_FILE_TYPE) {
+                renderVersions(version);
+                loadSwaggerUi(version, type);
             }
 
             function renderVersions(activeVersion) {
                 const container = document.getElementById('ba-sc');
                 container.innerHTML = '';
 
+                if (!VERSIONS.length) {
+                    const msg = document.createElement('div');
+                    msg.textContent = 'No API versions available.';
+                    container.appendChild(msg);
+                    return;
+                }
+
                 VERSIONS.forEach((version) => {
-                    container.appendChild(getVersionComponent(version));
-                })
+                    container.appendChild(getVersionComponent(version, activeVersion));
+                });
             }
 
-            function getVersionComponent(version) {
+            function getVersionComponent(version, activeVersion) {
                 const actived = (version === activeVersion);
 
                 const wrapper = document.createElement('span');
@@ -88,7 +100,7 @@
                 pathSpan.setAttribute('data-path', `/api/v${version}`);
                 const pathLink = document.createElement('a');
                 pathLink.className = 'nostyle';
-                pathLink.innerHTML = `<span>./v${version}.${DEFAULT_DOCS_FILE_TYPE}</span>`;
+                pathLink.textContent = `./v${version}.${DEFAULT_DOCS_FILE_TYPE}`;
                 pathSpan.appendChild(pathLink);
 
                 const descriptionDiv = document.createElement('div');
@@ -108,7 +120,6 @@
                 });
 
                 return wrapper;
-
             }
 
             function loadSwaggerUi(version, type) {
@@ -128,18 +139,23 @@
                 }
                 currentVersion = newVersion;
                 updateUrl(currentVersion);
-                render(currentVersion);
+                render(currentVersion, currentType);
             }
 
             window.addEventListener('popstate', () => {
                 const version = getVersion();
-                if (version !== currentVersion) {
-                    render(version)
+                const type = getType();
+                if (version !== currentVersion || type !== currentType) {
+                    currentVersion = version;
+                    currentType = type;
+                    render(currentVersion, currentType);
                 }
             });
 
-            // --- initilize page data
-            currentType = new URLSearchParams(window.location.search).get('type') || DEFAULT_DOCS_FILE_TYPE;
+            // --- initialize page data
+            currentType = getType();
+            currentVersion = getVersion();
+            render(currentVersion, currentType);
         })();
     </script>
 </body>
