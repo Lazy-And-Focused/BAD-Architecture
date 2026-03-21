@@ -28,13 +28,15 @@
             // [Не менять]!: будет подставлен массив чисел из CI, например [1,2,3]
             const VERSIONS = __VERSIONS_LIST__;
 
+            const DEFAULT_DOCS_FILE_TYPE = 'json'; 
+
             let currentVersion;
-            let currentType = 'json';
+            let currentType = DEFAULT_DOCS_FILE_TYPE;
             let swaggerUiInstance = null;
 
             function getVersionFromUrl() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const version = parseInt(urlParams.get('version') || urlParams.get('v'));
+                const query = new URLSearchParams(window.location.search);
+                const version = parseInt(query.get('version') || query.get('v'));
                 if (!VERSIONS.includes(version)){
                   return VERSIONS[0];
                 }
@@ -55,7 +57,7 @@
                 container.innerHTML = '';
 
                 VERSIONS.forEach(version => {
-                    const isActive = (version === activeVersion);
+                    const actived = (version === activeVersion);
 
                     const wrapper = document.createElement('span');
                     const block = document.createElement('div');
@@ -68,24 +70,24 @@
                     button.className = 'opblock-summary-control';
 
                     const methodSpan = document.createElement('span');
-                    methodSpan.className = 'opblock-summary-method' + (isActive ? ' active-version-badge' : '');
-                    methodSpan.textContent = isActive ? 'SELECTED' : `v${version}`;
+                    methodSpan.className = 'opblock-summary-method' + (actived ? ' active-version-badge' : '');
+                    methodSpan.textContent = actived ? 'SELECTED' : `v${version}`;
 
                     const pathSpan = document.createElement('span');
                     pathSpan.className = 'opblock-summary-path';
                     pathSpan.setAttribute('data-path', `/api/v${version}`);
                     const pathLink = document.createElement('a');
                     pathLink.className = 'nostyle';
-                    pathLink.innerHTML = `<span>./v${version}.json</span>`;
+                    pathLink.innerHTML = `<span>./v${version}.${DEFAULT_DOCS_FILE_TYPE}</span>`;
                     pathSpan.appendChild(pathLink);
 
-                    const descSpan = document.createElement('div');
-                    descSpan.className = 'opblock-summary-description';
-                    descSpan.textContent = `api specification for ${version} version`;
+                    const descriptionDiv = document.createElement('div');
+                    descriptionDiv.className = 'opblock-summary-description';
+                    descriptionDiv.textContent = `api specification for ${version} version`;
 
                     button.appendChild(methodSpan);
                     button.appendChild(pathSpan);
-                    button.appendChild(descSpan);
+                    button.appendChild(descriptionDiv);
                     summary.appendChild(button);
                     block.appendChild(summary);
                     wrapper.appendChild(block);
@@ -120,7 +122,7 @@
 
             function init() {
                 currentVersion = getVersionFromUrl();
-                currentType = new URLSearchParams(window.location.search).get('type') || 'json';
+                currentType = new URLSearchParams(window.location.search).get('type') || DEFAULT_DOCS_FILE_TYPE;
                 renderVersions(currentVersion);
                 loadSwaggerUi(currentVersion, currentType);
             }
