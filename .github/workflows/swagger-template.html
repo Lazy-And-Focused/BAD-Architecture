@@ -67,9 +67,9 @@
                 container.innerHTML = '';
 
                 if (!VERSIONS.length) {
-                    const msg = document.createElement('div');
-                    msg.textContent = 'No API versions available.';
-                    container.appendChild(msg);
+                    const message = document.createElement('div');
+                    message.textContent = 'No API versions available.';
+                    container.appendChild(message);
                     return;
                 }
 
@@ -114,8 +114,8 @@
                 block.appendChild(summary);
                 wrapper.appendChild(block);
 
-                wrapper.addEventListener('click', (e) => {
-                    e.preventDefault();
+                wrapper.addEventListener('click', (event) => {
+                    event.preventDefault();
                     updateVersion(version);
                 });
 
