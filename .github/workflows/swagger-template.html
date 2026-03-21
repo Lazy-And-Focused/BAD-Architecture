@@ -34,7 +34,7 @@
             let currentType = DEFAULT_DOCS_FILE_TYPE;
             let swaggerUiInstance = null;
 
-            function getVersionFromUrl() {
+            function getVersion() {
                 const query = new URLSearchParams(window.location.search);
                 const version = parseInt(query.get('version') || query.get('v'));
                 if (!VERSIONS.includes(version)) {
@@ -52,53 +52,63 @@
                 window.history.pushState({ version }, '', url);
             }
 
+            function render(currentVersion, currentType = DEFAULT_DOCS_FILE_TYPE) {
+                renderVersions(currentVersion);
+                loadSwaggerUi(currentVersion, currentType);
+            }
+
             function renderVersions(activeVersion) {
                 const container = document.getElementById('ba-sc');
                 container.innerHTML = '';
 
-                VERSIONS.forEach(version => {
-                    const actived = (version === activeVersion);
+                VERSIONS.forEach((version) => {
+                    container.appendChild(getVersionComponent(version));
+                })
+            }
 
-                    const wrapper = document.createElement('span');
-                    const block = document.createElement('div');
-                    block.className = 'opblock opblock-get';
+            function getVersionComponent(version) {
+                const actived = (version === activeVersion);
 
-                    const summary = document.createElement('div');
-                    summary.className = 'opblock-summary';
+                const wrapper = document.createElement('span');
+                const block = document.createElement('div');
+                block.className = 'opblock opblock-get';
 
-                    const button = document.createElement('button');
-                    button.className = 'opblock-summary-control';
+                const summary = document.createElement('div');
+                summary.className = 'opblock-summary';
 
-                    const methodSpan = document.createElement('span');
-                    methodSpan.className = 'opblock-summary-method' + (actived ? ' active-version-badge' : '');
-                    methodSpan.textContent = actived ? 'SELECTED' : `v${version}`;
+                const button = document.createElement('button');
+                button.className = 'opblock-summary-control';
 
-                    const pathSpan = document.createElement('span');
-                    pathSpan.className = 'opblock-summary-path';
-                    pathSpan.setAttribute('data-path', `/api/v${version}`);
-                    const pathLink = document.createElement('a');
-                    pathLink.className = 'nostyle';
-                    pathLink.innerHTML = `<span>./v${version}.${DEFAULT_DOCS_FILE_TYPE}</span>`;
-                    pathSpan.appendChild(pathLink);
+                const methodSpan = document.createElement('span');
+                methodSpan.className = 'opblock-summary-method' + (actived ? ' active-version-badge' : '');
+                methodSpan.textContent = actived ? 'SELECTED' : `v${version}`;
 
-                    const descriptionDiv = document.createElement('div');
-                    descriptionDiv.className = 'opblock-summary-description';
-                    descriptionDiv.textContent = `api specification for ${version} version`;
+                const pathSpan = document.createElement('span');
+                pathSpan.className = 'opblock-summary-path';
+                pathSpan.setAttribute('data-path', `/api/v${version}`);
+                const pathLink = document.createElement('a');
+                pathLink.className = 'nostyle';
+                pathLink.innerHTML = `<span>./v${version}.${DEFAULT_DOCS_FILE_TYPE}</span>`;
+                pathSpan.appendChild(pathLink);
 
-                    button.appendChild(methodSpan);
-                    button.appendChild(pathSpan);
-                    button.appendChild(descriptionDiv);
-                    summary.appendChild(button);
-                    block.appendChild(summary);
-                    wrapper.appendChild(block);
+                const descriptionDiv = document.createElement('div');
+                descriptionDiv.className = 'opblock-summary-description';
+                descriptionDiv.textContent = `api specification for ${version} version`;
 
-                    wrapper.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        updateVersion(version);
-                    });
+                button.appendChild(methodSpan);
+                button.appendChild(pathSpan);
+                button.appendChild(descriptionDiv);
+                summary.appendChild(button);
+                block.appendChild(summary);
+                wrapper.appendChild(block);
 
-                    container.appendChild(wrapper);
+                wrapper.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    updateVersion(version);
                 });
+
+                return wrapper;
+
             }
 
             function loadSwaggerUi(version, type) {
@@ -118,18 +128,11 @@
                 }
                 currentVersion = newVersion;
                 updateUrl(currentVersion);
-                render(currentVersion)
-            }
-
-            function render(version) {
-                currentVersion = version;
-                renderVersions(currentVersion);
-                loadSwaggerUi(currentVersion, currentType);
-
+                render(currentVersion);
             }
 
             window.addEventListener('popstate', () => {
-                const version = getVersionFromUrl();
+                const version = getVersion();
                 if (version !== currentVersion) {
                     render(version)
                 }
