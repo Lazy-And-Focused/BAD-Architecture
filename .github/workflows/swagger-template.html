@@ -28,7 +28,7 @@
             // [Не менять]!: будет подставлен массив чисел из CI, например [1,2,3]
             const VERSIONS = __VERSIONS_LIST__;
 
-            const DEFAULT_DOCS_FILE_TYPE = 'json'; 
+            const DEFAULT_DOCS_FILE_TYPE = 'json';
 
             let currentVersion;
             let currentType = DEFAULT_DOCS_FILE_TYPE;
@@ -37,8 +37,8 @@
             function getVersionFromUrl() {
                 const query = new URLSearchParams(window.location.search);
                 const version = parseInt(query.get('version') || query.get('v'));
-                if (!VERSIONS.includes(version)){
-                  return VERSIONS[0];
+                if (!VERSIONS.includes(version)) {
+                    return VERSIONS[0];
                 }
                 return version
             }
@@ -113,30 +113,30 @@
             }
 
             function updateVersion(newVersion) {
-                if (newVersion === currentVersion) return;
+                if (newVersion === currentVersion) {
+                    return;
+                }
                 currentVersion = newVersion;
                 updateUrl(currentVersion);
-                renderVersions(currentVersion);
-                loadSwaggerUi(currentVersion, currentType);
+                render(currentVersion)
             }
 
-            function init() {
-                currentVersion = getVersionFromUrl();
-                currentType = new URLSearchParams(window.location.search).get('type') || DEFAULT_DOCS_FILE_TYPE;
+            function render(version) {
+                currentVersion = version;
                 renderVersions(currentVersion);
                 loadSwaggerUi(currentVersion, currentType);
+
             }
 
             window.addEventListener('popstate', () => {
                 const version = getVersionFromUrl();
                 if (version !== currentVersion) {
-                    currentVersion = version;
-                    renderVersions(currentVersion);
-                    loadSwaggerUi(currentVersion, currentType);
+                    render(version)
                 }
             });
 
-            init();
+            // --- initilize page data
+            currentType = new URLSearchParams(window.location.search).get('type') || DEFAULT_DOCS_FILE_TYPE;
         })();
     </script>
 </body>
