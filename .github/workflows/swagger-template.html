@@ -32,16 +32,16 @@
             let currentType = 'json';
             let swaggerUiInstance = null;
 
-            function getVersionFromURL() {
+            function getVersionFromUrl() {
                 const urlParams = new URLSearchParams(window.location.search);
-                let v = urlParams.get('version') || urlParams.get('v');
-                if (v && VERSIONS.includes(parseInt(v))) {
-                    return parseInt(v);
+                const version = parseInt(urlParams.get('version') || urlParams.get('v'));
+                if (!VERSIONS.includes(version)){
+                  return VERSIONS[0];
                 }
-                return VERSIONS[0];
+                return version
             }
 
-            function updateURL(version) {
+            function updateUrl(version) {
                 const url = new URL(window.location);
                 url.searchParams.set('v', version);
                 if (url.searchParams.has('version')) {
@@ -99,7 +99,7 @@
                 });
             }
 
-            function loadSwaggerUI(version, type) {
+            function loadSwaggerUi(version, type) {
                 const specificationPath = `./v${version}.${type}`;
                 if (swaggerUiInstance) {
                     document.getElementById('swagger-ui').innerHTML = '';
@@ -113,24 +113,24 @@
             function updateVersion(newVersion) {
                 if (newVersion === currentVersion) return;
                 currentVersion = newVersion;
-                updateURL(currentVersion);
+                updateUrl(currentVersion);
                 renderVersions(currentVersion);
-                loadSwaggerUI(currentVersion, currentType);
+                loadSwaggerUi(currentVersion, currentType);
             }
 
             function init() {
-                currentVersion = getVersionFromURL();
+                currentVersion = getVersionFromUrl();
                 currentType = new URLSearchParams(window.location.search).get('type') || 'json';
                 renderVersions(currentVersion);
-                loadSwaggerUI(currentVersion, currentType);
+                loadSwaggerUi(currentVersion, currentType);
             }
 
             window.addEventListener('popstate', () => {
-                const version = getVersionFromURL();
+                const version = getVersionFromUrl();
                 if (version !== currentVersion) {
                     currentVersion = version;
                     renderVersions(currentVersion);
-                    loadSwaggerUI(currentVersion, currentType);
+                    loadSwaggerUi(currentVersion, currentType);
                 }
             });
 
