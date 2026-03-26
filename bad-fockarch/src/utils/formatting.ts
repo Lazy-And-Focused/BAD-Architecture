@@ -59,7 +59,7 @@ export function pluralize(name: string): string {
   ) {
     return trimmed.slice(0, -1) + "ies";
   }
-  
+
   if (
     trimmed.endsWith("s") ||
     trimmed.endsWith("x") ||

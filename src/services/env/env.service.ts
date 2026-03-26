@@ -53,9 +53,9 @@ export const getPassportEnv = (type: Uppercase<AuthTypes>) => {
     GROUPED_AUTH_PROPERTIES[type];
 
   return {
-    id: CLIENT_ID,
-    secret: CLIENT_SECRET,
-    callback: CALLBACK_URL,
+    id: env[CLIENT_ID],
+    secret: env[CLIENT_SECRET],
+    callback: env[CALLBACK_URL],
   };
 };
 
