@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { HASH_ERRORS } from "@1/errors/services/hash.errors";
 import { tryCatchThrow } from "@/utils/try-catch.utils";
+
+import { verify } from "jsonwebtoken";
 
 import { env } from "@/services";
 import crypto from "crypto";
@@ -29,13 +31,30 @@ export class HashService {
   }
 
   public static resolveTokenOrThrow(token: string): ParsedToken {
-    const [authId, userId, access_token] = token.split("-");
-    const valided = authId && userId && access_token;
-    if (!valided) {
-      throw HASH_ERRORS.INVALID_TOKEN.exeption;
-    }
+    return tryCatchThrow((): ParsedToken => {
+      const payload = verify(token, env.HASH_KEY);
+      if (typeof payload === "string") {
+        throw HASH_ERRORS.INVALID_TOKEN.exeption;
+      }
 
-    return { authId, userId, token: access_token, successed: true };
+      const { id, userId } = payload;
+      if (!id || !userId) {
+        throw HASH_ERRORS.INVALID_TOKEN.exeption;
+      }
+
+      return {
+        authId: id,
+        userId,
+        token: token,
+        successed: true
+      }
+    }, (error) => {
+      if (error instanceof Error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST, {
+          cause: error.cause
+        });
+      };
+    });
   }
 
   public static resolveHeaderAuthorizationOrThrow(
