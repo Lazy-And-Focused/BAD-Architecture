@@ -15,7 +15,7 @@ import {
   convertToKebabCase,
   mergeSourceRoot,
   convertToConstantCase,
-  pluralize
+  pluralize,
 } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";

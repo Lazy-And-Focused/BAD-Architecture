@@ -10,11 +10,7 @@ import type { Schema as BadFockarchOptions } from "./laf-auth.schema";
 
 import type { Location } from "../utils";
 
-import {
-  NameParser,
-  convertToKebabCase,
-  mergeSourceRoot,
-} from "../utils";
+import { NameParser, convertToKebabCase, mergeSourceRoot } from "../utils";
 
 import { join, strings } from "@angular-devkit/core";
 import {
@@ -41,9 +37,7 @@ function transform(options: BadFockarchOptions): BadFockarchOptions {
   target.name = convertToKebabCase(location.name);
   target.path = convertToKebabCase(location.path);
   target.language = target.language !== undefined ? target.language : "ts";
-  target.specFileSuffix = convertToKebabCase(
-    options.specFileSuffix || "test",
-  );
+  target.specFileSuffix = convertToKebabCase(options.specFileSuffix || "test");
 
   target.path = target.flat
     ? target.path

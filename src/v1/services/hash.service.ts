@@ -31,30 +31,33 @@ export class HashService {
   }
 
   public static resolveTokenOrThrow(token: string): ParsedToken {
-    return tryCatchThrow((): ParsedToken => {
-      const payload = verify(token, env.HASH_KEY);
-      if (typeof payload === "string") {
-        throw HASH_ERRORS.INVALID_TOKEN.exeption;
-      }
+    return tryCatchThrow(
+      (): ParsedToken => {
+        const payload = verify(token, env.HASH_KEY);
+        if (typeof payload === "string") {
+          throw HASH_ERRORS.INVALID_TOKEN.exeption;
+        }
 
-      const { id, userId } = payload;
-      if (!id || !userId) {
-        throw HASH_ERRORS.INVALID_TOKEN.exeption;
-      }
+        const { id, userId } = payload;
+        if (!id || !userId) {
+          throw HASH_ERRORS.INVALID_TOKEN.exeption;
+        }
 
-      return {
-        authId: id,
-        userId,
-        token: token,
-        successed: true
-      }
-    }, (error) => {
-      if (error instanceof Error) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST, {
-          cause: error.cause
-        });
-      };
-    });
+        return {
+          authId: id,
+          userId,
+          token: token,
+          successed: true,
+        };
+      },
+      (error) => {
+        if (error instanceof Error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST, {
+            cause: error.cause,
+          });
+        }
+      },
+    );
   }
 
   public static resolveHeaderAuthorizationOrThrow(
