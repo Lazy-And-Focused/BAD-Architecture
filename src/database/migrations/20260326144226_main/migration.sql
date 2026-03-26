@@ -6,7 +6,7 @@ CREATE TABLE "Service" (
     "id" TEXT NOT NULL,
     "name" "AuthTypes" NOT NULL,
     "accessToken" TEXT NOT NULL,
-    "refreshToken" TEXT NOT NULL,
+    "refreshToken" TEXT,
     "authId" TEXT NOT NULL,
 
     CONSTRAINT "Service_pkey" PRIMARY KEY ("id")
