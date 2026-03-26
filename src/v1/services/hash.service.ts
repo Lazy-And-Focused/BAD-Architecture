@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { HASH_ERRORS } from "@1/errors/services/hash.errors";
-import { tryCatchThrow } from "@/utils/try-catch.utils";
+import { HASH_ERRORS } from "@1/errors";
+
+import { tryCatchThrow } from "@/utils";
+import { env } from "@/services";
 
 import { verify } from "jsonwebtoken";
-
-import { env } from "@/services";
-import crypto from "crypto";
+import { createHmac } from "crypto";
 
 const PARSE_ERROR = {
   id: false,
@@ -100,12 +100,11 @@ export class HashService {
   public constructor() {}
 
   public execute(data: string) {
-    return crypto.createHmac("sha512", env.HASH_KEY).update(data).digest("hex");
+    return createHmac("sha512", env.HASH_KEY).update(data).digest("hex");
   }
 
   public generateCode(data: string = (Math.random() * 1000).toString()) {
-    return crypto
-      .createHmac("sha512", env.HASH_KEY)
+    return createHmac("sha512", env.HASH_KEY)
       .update(new Date().getTime().toString() + data)
       .digest("base64");
   }
