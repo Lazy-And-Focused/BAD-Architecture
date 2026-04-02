@@ -38,7 +38,7 @@ jobs:
         run: pnpm run swagger
         env:
           IGNORE: true
-          PROGRAMM_MODE: "swagger"
+          PROGRAM_MODE: "swagger"
 
       - name: Prepare documentation folder
         run: |
