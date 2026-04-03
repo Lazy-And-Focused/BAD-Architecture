@@ -1,31 +1,6 @@
 {
-  "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "esnext",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "@1/*": ["./src/v1/*"],
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "dist", "bad-fockarch"]
+  "references": [
+    { "path": "./tsconfig.main.json" },
+    { "path": "./tsconfig.nostrictpropertyinitialization.json" },
+  ]
 }

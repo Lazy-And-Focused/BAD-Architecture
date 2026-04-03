@@ -15,15 +15,7 @@ const ACCELERATE_URL =
 const OPTIONS = {
   adapter: ADAPTER,
   accelerateUrl: ACCELERATE_URL,
-} as
-  | {
-      adapter: PrismaPg;
-      accelerateUrl: undefined;
-    }
-  | {
-      adapter: undefined;
-      accelerateUrl: string;
-    };
+} as ConstructorParameters<typeof PrismaClient>[0];
 
 @Injectable()
 export class PrismaService
