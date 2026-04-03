@@ -1,6 +1,6 @@
 {
   "references": [
-    { "path": "./tsconfig.main.json" },
-    { "path": "./tsconfig.nostrictpropertyinitialization.json" },
+    { "path": "./configs/tsconfig.main.json" },
+    { "path": "./configs/tsconfig.nostrictpropertyinitialization.json" },
   ]
 }
