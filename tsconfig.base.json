@@ -25,7 +25,10 @@
     "paths": {
       "@1/*": ["./src/v1/*"],
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "jest"
+    ]
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "dist", "bad-fockarch"]
