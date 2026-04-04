@@ -8,14 +8,14 @@ export const BASE_HEADERS_AUTHORIZATION = new ErrorConstructor(
       message: "Authorization is required",
       description: "Значение Authorization не было объявлено",
       status: HttpStatus.BAD_REQUEST,
-      placeholders: []
+      placeholders: [],
     },
 
     BAD_TYPE: {
       message: "Authorization must be Basic type",
       description: "Тип авторизации должен быть Basic",
       status: HttpStatus.BAD_REQUEST,
-      placeholders: []
+      placeholders: [],
     },
   },
 ).execute();

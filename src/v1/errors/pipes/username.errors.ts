@@ -8,14 +8,14 @@ export const USERNAME_ERRORS = new ErrorConstructor("USERNAME EXСEPTION", {
     message: "username must be string",
     description: "Имя пользователя не является строкой",
     status: HttpStatus.BAD_REQUEST,
-    placeholders: []
+    placeholders: [],
   },
 
   INVALID_USERNAME: {
     message: `username not valided and must includes only \`${env.AVAILABLE_USERNAME_SYMBOLS}\``,
     description: `Имя пользователя должно содержать только определенный набор символов: \`${env.AVAILABLE_USERNAME_SYMBOLS}\``,
     status: HttpStatus.BAD_REQUEST,
-    placeholders: []
+    placeholders: [],
   },
 }).execute();
 

@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.base.json",
-  
+
   "references": [
     { "path": "./tsconfig.main.json" },
-    { "path": "./tsconfig.nostrictpropertyinitialization.json" },
+    { "path": "./tsconfig.nostrictpropertyinitialization.json" }
   ]
 }

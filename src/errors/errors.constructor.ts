@@ -13,11 +13,11 @@ const PLACEHOLDER_PATTERN = /\{([^}]+)\}/g;
  */
 type PlaceholderObject<Placeholders extends string[]> = {
   [P in Placeholders[number]]: string;
-}
+};
 
 type BadErrors<Errors extends Record<string, ErrorTemplate<string[]>>> = {
-  [P in keyof Errors]: BadError<Errors[P]["placeholders"]>
-}
+  [P in keyof Errors]: BadError<Errors[P]["placeholders"]>;
+};
 
 interface ErrorTemplate<Placeholders extends string[]> {
   message: string;
@@ -33,15 +33,16 @@ interface ErrorTemplate<Placeholders extends string[]> {
  * @template Placeholders - Массив строковых ключей, которые должны быть заменены.
  */
 export class BadError<Placeholders extends string[]> {
-  private readonly placeholderRegexes: Map<keyof PlaceholderObject<Placeholders>, RegExp>;
+  private readonly placeholderRegexes: Map<
+    keyof PlaceholderObject<Placeholders>,
+    RegExp
+  >;
 
   /**
    * Создаёт экземпляр `BadError`.
    * @param {ErrorTemplate} template - Шаблон ошибки с сообщением, описанием и опциями.
    */
-  public constructor(
-    public readonly template: ErrorTemplate<Placeholders>,
-  ) {
+  public constructor(public readonly template: ErrorTemplate<Placeholders>) {
     this.placeholderRegexes = this.extractPlaceholders(template);
   }
 
@@ -49,10 +50,13 @@ export class BadError<Placeholders extends string[]> {
    * Основной метод для выброса исключения с подстановкой данных.
    * Если передан пустой объект данных, выбрасывается статическое исключение (без замен).
    * Иначе выполняется динамическая подстановка.
-   * 
+   *
    * @throws {HttpException} Всегда выбрасывает HTTP-исключение.
    */
-  public execute(placeholders: PlaceholderObject<Placeholders>, cause?: unknown): HttpException {
+  public execute(
+    placeholders: PlaceholderObject<Placeholders>,
+    cause?: unknown,
+  ): HttpException {
     const keys = Object.keys(placeholders);
     if (keys.length === 0) {
       return this.createStaticException(cause);
@@ -88,7 +92,10 @@ export class BadError<Placeholders extends string[]> {
   /**
    * Создаёт динамическое исключение, заменяя плейсхолдеры в шаблоне.
    */
-  private createDynamicException(placeholders: PlaceholderObject<Placeholders>, cause?: unknown): HttpException {
+  private createDynamicException(
+    placeholders: PlaceholderObject<Placeholders>,
+    cause?: unknown,
+  ): HttpException {
     const error = this.formatTemplate(placeholders);
     return this.createHttpException(error, cause);
   }
@@ -96,13 +103,16 @@ export class BadError<Placeholders extends string[]> {
   /**
    * Выполняет замену плейсхолдеров в сообщении, описании и причине (если причина — строка).
    * Если значение для плейсхолдера отсутствует, выводит предупреждение в консоль и пропускает замену.
-   * 
+   *
    * @returns {ErrorTemplate} Новый шаблон ошибки с заменёнными значениями.
    */
-  private formatTemplate(placeholders: PlaceholderObject<Placeholders>): ErrorTemplate<Placeholders> {
+  private formatTemplate(
+    placeholders: PlaceholderObject<Placeholders>,
+  ): ErrorTemplate<Placeholders> {
     let message = this.template.message;
     let description = this.template.description;
-    let cause = typeof this.template.cause === 'string' ? this.template.cause : undefined;
+    let cause =
+      typeof this.template.cause === "string" ? this.template.cause : undefined;
 
     for (const [key, regex] of this.placeholderRegexes.entries()) {
       const value = placeholders[key];
@@ -110,7 +120,7 @@ export class BadError<Placeholders extends string[]> {
         console.error(`Placeholder {${key}} not provided in data`);
         continue;
       }
-      
+
       message = message.replace(regex, value);
       description = description.replace(regex, value);
       if (cause) {
@@ -124,7 +134,7 @@ export class BadError<Placeholders extends string[]> {
       cause: cause ?? this.template.cause,
       status: this.template.status,
       options: this.template.options,
-      placeholders: this.template.placeholders
+      placeholders: this.template.placeholders,
     };
   }
 
@@ -134,8 +144,12 @@ export class BadError<Placeholders extends string[]> {
    * @param {ErrorTemplate} error - Шаблон ошибки (возможно, после подстановки).
    * @returns {HttpException}
    */
-  private createHttpException(error: ErrorTemplate<Placeholders>, cause?: unknown): HttpException {
-    const status = error.status ?? this.template.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+  private createHttpException(
+    error: ErrorTemplate<Placeholders>,
+    cause?: unknown,
+  ): HttpException {
+    const status =
+      error.status ?? this.template.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
     return new HttpException(error.message, status, {
       description: error.description,
       cause: cause ?? error.cause,
@@ -150,11 +164,13 @@ export class BadError<Placeholders extends string[]> {
    * @returns {Map<keyof PlaceholderObject<Placeholders>, RegExp>} Карта ключ → регулярное выражение.
    * @throws {Error} Если какой-либо плейсхолдер из списка `placeholders` отсутствует в шаблоне.
    */
-  private extractPlaceholders(template: ErrorTemplate<Placeholders>): Map<keyof PlaceholderObject<Placeholders>, RegExp> {
+  private extractPlaceholders(
+    template: ErrorTemplate<Placeholders>,
+  ): Map<keyof PlaceholderObject<Placeholders>, RegExp> {
     const placeholderRegexes = new Map();
-    const cause = typeof template.cause === 'string' ? template.cause : '';
+    const cause = typeof template.cause === "string" ? template.cause : "";
     const text = `${template.message} ${template.description} ${cause}`;
-    
+
     let match;
     while ((match = PLACEHOLDER_PATTERN.exec(text)) !== null) {
       const matchData = match[1];
@@ -169,15 +185,15 @@ export class BadError<Placeholders extends string[]> {
     if (!this.template.placeholders) {
       return placeholderRegexes;
     }
-    
-    this.template.placeholders.forEach(placeholder => {
+
+    this.template.placeholders.forEach((placeholder) => {
       if (placeholderRegexes.has(placeholder)) {
         return;
-      };
+      }
 
       throw new Error(`${placeholder} in placeholders`);
     });
-    
+
     return placeholderRegexes;
   }
 }
@@ -204,7 +220,7 @@ export class ErrorConstructor<
   public constructor(
     public readonly prefix: string,
     private readonly templates: {
-      [P in keyof Errors]: Errors[P]
+      [P in keyof Errors]: Errors[P];
     },
   ) {
     this.errors = this.execute();
@@ -226,7 +242,9 @@ export class ErrorConstructor<
 
       const badError = new BadError(prefixedTemplate);
 
-      logger.execute(`Загрузка ошибки ${this.prefix} ${code} : ${template.message}`);
+      logger.execute(
+        `Загрузка ошибки ${this.prefix} ${code} : ${template.message}`,
+      );
 
       return [key, badError];
     });
@@ -242,8 +260,8 @@ export class ErrorConstructor<
    * @returns {string} Уникальный строковый код.
    */
   private generateCode(key: keyof Errors, index: number): string {
-    const prefixEncoded = Buffer.from(this.prefix).toString('base64url');
-    const suffix = Buffer.from(`${String(key)}:${index}`).toString('hex');
+    const prefixEncoded = Buffer.from(this.prefix).toString("base64url");
+    const suffix = Buffer.from(`${String(key)}:${index}`).toString("hex");
 
     return `${prefixEncoded}:${suffix}`;
   }

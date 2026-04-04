@@ -6,21 +6,21 @@ export const HASH_ERRORS = new ErrorConstructor("HASH EXСEPTION", {
     message: "Token method not acceptable",
     description: "Метод токена не доступен к использованию",
     status: HttpStatus.NOT_ACCEPTABLE,
-    placeholders: []
+    placeholders: [],
   },
 
   AUTHORIZATION_UNDEFINED: {
     message: "authroization not defined",
     description: "Заголовок `authorization` не был определен",
     status: HttpStatus.UNAUTHORIZED,
-    placeholders: []
+    placeholders: [],
   },
 
   INVALID_TOKEN: {
     message: "token not valided",
     description: "Токен не прошёл проверку по некоторым свойствам",
     status: HttpStatus.UNAUTHORIZED,
-    placeholders: []
+    placeholders: [],
   },
 }).execute();
 

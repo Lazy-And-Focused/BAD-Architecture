@@ -76,7 +76,7 @@ export class AuthStrategy {
     if (!user) {
       throw AUTH_STRATEGIES_ERRORS.USER_NOT_FOUND.execute({
         key: "username",
-        value: username
+        value: username,
       });
     }
 
@@ -87,7 +87,7 @@ export class AuthStrategy {
     if (!auth) {
       throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.execute({
         key: "userId",
-        value: user.id
+        value: user.id,
       });
     }
 
@@ -124,7 +124,7 @@ export class AuthStrategy {
     if (!auth) {
       throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.execute({
         key: "id",
-        value: service.authId
+        value: service.authId,
       });
     }
 
@@ -137,7 +137,7 @@ export class AuthStrategy {
     if (!user) {
       throw AUTH_STRATEGIES_ERRORS.USER_NOT_FOUND.execute({
         key: "id",
-        value: auth.userId
+        value: auth.userId,
       });
     }
 
