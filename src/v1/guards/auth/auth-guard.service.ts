@@ -21,15 +21,15 @@ export class AuthGuardService {
     });
 
     if (!auth) {
-      throw AUTH_ERRORS.USER_NOT_FOUND.exeption;
+      throw AUTH_ERRORS.USER_NOT_FOUND.exception;
     }
 
     if (auth.userId !== userId) {
-      throw AUTH_ERRORS.PROFILE_ID.exeption;
+      throw AUTH_ERRORS.PROFILE_ID.exception;
     }
 
     if (token !== auth.token) {
-      throw AUTH_ERRORS.TOKEN_ERROR.exeption;
+      throw AUTH_ERRORS.TOKEN_ERROR.exception;
     }
 
     const user = this.prisma.user.findUnique({
@@ -39,7 +39,7 @@ export class AuthGuardService {
     });
 
     if (!user) {
-      throw AUTH_ERRORS.PROFILE_NOT_FOUND.exeption;
+      throw AUTH_ERRORS.PROFILE_NOT_FOUND.exception;
     }
 
     return true;

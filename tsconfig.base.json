@@ -3,6 +3,8 @@
     "composite": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "target": "es2024",
+    "lib": ["ES2024"],
     "resolvePackageJsonExports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
@@ -11,7 +13,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
@@ -27,7 +28,8 @@
       "@/*": ["./src/*"]
     },
     "types": [
-      "jest"
+      "jest",
+      "node"
     ]
   },
   "include": ["./**/*.ts"],

@@ -38,7 +38,7 @@ export class SentryController {
       throw new HttpException("Not found TEST", HttpStatus.NOT_FOUND);
     }
 
-    throw new HttpException("Exeption TEST", status);
+    throw new HttpException("Exсeption TEST", status);
   }
 }
 

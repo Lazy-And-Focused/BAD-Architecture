@@ -74,10 +74,10 @@ export class AuthStrategy {
     });
 
     if (!user) {
-      throw new HttpException(
-        `User with username ${username} not found`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw AUTH_STRATEGIES_ERRORS.USER_NOT_FOUND.execute({
+        key: "username",
+        value: username
+      });
     }
 
     const auth = await this.prisma.auth.findUnique({
@@ -85,11 +85,14 @@ export class AuthStrategy {
     });
 
     if (!auth) {
-      throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.exeption;
+      throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.execute({
+        key: "userId",
+        value: user.id
+      });
     }
 
     if (auth.password !== this.hash.execute(password)) {
-      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.exeption;
+      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.exception;
     }
 
     return { user, auth };
@@ -119,10 +122,10 @@ export class AuthStrategy {
     });
 
     if (!auth) {
-      throw new HttpException(
-        `Auth with "${service.authId}" not found`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.execute({
+        key: "id",
+        value: service.authId
+      });
     }
 
     const user = await this.prisma.user.findUnique({
@@ -132,10 +135,10 @@ export class AuthStrategy {
     });
 
     if (!user) {
-      throw new HttpException(
-        `User with "${auth.userId}" not found`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw AUTH_STRATEGIES_ERRORS.USER_NOT_FOUND.execute({
+        key: "id",
+        value: auth.userId
+      });
     }
 
     const update = {

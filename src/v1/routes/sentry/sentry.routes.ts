@@ -17,7 +17,7 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
       summary: "Testing an error for sentry",
     },
     GET_HTTP: {
-      summary: "Testing an `HttpExeption` from sentry",
+      summary: "Testing an `HttpExсeption` from sentry",
     },
   },
 }).execute();

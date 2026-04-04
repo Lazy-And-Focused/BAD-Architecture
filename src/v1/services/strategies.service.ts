@@ -44,7 +44,7 @@ export class StrategiesService {
   public static getStrategy(service: string) {
     const strategy = this.strategies.get(service as AuthTypes);
     if (!strategy) {
-      throw STRATEGIES_SERVICE_ERROS.STRATEGY_NOT_FOUND.exeption;
+      throw STRATEGIES_SERVICE_ERROS.STRATEGY_NOT_FOUND.exception;
     }
 
     return strategy;

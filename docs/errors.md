@@ -69,7 +69,7 @@ API или во всём приложении.
 - `puck` — идентификатор вида `"PREFIX KEY"`;
 - `message` — полное сообщение (включает код и описание);
 - `description` — описание;
-- `exeption` — готовый экземпляр `HttpException`, который можно сразу
+- `exception` — готовый экземпляр `HttpException`, который можно сразу
   выбросить.
 
 ### Пример из `auth.errors.ts` (для стратегий)
@@ -106,7 +106,7 @@ export default AUTH_STRATEGIES_ERRORS;
     puck: 'AUTH STRATEGY EXCEPTION AUTH_NOT_FOUND',
     message: '...',
     description: '...',
-    exeption: HttpException
+    exception: HttpException
   },
   PASSWORD_ERROR: { ... }
 }
@@ -115,14 +115,14 @@ export default AUTH_STRATEGIES_ERRORS;
 ## Использование в коде
 
 В сервисе, гарде или стратегии достаточно импортировать нужный объект
-ошибок и выбросить `exeption`:
+ошибок и выбросить `exception`:
 
 ```ts
 import { AUTH_STRATEGIES_ERRORS } from "../errors/strategies/auth.errors";
 
 // ...
 if (!auth) {
-  throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.exeption;
+  throw AUTH_STRATEGIES_ERRORS.AUTH_NOT_FOUND.exception;
 }
 ```
 

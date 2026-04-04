@@ -10,7 +10,7 @@ export class UsernamePipe implements PipeTransform {
       env.AVAILABLE_USERNAME_SYMBOLS.includes(char),
     );
     if (!usernameValided) {
-      throw USERNAME_ERRORS.INVALID_USERNAME.exeption;
+      throw USERNAME_ERRORS.INVALID_USERNAME.exception;
     }
 
     return username;
@@ -18,7 +18,7 @@ export class UsernamePipe implements PipeTransform {
 
   public transform(value: unknown) {
     if (typeof value !== "string") {
-      throw USERNAME_ERRORS.USERNAME_NOT_STRING.exeption;
+      throw USERNAME_ERRORS.USERNAME_NOT_STRING.exception;
     }
 
     return UsernamePipe.validate(value);
