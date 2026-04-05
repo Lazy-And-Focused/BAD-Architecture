@@ -9,7 +9,7 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
     OAUTH2_GET: "/oauth2/:method",
     OAUTH2_GET_CALLBACK: "/oauth2/:method/callback",
     POST: "/",
-  } as const,
+  },
 
   operations: {
     GET: {
@@ -27,5 +27,5 @@ export const { ROUTE, ROUTES, OPERATIONS } = new Routes({
     POST: {
       summary: "creating a user by password",
     },
-  } as const,
+  },
 }).execute();
