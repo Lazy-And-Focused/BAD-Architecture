@@ -17,12 +17,12 @@ export const BasicHeadersAuthorization = createParamDecorator(
     const { headers } = context.switchToHttp().getRequest() as Request;
     const { [Headers.authorization]: authorization } = headers;
     if (!authorization) {
-      throw BASE_HEADERS_AUTHORIZATION.AUTHORIZATION_NOT_DEFINED.exception;
+      throw BASE_HEADERS_AUTHORIZATION.AUTHORIZATION_NOT_DEFINED.execute();
     }
 
     const [type, ...data] = authorization.split(" ");
     if (type !== AuthorizationTypes.Basic) {
-      throw BASE_HEADERS_AUTHORIZATION.BAD_TYPE.exception;
+      throw BASE_HEADERS_AUTHORIZATION.BAD_TYPE.execute();
     }
 
     const base64 = data.join(" ");

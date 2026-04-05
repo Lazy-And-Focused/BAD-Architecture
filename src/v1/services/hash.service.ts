@@ -35,12 +35,12 @@ export class HashService {
       (): ParsedToken => {
         const payload = verify(token, env.HASH_KEY);
         if (typeof payload === "string") {
-          throw HASH_ERRORS.INVALID_TOKEN.exception;
+          throw HASH_ERRORS.INVALID_TOKEN.execute();
         }
 
         const { id, userId } = payload;
         if (!id || !userId) {
-          throw HASH_ERRORS.INVALID_TOKEN.exception;
+          throw HASH_ERRORS.INVALID_TOKEN.execute();
         }
 
         return {
@@ -64,7 +64,7 @@ export class HashService {
     authorization?: string,
   ): ParsedToken {
     if (!authorization) {
-      throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.exception;
+      throw HASH_ERRORS.AUTHORIZATION_UNDEFINED.execute();
     }
 
     return tryCatchThrow(() => {
@@ -75,7 +75,7 @@ export class HashService {
         return this.resolveTokenOrThrow(token);
       }
 
-      throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.exception;
+      throw HASH_ERRORS.TOKEN_METHOD_NOT_ACCEPTABLE.execute();
     });
   }
 

@@ -1,3 +1,2 @@
-export * from "./errors.constructor";
-
+export * from "./error.factory";
 export * from "./decorators";

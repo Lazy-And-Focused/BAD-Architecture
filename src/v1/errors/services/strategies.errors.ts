@@ -1,16 +1,15 @@
 import { HttpStatus } from "@nestjs/common";
-import { ErrorConstructor } from "@/errors";
+import { errorFactory } from "@/errors";
 
-export const STRATEGIES_SERVICE_ERROS = new ErrorConstructor(
+export const STRATEGIES_SERVICE_ERROS = errorFactory.execute(
   "STRATEGIES SERVICE EXСEPTION",
   {
     STRATEGY_NOT_FOUND: {
       message: "Strategy can not be find",
-      description: "Стратегия почему-то не была найдена",
+      description: "Стратегия не была найдена.",
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      placeholders: [],
     },
   },
-).execute();
+);
 
 export default STRATEGIES_SERVICE_ERROS;

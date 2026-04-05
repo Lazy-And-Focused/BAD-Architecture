@@ -92,7 +92,7 @@ export class AuthStrategy {
     }
 
     if (auth.password !== this.hash.execute(password)) {
-      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.exception;
+      throw AUTH_STRATEGIES_ERRORS.PASSWORD_ERROR.execute();
     }
 
     return { user, auth };
