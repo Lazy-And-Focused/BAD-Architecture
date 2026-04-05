@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "@/errors";
+import { fockerorFactory } from "@/errors";
 
-export const AUTH_STRATEGIES_ERRORS = errorFactory.execute(
+export const AUTH_STRATEGIES_ERRORS = fockerorFactory.execute(
   "AUTH STRATEGY EXСEPTION",
   {
     AUTH_NOT_FOUND: {

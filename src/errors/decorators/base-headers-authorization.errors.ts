@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "../error.factory";
+import { fockerorFactory } from "../error.factory";
 
-export const BASE_HEADERS_AUTHORIZATION = errorFactory.execute(
+export const BASE_HEADERS_AUTHORIZATION = fockerorFactory.execute(
   "BASE HEADERS AUTHORIZATION EXСEPTIONS",
   {
     AUTHORIZATION_NOT_DEFINED: {
@@ -17,5 +17,3 @@ export const BASE_HEADERS_AUTHORIZATION = errorFactory.execute(
     },
   },
 );
-
-export default BASE_HEADERS_AUTHORIZATION;

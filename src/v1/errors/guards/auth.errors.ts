@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "@/errors";
+import { fockerorFactory } from "@/errors";
 
-export const AUTH_ERRORS = errorFactory.execute("AUTH EXСEPTION", {
+export const AUTH_ERRORS = fockerorFactory.execute("AUTH EXСEPTION", {
   HASH_PARSE: {
     message: "Parse exception",
     description:

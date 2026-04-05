@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "@/errors";
+import { fockerorFactory } from "@/errors";
 
-export const STRATEGIES_SERVICE_ERROS = errorFactory.execute(
+export const STRATEGIES_SERVICE_ERROS = fockerorFactory.execute(
   "STRATEGIES SERVICE EXСEPTION",
   {
     STRATEGY_NOT_FOUND: {

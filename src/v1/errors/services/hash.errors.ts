@@ -1,7 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "@/errors";
+import { fockerorFactory } from "@/errors";
 
-export const HASH_ERRORS = errorFactory.execute("HASH EXСEPTION", {
+export const HASH_ERRORS = fockerorFactory.execute("HASH EXСEPTION", {
   TOKEN_METHOD_NOT_ACCEPTABLE: {
     message: "Token method not acceptable.",
     description: "Метод токена не доступен к использованию.",

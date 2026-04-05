@@ -1,9 +1,9 @@
 import { HttpStatus } from "@nestjs/common";
-import { errorFactory } from "@/errors";
+import { fockerorFactory } from "@/errors";
 
 import { env } from "@/services";
 
-export const USERNAME_ERRORS = errorFactory.execute("USERNAME EXСEPTION", {
+export const USERNAME_ERRORS = fockerorFactory.execute("USERNAME EXСEPTION", {
   USERNAME_NOT_STRING: {
     message: "username must be string",
     description: "Имя пользователя не является строкой",

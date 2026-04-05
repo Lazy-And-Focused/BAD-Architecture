@@ -1,4 +1,5 @@
+import { FockerorFactory } from "fockeror";
+import { HttpException } from "@nestjs/common";
 import { logger } from "@/services";
-import { ErrorFactory } from "@/utils";
 
-export const errorFactory = new ErrorFactory(logger);
+export const fockerorFactory = new FockerorFactory(HttpException, logger);
