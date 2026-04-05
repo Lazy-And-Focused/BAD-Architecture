@@ -27,7 +27,10 @@ type PlaceholderObject<Placeholders extends string[]> = {
  * @example
  * type Keys = ExtractPlaceholdersTuple<"Hello {name}, your id is {id}">; // ['name', 'id']
  */
-type ExtractPlaceholdersTuple<InputString extends string, Acc extends string[] = []> =
+type ExtractPlaceholdersTuple<
+  InputString extends string,
+  Acc extends string[] = [],
+> =
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   InputString extends `${infer _}\${{ ${infer P} }}${infer Rest}`
     ? ExtractPlaceholdersTuple<Rest, [...Acc, P]>
@@ -41,7 +44,7 @@ type ExtractPlaceholdersTuple<InputString extends string, Acc extends string[] =
  * type Placeholders = InferPlaceholders<Template>; // ['userId', 'action']
  */
 type InferPlaceholders<T extends { message: string; description: string }> =
-  ExtractPlaceholdersTuple<`${T['message']} ${T['description']}`>;
+  ExtractPlaceholdersTuple<`${T["message"]} ${T["description"]}`>;
 
 /**
  * Входной формат описания ошибки без автоматически вычисляемого поля `placeholders`.
@@ -84,7 +87,7 @@ type FormattedErrorTemplate = ErrorTemplate<[]>;
 
 /** Преобразует запись входных шаблонов в запись экземпляров `BadError`. */
 type BadErrors<T extends Record<string, ErrorTemplateInput>> = {
-  [K in keyof T]: BadError<InferPlaceholders<T[K]>>
+  [K in keyof T]: BadError<InferPlaceholders<T[K]>>;
 };
 
 /**
@@ -120,7 +123,10 @@ export class BadError<const Placeholders extends string[]> {
     this.placeholderRegexes = this.extractPlaceholders(template);
   }
 
-  public execute(placeholders: PlaceholderObject<Placeholders>, cause?: Error): HttpException;
+  public execute(
+    placeholders: PlaceholderObject<Placeholders>,
+    cause?: Error,
+  ): HttpException;
   public execute(cause?: Error): HttpException;
   /**
    * Возвращает объект HTTP исключения с подстановкой данных.
@@ -156,7 +162,10 @@ export class BadError<const Placeholders extends string[]> {
     return this.createDynamicException(placeholders, actualCause);
   }
 
-  public throw(placeholders: PlaceholderObject<Placeholders>, cause?: Error): never;
+  public throw(
+    placeholders: PlaceholderObject<Placeholders>,
+    cause?: Error,
+  ): never;
   public throw(cause?: Error): never;
   /**
    * Немедленно выбрасывает исключение с подстановкой данных.
@@ -164,12 +173,18 @@ export class BadError<const Placeholders extends string[]> {
    * @param cause - Дополнительная причина ошибки.
    * @throws {HttpException} Всегда выбрасывает HttpException.
    */
-  public throw(placeholdersOrCause?: PlaceholderObject<Placeholders> | Error, cause?: Error): never {
+  public throw(
+    placeholdersOrCause?: PlaceholderObject<Placeholders> | Error,
+    cause?: Error,
+  ): never {
     if (placeholdersOrCause instanceof Error) {
       throw this.execute(placeholdersOrCause);
     }
-    
-    throw this.execute(placeholdersOrCause as PlaceholderObject<Placeholders>, cause);
+
+    throw this.execute(
+      placeholdersOrCause as PlaceholderObject<Placeholders>,
+      cause,
+    );
   }
 
   private createStaticException(cause?: Error): HttpException {
@@ -187,17 +202,21 @@ export class BadError<const Placeholders extends string[]> {
     return this.createHttpException(error, cause);
   }
 
-  private formatTemplate(placeholders: PlaceholderObject<Placeholders>): FormattedErrorTemplate {
+  private formatTemplate(
+    placeholders: PlaceholderObject<Placeholders>,
+  ): FormattedErrorTemplate {
     let message = this.template.message;
     let description = this.template.description;
 
     for (const [key, regex] of this.placeholderRegexes.entries()) {
       const value = placeholders[key];
       if (value === undefined) {
-        this.logger.error(new Error(`Placeholder {${key}} not provided in data`));
+        this.logger.error(
+          new Error(`Placeholder {${key}} not provided in data`),
+        );
         continue;
       }
-      
+
       message = message.replace(regex, value);
       description = description.replace(regex, value);
     }
@@ -210,8 +229,12 @@ export class BadError<const Placeholders extends string[]> {
     };
   }
 
-  private createHttpException(error: FormattedErrorTemplate, cause?: Error): HttpException {
-    const status = error.status ?? this.template.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+  private createHttpException(
+    error: FormattedErrorTemplate,
+    cause?: Error,
+  ): HttpException {
+    const status =
+      error.status ?? this.template.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
     return new HttpException(error.message, status, {
       description: error.description,
       cause: cause ?? error.cause,
@@ -219,7 +242,9 @@ export class BadError<const Placeholders extends string[]> {
     });
   }
 
-  private collectPlaceholdersFromText(template: ErrorTemplate<Placeholders>): Set<Placeholders[number]> {
+  private collectPlaceholdersFromText(
+    template: ErrorTemplate<Placeholders>,
+  ): Set<Placeholders[number]> {
     const text = `${template.message} ${template.description}`;
     const set = new Set<Placeholders[number]>();
     for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
@@ -234,7 +259,7 @@ export class BadError<const Placeholders extends string[]> {
   ): void {
     if (!declaredPlaceholders) {
       return;
-    };
+    }
 
     const errors: Error[] = [];
     for (const placeholder of declaredPlaceholders) {
@@ -250,7 +275,11 @@ export class BadError<const Placeholders extends string[]> {
         continue;
       }
 
-      errors.push(new Error(`Placeholder from text "${placeholder}" not found in placeholders list`));
+      errors.push(
+        new Error(
+          `Placeholder from text "${placeholder}" not found in placeholders list`,
+        ),
+      );
     }
 
     if (errors.length !== 0) {
@@ -259,7 +288,9 @@ export class BadError<const Placeholders extends string[]> {
     }
   }
 
-  private buildRegexMap(keys: Set<Placeholders[number]>): PlaceholderRegexMap<Placeholders> {
+  private buildRegexMap(
+    keys: Set<Placeholders[number]>,
+  ): PlaceholderRegexMap<Placeholders> {
     const placeholdersMap: PlaceholderRegexMap<Placeholders> = new Map();
     for (const key of keys) {
       placeholdersMap.set(key, this.createRegEx(key));
@@ -268,7 +299,9 @@ export class BadError<const Placeholders extends string[]> {
     return placeholdersMap;
   }
 
-  private extractPlaceholders(template: ErrorTemplate<Placeholders>): PlaceholderRegexMap<Placeholders> {
+  private extractPlaceholders(
+    template: ErrorTemplate<Placeholders>,
+  ): PlaceholderRegexMap<Placeholders> {
     const collected = this.collectPlaceholdersFromText(template);
     this.validatePlaceholders(collected, template.placeholders);
     return this.buildRegexMap(collected);
@@ -328,9 +361,14 @@ export class ErrorFactory {
       const input = templates[key];
       const errorTemplate = this.defineError(input);
       const code = this.generateCode(prefix, key, index);
-      this.logger.execute(`Загрузка ошибки ${prefix} ${code} : ${errorTemplate.message}`);
-      
-      const prefixed = { ...errorTemplate, message: `${code} : ${errorTemplate.message}` };
+      this.logger.execute(
+        `Загрузка ошибки ${prefix} ${code} : ${errorTemplate.message}`,
+      );
+
+      const prefixed = {
+        ...errorTemplate,
+        message: `${code} : ${errorTemplate.message}`,
+      };
       return [key, new BadError(prefixed, this.logger)];
     });
 
@@ -343,9 +381,11 @@ export class ErrorFactory {
     return `${prefixEncoded}:${suffix}`;
   }
 
-  private defineError<const Input extends ErrorTemplateInput>(error: Input): ErrorTemplate<InferPlaceholders<Input>> {
+  private defineError<const Input extends ErrorTemplateInput>(
+    error: Input,
+  ): ErrorTemplate<InferPlaceholders<Input>> {
     const combined = `${error.message} ${error.description}`;
-    
+
     const matches = combined.match(PLACEHOLDER_PATTERN);
     const allKeys = matches?.map((m) => m.slice(1, -1)) ?? [];
     const uniqueKeys = Array.from(new Set(allKeys)) as InferPlaceholders<Input>;
