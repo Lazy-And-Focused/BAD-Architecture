@@ -1,24 +1,54 @@
-import { logger } from "@/services";
 import { HttpException, HttpStatus } from "@nestjs/common";
+import { logger } from "@/services";
 
 /**
  * Регулярное выражение для поиска плейсхолдеров вида `{key}`.
+ * @constant {RegExp}
  */
 const PLACEHOLDER_PATTERN = /\{([^}]+)\}/g;
 
 /**
  * Тип, описывающий объект с данными для подстановки вместо плейсхолдеров.
  * Все ключи должны присутствовать, значения — строки.
- * @template Placeholders - Массив строковых ключей.
+ *
+ * @template Placeholders - Массив строковых ключей (например, `['name', 'id']`).
+ * @example
+ * type MyPlaceholders = ['user', 'action'];
+ * const data: PlaceholderObject<MyPlaceholders> = { user: 'Alice', action: 'login' };
  */
 type PlaceholderObject<Placeholders extends string[]> = {
   [P in Placeholders[number]]: string;
 };
 
+/**
+ * Тип, преобразующий запись шаблонов ошибок в запись соответствующих `BadError` инстансов.
+ * @template Errors - Запись, где ключи — имена ошибок, значения — `ErrorTemplate<string[]>`.
+ * @internal
+ */
 type BadErrors<Errors extends Record<string, ErrorTemplate<string[]>>> = {
   [P in keyof Errors]: BadError<Errors[P]["placeholders"]>;
 };
 
+/**
+ * Шаблон ошибки, содержащий сообщение, описание, список плейсхолдеров и опциональные поля.
+ *
+ * @template Placeholders - Массив строк, перечисляющих все используемые плейсхолдеры (например, `['id', 'name']`).
+ * @interface ErrorTemplate
+ * @property {string} message - Текст сообщения об ошибке. Может содержать плейсхолдеры вида `{key}`.
+ * @property {string} description - Подробное описание ошибки. Тоже может содержать плейсхолдеры.
+ * @property {unknown} [cause] - Первопричина ошибки. Если это строка, в ней также будут заменены плейсхолдеры.
+ * @property {HttpStatus} [status] - HTTP статус ответа. По умолчанию `500 Internal Server Error`.
+ * @property {Record<string, unknown>} [options] - Дополнительные опции, передаваемые в конструктор `HttpException`.
+ * @property {Placeholders} placeholders - Массив всех возможных ключей плейсхолдеров, используемых в шаблоне.
+ *
+ * @example
+ * const template: ErrorTemplate<['entity', 'id']> = {
+ *   message: '{entity} with id {id} not found',
+ *   description: 'The {entity} record identified by {id} does not exist',
+ *   status: HttpStatus.NOT_FOUND,
+ *   placeholders: ['entity', 'id']
+ * };
+ */
 interface ErrorTemplate<Placeholders extends string[]> {
   message: string;
   description: string;
@@ -28,30 +58,65 @@ interface ErrorTemplate<Placeholders extends string[]> {
   placeholders: Placeholders;
 }
 
+/** Карта ключ-плейсхолдер → регулярное выражение для замены. */
+type PlaceholderRegexMap<Placeholders extends string[]> = Map<
+  keyof PlaceholderObject<Placeholders>,
+  RegExp
+>;
+
+/** Шаблон ошибки после замены всех плейсхолдеров (плейсхолдеры отсутствуют). */
+type FormattedErrorTemplate = ErrorTemplate<[]>;
+
 /**
  * Класс, представляющий конкретную ошибку с возможностью динамической подстановки плейсхолдеров.
- * @template Placeholders - Массив строковых ключей, которые должны быть заменены.
+ *
+ * @template Placeholders - Массив строковых ключей, которые должны быть заменены (например, `['userId', 'role']`).
+ *
+ * @example
+ * // Создание ошибки с плейсхолдерами
+ * const error = new BadError({
+ *   message: 'User {userId} has no permission for {action}',
+ *   description: 'Access denied for user {userId} to perform {action}',
+ *   status: HttpStatus.FORBIDDEN,
+ *   placeholders: ['userId', 'action']
+ * });
+ *
+ * // Получение объекта исключения
+ * const exception = error.execute({ userId: '123', action: 'delete' });
+ *
+ * // Или сразу выбросить
+ * error.throw({ userId: '123', action: 'delete' });
+ *
+ * // Статическое исключение (без замен)
+ * throw error.exception; // или error.throwStatic()
  */
 export class BadError<Placeholders extends string[]> {
-  private readonly placeholderRegexes: Map<
-    keyof PlaceholderObject<Placeholders>,
-    RegExp
-  >;
+  /**
+   * Карта, сопоставляющая каждый ключ плейсхолдера с регулярным выражением для его замены.
+   */
+  private readonly placeholderRegexes: PlaceholderRegexMap<Placeholders>;
 
   /**
    * Создаёт экземпляр `BadError`.
-   * @param {ErrorTemplate} template - Шаблон ошибки с сообщением, описанием и опциями.
+   *
+   * @param {ErrorTemplate<Placeholders>} template - Шаблон ошибки с сообщением, описанием и опциями.
+   * @throws {Error} Если в шаблоне есть несоответствия между `placeholders` и фактическими плейсхолдерами в тексте.
    */
   public constructor(public readonly template: ErrorTemplate<Placeholders>) {
     this.placeholderRegexes = this.extractPlaceholders(template);
   }
 
   /**
-   * Основной метод для выброса исключения с подстановкой данных.
-   * Если передан пустой объект данных, выбрасывается статическое исключение (без замен).
-   * Иначе выполняется динамическая подстановка.
+   * Возвращает объект HTTP исключения с подстановкой данных.
+   * Если передан пустой объект `placeholders`, возвращается статическое исключение (без замен).
    *
-   * @throws {HttpException} Всегда выбрасывает HTTP-исключение.
+   * @param {PlaceholderObject<Placeholders>} placeholders - Объект с данными для замены плейсхолдеров.
+   * @param {unknown} [cause] - Дополнительная причина ошибки (будет передана в `HttpException`).
+   * @returns {HttpException} Готовый объект исключения (не выброшенный).
+   *
+   * @example
+   * const exception = badError.execute({ userId: '123' });
+   * throw exception;
    */
   public execute(
     placeholders: PlaceholderObject<Placeholders>,
@@ -66,16 +131,61 @@ export class BadError<Placeholders extends string[]> {
   }
 
   /**
-   * Выбрасывает исключение без замены плейсхолдеров (использует исходный шаблон).
-   * @throws {HttpException} Всегда выбрасывает HTTP-исключение.
+   * Немедленно выбрасывает HTTP исключение с подстановкой данных.
+   * Является альтернативой `execute()`, но выбрасывает, а не возвращает.
+   *
+   * @param {PlaceholderObject<Placeholders>} placeholders - Данные для замены плейсхолдеров.
+   * @param {unknown} [cause] - Дополнительная причина.
+   * @throws {HttpException} Всегда выбрасывает исключение.
+   * @returns {never}
+   *
+   * @example
+   * badError.throw({ userId: '123' }, new Error('User not found'));
+   */
+  public throw(
+    placeholders: PlaceholderObject<Placeholders>,
+    cause?: unknown,
+  ): never {
+    throw this.execute(placeholders, cause);
+  }
+
+  /**
+   * Возвращает статическое исключение (без замены плейсхолдеров).
+   * Плейсхолдеры в сообщении остаются нетронутыми.
+   *
+   * @param {unknown} [cause] - Дополнительная причина.
+   * @returns {HttpException} Статический объект исключения.
+   *
+   * @example
+   * const exception = badError.executeStatic();
+   * throw exception;
    */
   public executeStatic(cause?: unknown): HttpException {
     return this.createStaticException(cause);
   }
 
   /**
-   * Создаёт статическое исключение (без подстановки данных).
-   * @returns {HttpException}
+   * Немедленно выбрасывает статическое исключение (без замены плейсхолдеров).
+   *
+   * @param {unknown} [cause] - Дополнительная причина.
+   * @throws {HttpException} Всегда выбрасывает исключение.
+   * @returns {never}
+   *
+   * @example
+   * badError.throwStatic();
+   */
+  public throwStatic(cause?: unknown): never {
+    throw this.executeStatic(cause);
+  }
+
+  /**
+   * Геттер, возвращающий статическое исключение (без замены).
+   * Позволяет использовать синтаксис `throw badError.exception`.
+   *
+   * @returns {HttpException} Статический объект исключения.
+   *
+   * @example
+   * throw badError.exception;
    */
   public get exception(): HttpException {
     return this.createStaticException();
@@ -83,14 +193,24 @@ export class BadError<Placeholders extends string[]> {
 
   /**
    * Создаёт статическое исключение (без подстановки данных).
+   * @param {unknown} [cause] - Причина ошибки.
    * @returns {HttpException}
    */
   private createStaticException(cause?: unknown): HttpException {
-    return this.createHttpException(this.template, cause);
+    return this.createHttpException(
+      {
+        ...this.template,
+        placeholders: [],
+      },
+      cause,
+    );
   }
 
   /**
    * Создаёт динамическое исключение, заменяя плейсхолдеры в шаблоне.
+   * @param {PlaceholderObject<Placeholders>} placeholders - Данные для замены.
+   * @param {unknown} [cause] - Причина ошибки.
+   * @returns {HttpException}
    */
   private createDynamicException(
     placeholders: PlaceholderObject<Placeholders>,
@@ -102,13 +222,15 @@ export class BadError<Placeholders extends string[]> {
 
   /**
    * Выполняет замену плейсхолдеров в сообщении, описании и причине (если причина — строка).
-   * Если значение для плейсхолдера отсутствует, выводит предупреждение в консоль и пропускает замену.
+   * Если значение для плейсхолдера отсутствует (равно `undefined`), выводит ошибку в логгер
+   * и пропускает замену для этого ключа.
    *
-   * @returns {ErrorTemplate} Новый шаблон ошибки с заменёнными значениями.
+   * @param {PlaceholderObject<Placeholders>} placeholders - Объект с данными.
+   * @returns {FormattedErrorTemplate} Новый шаблон ошибки с заменёнными значениями.
    */
   private formatTemplate(
     placeholders: PlaceholderObject<Placeholders>,
-  ): ErrorTemplate<Placeholders> {
+  ): FormattedErrorTemplate {
     let message = this.template.message;
     let description = this.template.description;
     let cause =
@@ -117,7 +239,7 @@ export class BadError<Placeholders extends string[]> {
     for (const [key, regex] of this.placeholderRegexes.entries()) {
       const value = placeholders[key];
       if (value === undefined) {
-        console.error(`Placeholder {${key}} not provided in data`);
+        logger.error(new Error(`Placeholder {${key}} not provided in data`));
         continue;
       }
 
@@ -129,23 +251,24 @@ export class BadError<Placeholders extends string[]> {
     }
 
     return {
+      ...this.template,
       message,
       description,
-      cause: cause ?? this.template.cause,
-      status: this.template.status,
-      options: this.template.options,
-      placeholders: this.template.placeholders,
+      cause: cause ?? this.template.cause ?? undefined,
+      placeholders: [],
     };
   }
 
   /**
    * Создаёт экземпляр `HttpException` на основе шаблона ошибки и дополнительной причины.
-   * HTTP-статус определяется из шаблона, затем из исходного шаблона, либо используется `500`.
-   * @param {ErrorTemplate} error - Шаблон ошибки (возможно, после подстановки).
+   * HTTP-статус определяется из переданного шаблона, затем из исходного шаблона, либо используется `500`.
+   *
+   * @param {FormattedErrorTemplate} error - Шаблон ошибки после подстановки (плейсхолдеры отсутствуют).
+   * @param {unknown} [cause] - Дополнительная причина (имеет приоритет над `error.cause`).
    * @returns {HttpException}
    */
   private createHttpException(
-    error: ErrorTemplate<Placeholders>,
+    error: FormattedErrorTemplate,
     cause?: unknown,
   ): HttpException {
     const status =
@@ -158,50 +281,130 @@ export class BadError<Placeholders extends string[]> {
   }
 
   /**
-   * Извлекает все плейсхолдеры из шаблона ошибки и создаёт для них регулярные выражения.
-   * Если передан список `placeholders`, проверяет, что каждый из них присутствует в шаблоне.
-   * @param {ErrorTemplate} template - Шаблон ошибки.
-   * @returns {Map<keyof PlaceholderObject<Placeholders>, RegExp>} Карта ключ → регулярное выражение.
-   * @throws {Error} Если какой-либо плейсхолдер из списка `placeholders` отсутствует в шаблоне.
+   * Извлекает все плейсхолдеры из текста шаблона.
+   * @param template - Шаблон ошибки.
+   * @returns Множество уникальных ключей плейсхолдеров, найденных в тексте.
    */
-  private extractPlaceholders(
+  private collectPlaceholdersFromText(
     template: ErrorTemplate<Placeholders>,
-  ): Map<keyof PlaceholderObject<Placeholders>, RegExp> {
-    const placeholderRegexes = new Map();
+  ): Set<string> {
     const cause = typeof template.cause === "string" ? template.cause : "";
     const text = `${template.message} ${template.description} ${cause}`;
 
-    let match;
-    while ((match = PLACEHOLDER_PATTERN.exec(text)) !== null) {
-      const matchData = match[1];
-      const dataExists = placeholderRegexes.has(matchData);
-      if (dataExists) {
+    const placeholdersSet = new Set<string>();
+    for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
+      placeholdersSet.add(match[1]);
+    }
+
+    return placeholdersSet;
+  }
+
+  /**
+   * Проверяет соответствие между найденными плейсхолдерами и заявленными в шаблоне.
+   * @param collectedPlaceholders - Множество найденных в тексте ключей.
+   * @param declaredPlaceholders - Массив заявленных ключей (может быть undefined).
+   * @throws {Error} Если есть несоответствия.
+   */
+  private validatePlaceholders(
+    collectedPlaceholders: Set<string>,
+    declaredPlaceholders?: readonly string[],
+  ): void {
+    if (!declaredPlaceholders) {
+      return;
+    }
+
+    const errors: Error[] = [];
+
+    for (const placeholder of declaredPlaceholders) {
+      if (collectedPlaceholders.has(placeholder)) {
         continue;
       }
 
-      placeholderRegexes.set(matchData, new RegExp(`\\{${matchData}\\}`));
+      errors.push(new Error(`Placeholder "${placeholder}" not found in text`));
     }
 
-    if (!this.template.placeholders) {
-      return placeholderRegexes;
-    }
-
-    this.template.placeholders.forEach((placeholder) => {
-      if (placeholderRegexes.has(placeholder)) {
-        return;
+    for (const key of collectedPlaceholders) {
+      if (declaredPlaceholders.includes(key)) {
+        continue;
       }
 
-      throw new Error(`${placeholder} in placeholders`);
-    });
+      errors.push(
+        new Error(
+          `Placeholder from text "${key}" not found in placeholders list`,
+        ),
+      );
+    }
 
-    return placeholderRegexes;
+    if (errors.length !== 0) {
+      errors.forEach((error) => logger.error(error));
+      throw new Error("Placeholder validation failed.");
+    }
+  }
+
+  /**
+   * Создаёт карту регулярных выражений для замены плейсхолдеров.
+   * @param keys - Массив ключей плейсхолдеров.
+   * @returns Карта ключ → RegExp.
+   */
+  private buildRegexMap(keys: Set<string>): PlaceholderRegexMap<Placeholders> {
+    const regexMap: PlaceholderRegexMap<Placeholders> = new Map();
+    for (const key of keys) {
+      regexMap.set(key, this.createRegEx(key));
+    }
+
+    return regexMap;
+  }
+
+  private extractPlaceholders(
+    template: ErrorTemplate<Placeholders>,
+  ): PlaceholderRegexMap<Placeholders> {
+    const collectedPlaceholders = this.collectPlaceholdersFromText(template);
+    this.validatePlaceholders(collectedPlaceholders, template.placeholders);
+    return this.buildRegexMap(collectedPlaceholders);
+  }
+
+  /**
+   * Создаёт регулярное выражение для поиска плейсхолдера вида `{key}`,
+   * экранируя специальные символы в ключе.
+   *
+   * @param {string} key - Ключ плейсхолдера (например, `user.id`).
+   * @returns {RegExp} Регулярное выражение вида `/\{user\.id\}/`.
+   */
+  private createRegEx(key: string): RegExp {
+    const cleanKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\{${cleanKey}\\}`);
   }
 }
 
 /**
  * Фабричный класс, создающий набор предопределённых ошибок (`BadError`) с автоматически
  * сгенерированными кодами на основе префикса.
- * @template Errors - Тип, сопоставляющий имена ошибок с их шаблонами.
+ *
+ * Каждая ошибка получает уникальный код в формате: `base64url(prefix):hex(${key}:${index})`,
+ * который добавляется в начало сообщения. Это позволяет легко идентифицировать тип ошибки по коду.
+ *
+ * @template Errors - Запись, сопоставляющая имена ошибок с их шаблонами (должна содержать поле `placeholders`).
+ *
+ * @example
+ * const errors = new ErrorConstructor('AUTH', {
+ *   INVALID_TOKEN: {
+ *     message: 'Invalid token provided',
+ *     description: 'The authentication token is malformed or expired',
+ *     status: HttpStatus.UNAUTHORIZED,
+ *     placeholders: []
+ *   },
+ *   USER_NOT_FOUND: {
+ *     message: 'User {userId} not found',
+ *     description: 'No user with id {userId} exists',
+ *     status: HttpStatus.NOT_FOUND,
+ *     placeholders: ['userId']
+ *   }
+ * } as const).execute(); // или .errors
+ *
+ * // Использование
+ * throw errors.INVALID_TOKEN.exception;
+ * throw errors.USER_NOT_FOUND.execute({ userId: '123' });
+ * errors.USER_NOT_FOUND.throw({ userId: '123' });
  */
 export class ErrorConstructor<
   Errors extends Record<string, ErrorTemplate<string[]>>,
@@ -209,26 +412,38 @@ export class ErrorConstructor<
   /**
    * Объект, содержащий все созданные экземпляры `BadError`.
    * Ключи соответствуют ключам из `Errors`.
+   *
+   * @type {BadErrors<Errors>}
    */
   public readonly errors: BadErrors<Errors>;
 
   /**
    * Создаёт экземпляр `ErrorConstructor`.
-   * @param {string} prefix - Строка, используемая для генерации уникального кода ошибки.
+   *
+   * @param {string} prefix - Строка, используемая для генерации уникального кода ошибки (будет закодирована в base64url).
    * @param {Errors} templates - Объект, сопоставляющий имена ошибок с их шаблонами.
+   *
+   * @example
+   * const errorFactory = new ErrorConstructor('MYAPP', {
+   *   DB_ERROR: { message: 'Database error', description: '...', placeholders: [] }
+   * });
    */
   public constructor(
     public readonly prefix: string,
-    private readonly templates: {
-      [P in keyof Errors]: Errors[P];
-    },
+    private readonly templates: Errors,
   ) {
     this.errors = this.execute();
   }
 
   /**
    * Генерирует все ошибки, добавляя к сообщению каждой уникальный код.
-   * @returns {BadErrors<Errors>} Объект с ошибками.
+   * Вызывается автоматически в конструкторе.
+   *
+   * @returns {BadErrors<Errors>} Объект с ошибками, где каждое сообщение дополнено кодом.
+   *
+   * @example
+   * const allErrors = errorConstructor.execute();
+   * throw allErrors.SOME_ERROR.exception;
    */
   public execute(): BadErrors<Errors> {
     const keys = Object.keys(this.templates);
@@ -255,7 +470,8 @@ export class ErrorConstructor<
   /**
    * Генерирует уникальный код для ошибки на основе префикса, имени ключа и его индекса.
    * Формат: `base64url(prefix):hex(${key}:${index})`.
-   * @param {keyof Errors} key - Имя ошибки.
+   *
+   * @param {keyof Errors} key - Имя ошибки (например, 'USER_NOT_FOUND').
    * @param {number} index - Индекс ключа в массиве `Object.keys(templates)`.
    * @returns {string} Уникальный строковый код.
    */
@@ -266,3 +482,5 @@ export class ErrorConstructor<
     return `${prefixEncoded}:${suffix}`;
   }
 }
+
+export default ErrorConstructor;
