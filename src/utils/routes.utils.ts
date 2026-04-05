@@ -4,19 +4,13 @@ type GroupedRoutes<T extends RoutesObject> = {
   [P in keyof T]: T[P] extends Readonly<ArrayPath> ? ArrayPath : T[P];
 };
 
-type ConstructorData<
-  R extends RoutesObject,
-  P extends Path
-> = {
+type ConstructorData<R extends RoutesObject, P extends Path> = {
   route: P;
   routes: R;
   operations: Operations<R>;
 };
 
-export class Routes<
-  const R extends RoutesObject,
-  const P extends Path
-> {
+export class Routes<const R extends RoutesObject, const P extends Path> {
   public constructor(private readonly data: ConstructorData<R, P>) {}
 
   public execute() {
