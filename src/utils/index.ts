@@ -3,4 +3,3 @@ export * from "./try-catch.utils";
 export * from "./resolve-pathname.utils";
 export * from "./routes.utils";
 export * from "./create-swagger-config.utils";
-export * from "./error-factory.utils";
