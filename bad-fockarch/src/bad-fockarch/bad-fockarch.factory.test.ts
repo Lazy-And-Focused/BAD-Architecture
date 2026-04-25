@@ -1,4 +1,3 @@
-// src/bad-fockarch/bad-fockarch.factory.test.ts
 import { runSchematic } from "../utils/test-helper";
 
 describe("bad-fockarch schematic", () => {
@@ -6,7 +5,6 @@ describe("bad-fockarch schematic", () => {
     const tree = await runSchematic("bad-fockarch", { name: "test" });
     const files = tree.files;
 
-    // Проверяем наличие основных файлов
     expect(files).toContain("/test/test.controller.ts");
     expect(files).toContain("/test/test.service.ts");
     expect(files).toContain("/test/test.module.ts");
@@ -14,7 +12,6 @@ describe("bad-fockarch schematic", () => {
     expect(files).toContain("/test/index.ts");
     expect(files).toContain("/test/dto/test-create.dto.ts");
     expect(files).toContain("/test/dto/test-update.dto.ts");
-    // spec файлы по умолчанию генерируются, т.к. spec=true
     expect(files).toContain("/test/test.controller.spec.ts");
     expect(files).toContain("/test/test.service.spec.ts");
   });
@@ -25,6 +22,7 @@ describe("bad-fockarch schematic", () => {
       spec: false,
     });
     const files = tree.files;
-    expect(files.some(f => f.endsWith(".spec.ts"))).toBe(false);
+    const specFiles = files.filter(f => f.endsWith(".spec.ts"));
+    expect(specFiles.length).toBe(0);
   });
 });
