@@ -1,30 +1,35 @@
-import { Command } from "./command.type";
-
+// src/bin/commands/command.loader.ts
 import { readdirSync } from "fs";
 import { join } from "path";
 
-export class Loader {
-  public static readonly fileRegExp = /.+\.command\.(?:ts|js)/;
+import { Command } from "./command.type";
 
-  public execute(): Command<{ [key: string]: unknown }>[] {
-    return this.filterFiles(this.readFolder()).map((file) =>
-      this.readFile(file),
+export class Loader {
+  private static readonly FILE_REGEXP = /.+\.command\.(?:ts|js)$/;
+
+  public async execute(): Promise<Command<{ [key: string]: unknown }>[]> {
+    const files = this.filterFiles(this.readFolder());
+    const commands = await Promise.all(
+      files.map(async (file) => this.loadCommand(file))
     );
+    return commands;
   }
 
-  private readFile(file: string): Command<{ [key: string]: unknown }> {
-    const data = require(join(__dirname, file));
-    const command = new data.default();
-
-    if (command instanceof Command) {
-      return command as Command<{ [key: string]: unknown }>;
-    } else {
-      throw new Error(`Command ${file} is not a command`);
+  private async loadCommand(
+    file: string
+  ): Promise<Command<{ [key: string]: unknown }>> {
+    const modulePath = join(__dirname, file);
+    const imported = await import(modulePath);
+    const CommandClass = imported.default;
+    const command = new CommandClass();
+    if (!(command instanceof Command)) {
+      throw new Error(`Command ${file} is not a valid command`);
     }
+    return command as Command<{ [key: string]: unknown }>;
   }
 
   private filterFiles(files: string[]): string[] {
-    return files.filter((file) => Loader.fileRegExp.test(file));
+    return files.filter((file) => Loader.FILE_REGEXP.test(file));
   }
 
   private readFolder(): string[] {

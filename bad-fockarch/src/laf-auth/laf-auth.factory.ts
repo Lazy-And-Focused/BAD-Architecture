@@ -1,70 +1,13 @@
-import type { Path } from "@angular-devkit/core";
-
-import type {
-  Rule,
-  SchematicContext,
-  Source,
-} from "@angular-devkit/schematics";
-
+import type { Rule } from "@angular-devkit/schematics";
 import type { Schema as BadFockarchOptions } from "./laf-auth.schema";
-
-import type { Location } from "../utils";
-
-import { NameParser, convertToKebabCase, mergeSourceRoot } from "../utils";
-
-import { join, strings } from "@angular-devkit/core";
-import {
-  SchematicsException,
-  apply,
-  chain,
-  filter,
-  mergeWith,
-  move,
-  noop,
-  template,
-  url,
-} from "@angular-devkit/schematics";
-
-function transform(options: BadFockarchOptions): BadFockarchOptions {
-  const target: BadFockarchOptions = Object.assign({}, options);
-
-  if (!target.name) {
-    throw new SchematicsException("Option (name) is required.");
-  }
-
-  const location: Location = new NameParser().parse(target);
-
-  target.name = convertToKebabCase(location.name);
-  target.path = convertToKebabCase(location.path);
-  target.language = target.language !== undefined ? target.language : "ts";
-  target.specFileSuffix = convertToKebabCase(options.specFileSuffix || "test");
-
-  target.path = target.flat
-    ? target.path
-    : join(target.path as Path, target.name);
-  return target;
-}
-
-const generate = (options: BadFockarchOptions): Source => {
-  return (context: SchematicContext) =>
-    apply(url(join("./files" as Path, options.language || "ts")), [
-      options.spec ? noop() : filter((path) => !path.endsWith(".spec.ts")),
-      options.spec
-        ? noop()
-        : filter((path) => {
-            const languageExtension = options.language || "ts";
-            const suffix = `.__specFileSuffix__.${languageExtension}`;
-            return !path.endsWith(suffix);
-          }),
-      template({
-        ...strings,
-        ...options,
-      }),
-      move(options.path || ""),
-    ])(context);
-};
+import { chain, mergeWith } from "@angular-devkit/schematics";
+import { mergeSourceRoot } from "../utils";
+import { createTransform, createGenerate } from "../utils/factory-helpers";
 
 export const main = (options: BadFockarchOptions): Rule => {
-  options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
+  const transformedOptions = createTransform(options);
+  return chain([
+    mergeSourceRoot(transformedOptions),
+    mergeWith(createGenerate(transformedOptions)),
+  ]);
 };
