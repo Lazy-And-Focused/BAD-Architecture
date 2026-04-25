@@ -13,7 +13,6 @@ import {
 import { ApiOperation } from "@nestjs/swagger";
 
 import { Public } from "@/decorators";
-import { AuthGuard } from "@1/guards";
 import { Params } from "@1/enums"
 
 import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
@@ -23,7 +22,6 @@ import { <%= classify(plural) %>Service as Service } from "./<%= plural %>.servi
 
 @Injectable()
 @Controller(ROUTE)
-@UseGuards(AuthGuard)
 export class <%= classify(plural) %>Controller {
   public constructor(
     private readonly service: Service

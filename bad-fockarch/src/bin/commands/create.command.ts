@@ -55,9 +55,7 @@ export class CreateCommand extends Command<Props> {
     const assetUrl = await this.fetchReleaseAssetUrl();
     await downloadFile(assetUrl, archivePath);
     await extractFile(archivePath);
-    await resolveChooseFilesAndDelete(folderPath, {
-      packageManager,
-    });
+    await resolveChooseFilesAndDelete(folderPath, packageManager);
     await this.installDependencies(folderPath, packageManager);
   }
 
@@ -69,7 +67,7 @@ export class CreateCommand extends Command<Props> {
       exec(
         `${packageManager} install`,
         { cwd: targetDir },
-        (error, stdout, stderr) => {
+        (error) => {
           if (error) {
             reject(error);
           } else {
@@ -85,12 +83,14 @@ export class CreateCommand extends Command<Props> {
     if (!response.ok) {
       throw new Error(`Failed to fetch latest release: ${response.statusText}`);
     }
+    
     const release = await response.json();
     const assets: any[] = release.assets;
     const asset = assets.find((a) => a.name === RELEASE_FILE_NAME);
     if (!asset) {
       throw new Error(`Asset ${RELEASE_FILE_NAME} not found in latest release`);
     }
+
     return asset.browser_download_url;
   }
 }

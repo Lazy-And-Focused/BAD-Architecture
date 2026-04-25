@@ -1,4 +1,3 @@
-// src/bin/commands/command.loader.ts
 import { readdirSync } from "fs";
 import { join } from "path";
 

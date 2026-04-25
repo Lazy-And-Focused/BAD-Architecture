@@ -1,14 +1,14 @@
-import { Tree } from "@angular-devkit/schematics";
-import { SchematicTestRunner } from "@angular-devkit/schematics/testing";
-import { join } from "path";
+import { runSchematic } from "../utils/test-helper";
 
-const collectionPath = join(__dirname, "../collection.json");
-
-describe("route-template", () => {
-  it("works", async () => {
-    const runner = new SchematicTestRunner("schematics", collectionPath);
-    const tree = await runner.runSchematic("route-template", {}, Tree.empty());
-
-    expect(tree.files).toEqual([]);
+describe("bad-plural schematic", () => {
+  it("should generate files with pluralized name", async () => {
+    const tree = await runSchematic("bad-plural", { name: "cat" });
+    const files = tree.files;
+    expect(files).toContain("/cats/cats.controller.ts");
+    expect(files).toContain("/cats/cats.service.ts");
+    expect(files).toContain("/cats/cats.module.ts");
+    expect(files).toContain("/cats/cats.routes.ts");
+    expect(files).toContain("/cats/dto/cat-create.dto.ts");
+    expect(files).toContain("/cats/dto/cat-update.dto.ts");
   });
 });
