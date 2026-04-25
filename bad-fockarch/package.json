@@ -2,8 +2,8 @@
   "name": "bad-fockarch",
   "version": "3.0.0",
   "description": "Мощный schematic-пакет для NestJS с BAD-архитектурой. Генерация проектов и роутов с единым стилем кода.",
-  "main": "dist/bin/index.js",
-  "types": "dist/bin/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "bad": "./dist/bin/index.js"
   },
@@ -29,7 +29,7 @@
   "module": "commonjs",
   "scripts": {
     "build": "tsc && copyfiles -u 1 \"src/**/*.json\" \"src/*/files/**/*\" dist/",
-    "test": "ts-mocha ./src/**/*.test.ts",
+    "test": "jest",
     "lint": "eslint src --ext .ts"
   },
   "keywords": [
@@ -68,13 +68,14 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.10",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.17.19",
     "@types/tar-stream": "^3.1.4",
     "@types/yargs": "^17.0.33",
     "copyfiles": "^2.4.1",
-    "mocha": "^11.7.0",
-    "ts-mocha": "^11.1.0",
-    "ts-node": "^10.9.2"
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
   }
 }

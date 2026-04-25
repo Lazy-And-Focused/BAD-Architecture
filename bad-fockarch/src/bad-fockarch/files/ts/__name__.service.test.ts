@@ -24,7 +24,7 @@ describe("<%= classify(name) %> Service", () => {
   describe("get", () => {
     it("should return an array of <%= name %>", async () => {
       const result = await service.get();
-      expect(result).toEqual([]);
+      expect(result).to.deep.equal([]);
     });
   });
 
@@ -32,30 +32,30 @@ describe("<%= classify(name) %> Service", () => {
     it("should return a single <%= name %>", async () => {
       const id = "test-id";
       const result = await service.getOne(id);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
 
     it("should handle non-existent <%= name %>", async () => {
       const id = "non-existent-id";
       const result = await service.getOne(id);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
   });
 
   describe("post", () => {
     it("should create a new <%= name %>", async () => {
       const createDto: <%= classify(name) %>CreateDto = {
-        // заполните поля в соответствии с вашим DTO
+        // fill fields according to your DTO
       };
       
       const result = await service.post(createDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
 
     it("should validate creation data", async () => {
       const invalidDto = {} as <%= classify(name) %>CreateDto;
       const result = await service.post(invalidDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
   });
 
@@ -63,11 +63,11 @@ describe("<%= classify(name) %> Service", () => {
     it("should fully update a <%= name %>", async () => {
       const id = "test-id";
       const updateDto: <%= classify(name) %>UpdateDto = {
-        // заполните поля в соответствии с вашим DTO
+        // fill fields according to your DTO
       };
       
       const result = await service.put(id, updateDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
 
     it("should handle update for non-existent <%= name %>", async () => {
@@ -75,7 +75,7 @@ describe("<%= classify(name) %> Service", () => {
       const updateDto: <%= classify(name) %>UpdateDto = {};
       
       const result = await service.put(id, updateDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
   });
 
@@ -83,11 +83,11 @@ describe("<%= classify(name) %> Service", () => {
     it("should partially update a <%= name %>", async () => {
       const id = "test-id";
       const updateDto: <%= classify(name) %>UpdateDto = {
-        // заполните только те поля, которые нужно обновить
+        // fill only fields to be updated
       };
       
       const result = await service.patch(id, updateDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
 
     it("should handle partial update for non-existent <%= name %>", async () => {
@@ -95,7 +95,7 @@ describe("<%= classify(name) %> Service", () => {
       const updateDto: <%= classify(name) %>UpdateDto = {};
       
       const result = await service.patch(id, updateDto);
-      expect(result).toEqual({});
+      expect(result).to.deep.equal({});
     });
   });
 
@@ -103,13 +103,13 @@ describe("<%= classify(name) %> Service", () => {
     it("should delete a <%= name %>", async () => {
       const id = "test-id";
       const result = await service.delete(id);
-      expect(result).toBe("deleted");
+      expect(result).to.equal("deleted");
     });
 
     it("should handle deletion of non-existent <%= name %>", async () => {
       const id = "non-existent-id";
       const result = await service.delete(id);
-      expect(result).toBe("deleted");
+      expect(result).to.equal("deleted");
     });
   });
 });

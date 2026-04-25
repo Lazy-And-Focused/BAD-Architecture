@@ -8,7 +8,6 @@ import {
   Put,
   Patch,
   Delete,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 
