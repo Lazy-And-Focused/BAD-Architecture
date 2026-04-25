@@ -1,58 +1,45 @@
-import https from "https";
-
-import { rm } from "node:fs/promises";
+import { get as httpGet } from "https";
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
-
 import { parse } from "path";
 
-const createDir = (path: string): string[] => {
-  const dirs: string[] = [];
-
-  const create = (filePath: string = path) => {
-    if (!filePath) {
-      dirs.shift();
-      return dirs;
-    }
-
-    const path = parse(filePath).dir;
-
-    if (existsSync(path)) return dirs;
-
-    dirs.unshift(path);
-    return create(path);
-  };
-
-  return create(path);
-};
+function ensureDir(filePath: string): void {
+  const dir = parse(filePath).dir;
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
+}
 
 export const downloadFile = async (
   url: string,
-  path: string,
-): Promise<boolean | unknown> => {
-  const dirPath = parse(path).dir;
+  destPath: string
+): Promise<void> => {
+  ensureDir(destPath);
 
-  return new Promise<boolean | unknown>((resolve, reject) => {
-    rm(dirPath, { force: true, recursive: true })
-      .then(() => {
-        createDir(path).forEach((path) => {
-          mkdirSync(path);
-        });
+  return new Promise<void>((resolve, reject) => {
+    const file = createWriteStream(destPath);
 
-        const file = createWriteStream(path);
-
-        https.get(url, (response) => {
-          console.log("downloading...");
-          response.pipe(file);
-
-          file.on("finish", () => {
-            console.log("downloaded!");
-            file.close();
-            resolve(true);
-          });
-
-          file.on("error", reject);
-        });
-      })
-      .catch(reject);
+    httpGet(url, (response) => {
+      if (response.statusCode && response.statusCode >= 400) {
+        reject(new Error(`Download failed with status ${response.statusCode}`));
+        return;
+      }
+      response.pipe(file);
+      file.on("finish", () => {
+        file.close();
+        resolve();
+      });
+      file.on("error", (err) => {
+        file.close();
+        reject(err);
+      });
+      response.on("error", (err) => {
+        file.close();
+        reject(err);
+      });
+    })
+    .on("error", (err) => {
+      file.close();
+      reject(err);
+    });
   });
 };
