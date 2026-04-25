@@ -15,9 +15,9 @@ export class NameParser {
   public parse(options: ParseOptions): Location {
     const nameWithoutPath: string = basename(options.name as Path);
     const namePath: string = dirname(
-      join((options.path ?? "") as Path, options.name)
+      join((options.path ?? "") as Path, options.name),
     );
-    
+
     return {
       name: nameWithoutPath,
       path: normalize(join("/" as Path, namePath)),

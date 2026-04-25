@@ -10,7 +10,7 @@ export function isNestProject(host: Tree, extraFiles: string[] = []): boolean {
 }
 
 export function mergeSourceRoot<
-  T extends { sourceRoot?: string; path?: string } = any
+  T extends { sourceRoot?: string; path?: string } = any,
 >(options: T): Rule {
   return (host: Tree) => {
     const isInRoot = isNestProject(host, ["tsconfig.json", "package.json"]);

@@ -9,13 +9,13 @@ export class Loader {
   public async execute(): Promise<Command<{ [key: string]: unknown }>[]> {
     const files = this.filterFiles(this.readFolder());
     const commands = await Promise.all(
-      files.map(async (file) => this.loadCommand(file))
+      files.map(async (file) => this.loadCommand(file)),
     );
     return commands;
   }
 
   private async loadCommand(
-    file: string
+    file: string,
   ): Promise<Command<{ [key: string]: unknown }>> {
     const modulePath = join(__dirname, file);
     const imported = await import(modulePath);

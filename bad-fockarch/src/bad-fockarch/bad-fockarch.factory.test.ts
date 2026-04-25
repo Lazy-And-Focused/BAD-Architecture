@@ -22,7 +22,7 @@ describe("bad-fockarch schematic", () => {
       spec: false,
     });
     const files = tree.files;
-    const specFiles = files.filter(f => f.endsWith(".spec.ts"));
+    const specFiles = files.filter((f) => f.endsWith(".spec.ts"));
     expect(specFiles.length).toBe(0);
   });
 });

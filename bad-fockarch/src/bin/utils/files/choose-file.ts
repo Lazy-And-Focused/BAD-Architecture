@@ -23,7 +23,7 @@ const chooseFile = (files: string[], option: string): string => {
 
 export const resolveChooseFilesAndDelete = async (
   dir: string,
-  option: string
+  option: string,
 ) => {
   const files = await readdir(dir);
   const selectedName = chooseFile(files, option);

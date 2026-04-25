@@ -11,7 +11,7 @@ function ensureDir(filePath: string): void {
 
 export const downloadFile = async (
   url: string,
-  destPath: string
+  destPath: string,
 ): Promise<void> => {
   ensureDir(destPath);
 
@@ -36,8 +36,7 @@ export const downloadFile = async (
         file.close();
         reject(err);
       });
-    })
-    .on("error", (err) => {
+    }).on("error", (err) => {
       file.close();
       reject(err);
     });

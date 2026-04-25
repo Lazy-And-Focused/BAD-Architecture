@@ -26,7 +26,9 @@ export class CreateCommand extends Command<Props> {
       demandOption: true,
       coerce: (arg: string) => {
         if (!arg || !/^[\w-]+$/.test(arg)) {
-          throw new Error("Invalid project name. Use letters, digits, hyphens and underscores.");
+          throw new Error(
+            "Invalid project name. Use letters, digits, hyphens and underscores.",
+          );
         }
         return arg;
       },
@@ -61,20 +63,16 @@ export class CreateCommand extends Command<Props> {
 
   private async installDependencies(
     targetDir: string,
-    packageManager: "npm" | "pnpm"
+    packageManager: "npm" | "pnpm",
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      exec(
-        `${packageManager} install`,
-        { cwd: targetDir },
-        (error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve();
-          }
+      exec(`${packageManager} install`, { cwd: targetDir }, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
         }
-      );
+      });
     });
   }
 
@@ -83,7 +81,7 @@ export class CreateCommand extends Command<Props> {
     if (!response.ok) {
       throw new Error(`Failed to fetch latest release: ${response.statusText}`);
     }
-    
+
     const release = await response.json();
     const assets: any[] = release.assets;
     const asset = assets.find((a) => a.name === RELEASE_FILE_NAME);

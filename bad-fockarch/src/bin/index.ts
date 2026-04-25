@@ -18,7 +18,7 @@ import Loader from "./commands/command.loader";
       (yargs) => {
         command.register().forEach((reg) => yargs.positional(...reg));
       },
-      (yargs) => command.execute(yargs)
+      (yargs) => command.execute(yargs),
     );
   });
 

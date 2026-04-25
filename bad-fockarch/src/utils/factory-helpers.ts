@@ -1,8 +1,5 @@
 import type { Path } from "@angular-devkit/core";
-import type {
-  SchematicContext,
-  Source,
-} from "@angular-devkit/schematics";
+import type { SchematicContext, Source } from "@angular-devkit/schematics";
 import type { Location } from "./name.parser";
 import { join, strings } from "@angular-devkit/core";
 import {
@@ -13,7 +10,11 @@ import {
   template,
   url,
 } from "@angular-devkit/schematics";
-import { convertToKebabCase, convertToConstantCase, pluralize } from "./formatting";
+import {
+  convertToKebabCase,
+  convertToConstantCase,
+  pluralize,
+} from "./formatting";
 import { NameParser } from "./name.parser";
 
 export interface BaseSchema {
@@ -37,7 +38,7 @@ const DEFAULT_SPEC_SUFFIX = "test";
 
 export function createTransform<T extends BaseSchema>(
   options: T,
-  opts?: TransformOptions
+  opts?: TransformOptions,
 ): T {
   const target: T = Object.assign({}, options);
 
@@ -51,7 +52,7 @@ export function createTransform<T extends BaseSchema>(
   target.path = convertToKebabCase(location.path);
   target.language = target.language ?? DEFAULT_LANGUAGE;
   target.specFileSuffix = convertToKebabCase(
-    options.specFileSuffix || DEFAULT_SPEC_SUFFIX
+    options.specFileSuffix || DEFAULT_SPEC_SUFFIX,
   );
 
   if (opts?.pluralizeName) {
