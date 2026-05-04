@@ -18,7 +18,6 @@ jobs:
       - name: Create tar archive
         run: |
           tar -czf release.tar.gz \
-            --transform 's,^,release_contents/,' \
             src/ \
             test/ \
             .github/workflows/swagger.yaml \
