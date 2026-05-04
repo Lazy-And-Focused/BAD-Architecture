@@ -70,11 +70,15 @@ export class CreateCommand extends Command<Props> {
         cwd: targetDir,
       });
 
-      if (stderr) {
-        console.warn(stderr);
+      const error = (await stderr?.toArray() || []).join("\n");
+      if (error) {
+        console.warn({error});
       }
       
-      console.log(stdout);
+      const output = (await stdout?.toArray() || []).join("\n")
+      if (output) {
+        console.log({output});
+      }
     } catch (error) {
       throw new Error(`Failed to install dependencies`, { cause: error });
     }
