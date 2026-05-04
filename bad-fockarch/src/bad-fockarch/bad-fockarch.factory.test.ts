@@ -12,8 +12,8 @@ describe("bad-fockarch schematic", () => {
     expect(files).toContain("/test/index.ts");
     expect(files).toContain("/test/dto/test-create.dto.ts");
     expect(files).toContain("/test/dto/test-update.dto.ts");
-    expect(files).toContain("/test/test.controller.spec.ts");
-    expect(files).toContain("/test/test.service.spec.ts");
+    expect(files).toContain("/test/test.controller.test.ts");
+    expect(files).toContain("/test/test.service.test.ts");
   });
 
   it("should not generate spec files when spec option is false", async () => {
@@ -22,7 +22,7 @@ describe("bad-fockarch schematic", () => {
       spec: false,
     });
     const files = tree.files;
-    const specFiles = files.filter((f) => f.endsWith(".spec.ts"));
-    expect(specFiles.length).toBe(0);
+    const testFiles = files.filter((f) => f.endsWith(".test.ts"));
+    expect(testFiles.length).toBe(0);
   });
 });

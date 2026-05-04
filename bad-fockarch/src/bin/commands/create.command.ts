@@ -65,15 +65,17 @@ export class CreateCommand extends Command<Props> {
     targetDir: string,
     packageManager: "npm" | "pnpm",
   ): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      exec(`${packageManager} install`, { cwd: targetDir }, (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
+    try {
+      const { stdout, stderr } = await exec(`${packageManager} install`, {
+        cwd: targetDir,
       });
-    });
+      if (stderr) {
+        console.warn(stderr);
+      }
+      console.log(stdout);
+    } catch (error) {
+      throw new Error(`Failed to install dependencies`, { cause: error });
+    }
   }
 
   private async fetchReleaseAssetUrl(): Promise<string> {
@@ -82,7 +84,7 @@ export class CreateCommand extends Command<Props> {
       throw new Error(`Failed to fetch latest release: ${response.statusText}`);
     }
 
-    const release = await response.json();
+    const release: any = await response.json();
     const assets: any[] = release.assets;
     const asset = assets.find((a) => a.name === RELEASE_FILE_NAME);
     if (!asset) {

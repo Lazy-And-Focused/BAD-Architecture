@@ -72,12 +72,11 @@ export function createTransform<T extends BaseSchema>(
 export function createGenerate(options: BaseSchema): Source {
   return (context: SchematicContext) =>
     apply(url(join("./files" as Path, options.language || DEFAULT_LANGUAGE)), [
-      options.spec ? noop() : filter((path) => !path.endsWith(".spec.ts")),
       options.spec
         ? noop()
         : filter((path) => {
             const langExt = options.language || DEFAULT_LANGUAGE;
-            const suffix = `.__specFileSuffix__.${langExt}`;
+            const suffix = `.${options.specFileSuffix || DEFAULT_SPEC_SUFFIX}.${langExt}`;
             return !path.endsWith(suffix);
           }),
       template({
