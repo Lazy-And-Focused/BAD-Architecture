@@ -66,12 +66,14 @@ export class CreateCommand extends Command<Props> {
     packageManager: "npm" | "pnpm",
   ): Promise<void> {
     try {
-      const { stdout, stderr } = await exec(`${packageManager} install`, {
+      const { stdout, stderr } = exec(`${packageManager} install`, {
         cwd: targetDir,
       });
+
       if (stderr) {
         console.warn(stderr);
       }
+      
       console.log(stdout);
     } catch (error) {
       throw new Error(`Failed to install dependencies`, { cause: error });

@@ -20,13 +20,16 @@ export const extractFile = (archivePath: string): Promise<void> => {
         nextEntry();
       } else {
         mkdirSync(parse(fullPath).dir, { recursive: true });
+        
         const writeStream = createWriteStream(fullPath);
         stream.pipe(writeStream);
+        
         writeStream.on("finish", nextEntry);
         writeStream.on("error", (err) => {
           extractData.destroy(err);
           reject(err);
         });
+
         stream.on("error", (err) => {
           extractData.destroy(err);
           reject(err);

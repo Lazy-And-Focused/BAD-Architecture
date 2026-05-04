@@ -1,6 +1,6 @@
 {
   "name": "bad-fockarch",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Мощный schematic-пакет для NestJS с BAD-архитектурой. Генерация проектов и роутов с единым стилем кода.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

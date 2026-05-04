@@ -40,6 +40,7 @@ jobs:
             tsconfig.json \
             tsconfig.base.json \
             tsconfig.main.json \
+            tsconfig.nostrictpropertyinitialization.json \
             tsconfig.build.json
 
       - name: Create Release
