@@ -1,14 +1,12 @@
-import { Tree } from "@angular-devkit/schematics";
-import { SchematicTestRunner } from "@angular-devkit/schematics/testing";
-import { join } from "path";
+import { runSchematic } from "../utils/test-helper";
 
-const collectionPath = join(__dirname, "../collection.json");
+describe("laf-auth schematic", () => {
+  it("should generate auth module files", async () => {
+    const tree = await runSchematic("laf-auth", { name: "session" });
+    const files = tree.files;
 
-describe("route-template", () => {
-  it("works", async () => {
-    const runner = new SchematicTestRunner("schematics", collectionPath);
-    const tree = await runner.runSchematic("route-template", {}, Tree.empty());
-
-    expect(tree.files).toEqual([]);
+    expect(files).toContain("/session/session.controller.ts");
+    expect(files).toContain("/session/session.module.ts");
+    expect(files).toContain("/session/session.routes.ts");
   });
 });

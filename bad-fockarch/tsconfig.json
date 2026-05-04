@@ -1,24 +1,29 @@
 {
   "compilerOptions": {
-    "baseUrl": "tsconfig",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2023"],
     "declaration": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "es2023",
+    "rootDir": "./src/",
+    "outDir": "./dist/",
+    "strict": true,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "rootDir": "src/",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "strictNullChecks": true,
-    "target": "es6",
-    "types": ["jasmine", "node"]
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "sourceMap": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["jest"]
   },
   "include": ["src/**/*"],
-  "exclude": ["src/*/files/**/*"]
+  "exclude": ["src/**/files/**/*"]
 }

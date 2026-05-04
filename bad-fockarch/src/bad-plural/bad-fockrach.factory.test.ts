@@ -1,14 +1,27 @@
-import { Tree } from "@angular-devkit/schematics";
-import { SchematicTestRunner } from "@angular-devkit/schematics/testing";
-import { join } from "path";
+import { runSchematic } from "../utils/test-helper";
 
-const collectionPath = join(__dirname, "../collection.json");
+describe("bad-plural schematic", () => {
+  it("should generate required files for a simple route", async () => {
+    const tree = await runSchematic("bad-plural", { name: "test" });
+    const files = tree.files;
 
-describe("route-template", () => {
-  it("works", async () => {
-    const runner = new SchematicTestRunner("schematics", collectionPath);
-    const tree = await runner.runSchematic("route-template", {}, Tree.empty());
+    expect(files).toContain("/tests/tests.controller.ts");
+    expect(files).toContain("/tests/tests.service.ts");
+    expect(files).toContain("/tests/tests.module.ts");
+    expect(files).toContain("/tests/tests.routes.ts");
+    expect(files).toContain("/tests/index.ts");
+    expect(files).toContain("/tests/dto/test-create.dto.ts");
+    expect(files).toContain("/tests/dto/test-update.dto.ts");
+    expect(files).toContain("/tests/tests.controller.test.ts");
+    expect(files).toContain("/tests/tests.service.test.ts");
+  });
 
-    expect(tree.files).toEqual([]);
+  it("should not generate spec files when spec option is false", async () => {
+    const tree = await runSchematic("bad-plural", {
+      name: "test",
+      spec: false,
+    });
+    const testFiles = tree.files.filter((f) => f.endsWith(".test.ts"));
+    expect(testFiles).toHaveLength(0);
   });
 });

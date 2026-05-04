@@ -5,10 +5,8 @@ import { join } from "path";
 
 import Command from "./command.type";
 
-import { getDownloadUrl, RELEASE_URL, RELEASE_FILE_NAME } from "../utils";
-
+import { RELEASE_URL, RELEASE_FILE_NAME } from "../utils";
 import { downloadFile, extractFile } from "../utils/files";
-import { AdditionData } from "../utils/addition-data.type";
 import { resolveChooseFilesAndDelete } from "../utils/files/choose-file";
 
 type Props = {
@@ -25,14 +23,22 @@ export class CreateCommand extends Command<Props> {
       type: "string",
       default: "bad-app",
       describe: "name of your app folder",
+      demandOption: true,
+      coerce: (arg: string) => {
+        if (!arg || !/^[\w-]+$/.test(arg)) {
+          throw new Error(
+            "Invalid project name. Use letters, digits, hyphens and underscores.",
+          );
+        }
+        return arg;
+      },
     },
-
     path: {
       type: "string",
       default: "./",
       describe: "path to your folder",
+      normalize: true,
     },
-
     "package-manager": {
       type: "string",
       default: "npm",
@@ -45,87 +51,47 @@ export class CreateCommand extends Command<Props> {
   public async execute(argv: ArgumentsCamelCase<Props>): Promise<void> {
     const { name, path, packageManager } = argv;
 
-    console.log("Название: " + name);
-    console.log("Путь: " + path);
-    console.log("Пакетный менеджер: " + packageManager);
-
     const folderPath = join(path, name);
-    const filePath = join(folderPath, RELEASE_FILE_NAME);
+    const archivePath = join(folderPath, RELEASE_FILE_NAME);
 
-    const url = await this.fetchRelease();
-
-    await this.downloadRelease(url, filePath);
-    await this.extractFile(filePath);
-    await this.resolveChooseFilesAndDelete(folderPath, {
-      packageManager,
-    });
-    await this.downloadPackages(folderPath, packageManager);
-
-    return;
+    const assetUrl = await this.fetchReleaseAssetUrl();
+    await downloadFile(assetUrl, archivePath);
+    await extractFile(archivePath);
+    await resolveChooseFilesAndDelete(folderPath, packageManager);
+    await this.installDependencies(folderPath, packageManager);
   }
 
-  private resolveChooseFilesAndDelete(dir: string, data: AdditionData) {
-    return resolveChooseFilesAndDelete(dir, data.packageManager);
-  }
-
-  private async downloadPackages(
-    path: string,
+  private async installDependencies(
+    targetDir: string,
     packageManager: "npm" | "pnpm",
-  ): Promise<boolean | unknown> {
-    console.log("Packages downloading...");
-
-    return new Promise<boolean | unknown>((resolve, reject) => {
-      exec(
-        `cd ${path} && ${packageManager} --save install`,
-        (error, stdout, stderr) => {
-          console.log("stdout:\n" + stdout);
-          console.log("stderr:\n" + stderr);
-
-          if (error !== null) {
-            console.log("exec error:\n" + error);
-            reject(error);
-          }
-
-          resolve(true);
-        },
-      );
-    });
+  ): Promise<void> {
+    try {
+      const { stdout, stderr } = await exec(`${packageManager} install`, {
+        cwd: targetDir,
+      });
+      if (stderr) {
+        console.warn(stderr);
+      }
+      console.log(stdout);
+    } catch (error) {
+      throw new Error(`Failed to install dependencies`, { cause: error });
+    }
   }
 
-  private async extractFile(path: string): Promise<true> {
-    return new Promise<true>((resolve) => {
-      extractFile(path);
+  private async fetchReleaseAssetUrl(): Promise<string> {
+    const response = await fetch(RELEASE_URL, { method: "GET" });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch latest release: ${response.statusText}`);
+    }
 
-      setTimeout(() => resolve(true), 1000);
-    });
-  }
+    const release: any = await response.json();
+    const assets: any[] = release.assets;
+    const asset = assets.find((a) => a.name === RELEASE_FILE_NAME);
+    if (!asset) {
+      throw new Error(`Asset ${RELEASE_FILE_NAME} not found in latest release`);
+    }
 
-  private async downloadRelease(
-    url: string,
-    path: string,
-  ): Promise<boolean | unknown> {
-    return new Promise<boolean | unknown>((resolve, reject) => {
-      downloadFile(url, path)
-        .then(() => {
-          setTimeout(() => {
-            resolve(true);
-          }, 1000);
-        })
-        .catch(reject);
-    });
-  }
-
-  private async fetchRelease(): Promise<string> {
-    const response = await fetch(RELEASE_URL, {
-      method: "GET",
-    });
-
-    const release = await response.json();
-    const { url } = await fetch(getDownloadUrl(release.tag_name));
-
-    console.log("Найден релиз версии: " + release.tag_name);
-
-    return url;
+    return asset.browser_download_url;
   }
 }
 

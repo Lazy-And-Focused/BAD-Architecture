@@ -1,50 +1,80 @@
 {
   "name": "bad-fockarch",
   "version": "3.0.0",
-  "description": "A blank schematics",
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "npm run build && jasmine src/**/*_spec.js"
-  },
+  "description": "Мощный schematic-пакет для NestJS с BAD-архитектурой. Генерация проектов и роутов с единым стилем кода.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
-    "bad": "./src/bin/index.js"
+    "bad": "./dist/bin/index.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js"
+    }
+  },
+  "sideEffects": false,
+  "module": "commonjs",
+  "scripts": {
+    "build": "tsc && copyfiles -u 1 \"src/**/*.json\" \"src/*/files/**/*\" dist/",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
   },
   "keywords": [
-    "schematics"
+    "nestjs",
+    "schematic",
+    "angular-devkit",
+    "code-generator",
+    "bad-architecture",
+    "laf",
+    "backend",
+    "scaffold"
   ],
-  "files": [
-    "./**/*.js",
-    "./**/*.js.map",
-    "./**/*.d.ts",
-    "./**/files/**/*.ts",
-    ".gitignore",
-    "*.json",
-    "./README.md",
-    "./tsconfig.json"
-  ],
+  "author": {
+    "name": "FOCKUSTY",
+    "email": "viserd.yt@gmail.com",
+    "url": "https://fockusty.vercel.app/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lazy-And-Focused/BAD-Architecture/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lazy-And-Focused/BAD-Architecture.git"
   },
-  "author": {
-    "name": "FOCKUSTY",
-    "email": "viserd.yt@gmail.com",
-    "url": "https://fockusty.netlify.app/"
+  "homepage": "https://github.com/Lazy-And-Focused/BAD-Architecture#readme",
+  "engines": {
+    "node": ">=20.19.0"
   },
-  "license": "MIT",
-  "schematics": "./src/collection.json",
+  "schematics": "./dist/collection.json",
   "dependencies": {
     "@angular-devkit/core": "^20.1.6",
     "@angular-devkit/schematics": "^20.1.6",
     "tar-stream": "^3.1.7",
-    "typescript": "~5.8.2",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@types/jasmine": "~5.1.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.17.19",
     "@types/tar-stream": "^3.1.4",
     "@types/yargs": "^17.0.33",
-    "jasmine": "^5.0.0"
+    "copyfiles": "^2.4.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
   }
 }

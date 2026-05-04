@@ -8,12 +8,10 @@ import {
   Put,
   Patch,
   Delete,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 
 import { Public } from "@/decorators";
-import { AuthGuard } from "@1/guards";
 import { Params } from "@1/enums";
 
 import { <%= classify(name) %>CreateDto, <%= classify(name) %>UpdateDto } from "./dto";
@@ -23,7 +21,6 @@ import { <%= classify(name) %>Service as Service } from "./<%= name %>.service";
 
 @Injectable()
 @Controller(ROUTE)
-@UseGuards(AuthGuard)
 export class <%= classify(name) %>Controller {
   public constructor(
     private readonly service: Service
