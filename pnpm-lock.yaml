@@ -57,8 +57,8 @@ importers:
         specifier: ^1.19.0
         version: 1.19.0
       fenviee:
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.1.2
+        version: 0.1.2
       fock-logger:
         specifier: ^6.3.2
         version: 6.3.2
@@ -2537,8 +2537,8 @@ packages:
       picomatch:
         optional: true
 
-  fenviee@0.1.1:
-    resolution: {integrity: sha512-yMVQ4VrthLqJSQdPbDsEr392tET/dOjQnyb/lMLZpu2pnupidLXb4TeoJOtz/B2Jrs89bUC2j9wfU819c8GZQg==}
+  fenviee@0.1.2:
+    resolution: {integrity: sha512-Fwd/7mxkMs/9xpg6k2ORSzIQNx//EkGjLM+ZzbGO0quZecEpMTgw618Udkw00ji5U/+d9lC8icjPoLbogbjvuw==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
 
   file-entry-cache@8.0.0:
@@ -6929,7 +6929,7 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
-  fenviee@0.1.1: {}
+  fenviee@0.1.2: {}
 
   file-entry-cache@8.0.0:
     dependencies:

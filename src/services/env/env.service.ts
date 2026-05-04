@@ -1,20 +1,17 @@
 import { config } from "dotenv";
 
-import { getEnvFileName } from "./validators";
+import { getEnvFileName, normalizeProgramMode, validateTokenExpiration } from "./validators";
 
 config({
   path: getEnvFileName(),
 });
-
-import type { Unique } from "./env.validators";
-import { VALIDATORS } from "./env.validators";
 
 import { AUTH_PROPERTIES, GROUPED_AUTH_PROPERTIES } from "./env.auth";
 
 import { AuthTypes } from "@1/types";
 import { Env } from "fenviee";
 
-export const env = Env.create<Unique>(process.env)({
+export const env = Env.create(process.env)({
   required: [
     ...AUTH_PROPERTIES,
     "CLIENT_URL",
@@ -43,7 +40,10 @@ export const env = Env.create<Unique>(process.env)({
     AVAILABLE_USERNAME_SYMBOLS: "abcdefghijklmnopqrstuvwxyz",
   },
 
-  unique: VALIDATORS,
+  unique: {
+    TOKEN_EXPIRATION: validateTokenExpiration,
+    PROGRAM_MODE: normalizeProgramMode,
+  },
 
   dangerousIgnoreErrors: process.env.IGNORE === "true",
 });
