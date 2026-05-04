@@ -12,14 +12,14 @@ const PARSE_ERROR = {
   id: false,
   profile_id: false,
   token: false,
-  successed: false,
+  succeeded: false,
 } as const;
 
 type ParsedToken = {
   authId: string;
   userId: string;
   token: string;
-  successed: true;
+  succeeded: true;
 };
 
 type ParseReturn = ParsedToken | typeof PARSE_ERROR;
@@ -47,7 +47,7 @@ export class HashService {
           authId: id,
           userId,
           token: token,
-          successed: true,
+          succeeded: true,
         };
       },
       (error) => {
