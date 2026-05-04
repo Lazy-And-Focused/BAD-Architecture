@@ -17,26 +17,31 @@ jobs:
 
       - name: Create tar archive
         run: |
-          mkdir -p release_contents
-          mkdir -p release_contents/src
-          mkdir -p release_contents/test
-          cp -r src/* release_contents/src
-          cp -r ./test/* release_contents/test
-          cp -r ./.env.example release_contents/.env.example
-          cp -r ./.gitignore release_contents/.gitignore
-          cp -r ./.prettierrc.mjs release_contents/.prettierrc.mjs
-          cp -r ./eslint.config.mjs release_contents/eslint.config.mjs
-          cp -r ./LICENSE release_contents/LICENSE
-          cp -r ./nest-cli.json release_contents/nest-cli.json
-          cp -r ./package.json release_contents/package.json
-          cp -r ./README.md release_contents/README.md
-          cp -r ./docker-compose.yaml release_contents/docker-compose.yaml
-          cp -r ./npm--dockerfile release_contents/npm--dockerfile
-          cp -r ./pnpm--dockerfile release_contents/pnpm--dockerfile
-          cp -r ./.dockerignore release_contents/.dockerignore
-          cp -r ./tsconfig.json release_contents/tsconfig.json
-          cp -r ./tsconfig.build.json release_contents/tsconfig.build.json
-          tar -czf release.tar.gz -C release_contents .
+          tar -czf release.tar.gz \
+            --transform 's,^,release_contents/,' \
+            src/ \
+            test/ \
+            .github/workflows/swagger.yaml \
+            .env.example \
+            .env.swagger \
+            .gitignore \
+            .prettierrc.mjs \
+            bad.json \
+            eslint.config.mjs \
+            LICENSE \
+            nest-cli.json \
+            package.json \
+            prisma.config.ts \
+            swagger-template.html \
+            README.md \
+            docker-compose.yaml \
+            npm--dockerfile \
+            pnpm--dockerfile \
+            .dockerignore \
+            tsconfig.json \
+            tsconfig.base.json \
+            tsconfig.main.json \
+            tsconfig.build.json
 
       - name: Create Release
         run: |
